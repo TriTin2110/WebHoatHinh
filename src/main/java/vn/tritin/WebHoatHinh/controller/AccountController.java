@@ -1,6 +1,7 @@
 package vn.tritin.WebHoatHinh.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,10 +30,20 @@ public class AccountController {
 		this.userSer = userSer;
 	}
 
+	@GetMapping("/home")
+	public String showHomePage() {
+		return "home";
+	}
+
 	@GetMapping("/sign-up")
 	public String showSignUpPage(Model model) {
 		model.addAttribute("ru", new RegisterUser());
 		return "sign-up";
+	}
+
+	@GetMapping("/sign-in")
+	public String showSignInPage() {
+		return "sign-in";
 	}
 
 	@PostMapping("/create-user")
@@ -56,7 +67,7 @@ public class AccountController {
 	public User createUser(RegisterUser ru) {
 		Role role = roleSer.selectById(ru.getRole());
 		role = (role == null) ? new Role(ru.getRole()) : role;
-		Account account = new Account(ru.getUserName(), ru.getPassword(), role);
+		Account account = new Account(ru.getUserName(), new BCryptPasswordEncoder().encode(ru.getPassword()), role);
 		User user = new User(ru.getEmail(), ru.getFullName(), null, ru.isGender(), 0, ru.getDateOfBirth(), account);
 		account.setUser(user);
 		return user;
