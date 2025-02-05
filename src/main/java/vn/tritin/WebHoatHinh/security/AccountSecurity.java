@@ -1,7 +1,6 @@
 package vn.tritin.WebHoatHinh.security;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -11,7 +10,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import vn.tritin.WebHoatHinh.service.AccountService;
 
-@Configuration
 public class AccountSecurity {
 	@Bean
 	public DaoAuthenticationProvider createAuthenticationProvider(AccountService service) {
@@ -30,4 +28,5 @@ public class AccountSecurity {
 		http.csrf(csrf -> csrf.disable());
 		return http.build();
 	}
+
 }

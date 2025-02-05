@@ -3,9 +3,9 @@ package vn.tritin.WebHoatHinh.dao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
-import vn.tritin.WebHoatHinh.entity.User;
+import vn.tritin.WebHoatHinh.entity.Country;
 
 @RepositoryRestResource
-public interface DAOUser extends JpaRepository<User, Integer> {
-	public User findByEmail(String email);
+public interface DAOCountry extends JpaRepository<Country, Integer> {
+	public Country findByName(String name);
 }

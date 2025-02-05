@@ -1,4 +1,4 @@
-package vn.tritin.WebHoatHinh.entity;
+package vn.tritin.WebHoatHinh.model;
 
 import java.sql.Date;
 

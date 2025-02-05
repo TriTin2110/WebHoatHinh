@@ -25,4 +25,16 @@ public class RoleServiceImpl implements RoleService {
 		return (opt.isEmpty()) ? null : opt.get();
 	}
 
+	@Override
+	public void save(Role role) {
+		// TODO Auto-generated method stub
+		dao.save(role);
+	}
+
+	@Override
+	public void merge(Role role) {
+		// TODO Auto-generated method stub
+		dao.saveAndFlush(role);
+	}
+
 }

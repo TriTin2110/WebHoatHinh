@@ -8,4 +8,6 @@ public interface UserService {
 	public boolean update(User user);
 
 	public void delete(User user);
+
+	public User selectUserByEmail(String email);
 }
