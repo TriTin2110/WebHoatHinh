@@ -17,10 +17,10 @@ public class Country {
 	private int id;
 	private String name;
 
-	@OneToMany(mappedBy = "country", cascade = { CascadeType.MERGE, CascadeType.REMOVE })
+	@OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
 	private List<Video> videos;
 
-	@OneToMany(mappedBy = "country", cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
 	private List<Studio> studios;
 
 	public Country() {

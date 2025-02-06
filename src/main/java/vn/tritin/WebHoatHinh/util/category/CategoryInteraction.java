@@ -19,13 +19,13 @@ public class CategoryInteraction {
 		Category category = categorySer.findByName(name);
 		if (category == null) {
 			category = new Category(name);
-			categorySer.save(category);
-			category = categorySer.findByName(name);
+			category = categorySer.save(category);
 		}
 		return category;
 	}
 
-	public void update(Category category) {
-		categorySer.merge(category);
+	public Category update(Category category) {
+		return categorySer.merge(category);
 	}
+
 }

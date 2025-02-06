@@ -18,6 +18,15 @@ public class VideoTag {
 	public VideoTag() {
 	}
 
+	public VideoTag(String id, String name, String avatar, String typeOfVideo, String duration, int viewer) {
+		this.id = id;
+		this.name = name;
+		this.avatar = avatar;
+		this.typeOfVideo = typeOfVideo;
+		this.duration = duration;
+		this.viewer = viewer;
+	}
+
 	public VideoTag(String id, String name, String avatar, String typeOfVideo, String duration, int viewer,
 			Video video) {
 		this.id = id;

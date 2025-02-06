@@ -5,7 +5,7 @@ import vn.tritin.WebHoatHinh.entity.Country;
 public interface CountryService {
 	public Country findByName(String name);
 
-	public void save(Country country);
+	public Country save(Country country);
 
-	public void merge(Country country);
+	public Country merge(Country country);
 }

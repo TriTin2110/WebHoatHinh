@@ -31,54 +31,56 @@ public class AttributeAddition {
 		this.studioInt = studioInt;
 	}
 
-	public Video createOtherEntity(VideoCreator videoCreator, Video video) {
-		String countryName = videoCreator.getCountry();
-		String categoriesName = videoCreator.getCategories();
-		String studioName = videoCreator.getStudio();
-
-		if (countryName != null) {
-			Country country = countryInt.findCountry(countryName);
-			country.getVideos().add(video);
-			countryInt.update(country);
-
-			video.setCountry(country);
-		}
-		if (categoriesName != null) {
-			String[] categoryListStr = categoriesName.split(",");
-			List<Category> categories = new ArrayList<Category>();
-
-			for (String name : categoryListStr) {
-				Category category = categoryInt.findCategories(name);
-				category.getVideos().add(video);
-				categoryInt.update(category);
-
-				categories.add(category);
-			}
-
-			video.setCategories(categories);
-		}
-		if (studioName != null) {
-			Studio studio = studioInt.findStudio(studioName);
-			studio.getVideos().add(video);
-			studioInt.update(studio);
-
-			video.setStudio(studio);
-		}
-
-		return video;
-	}
-
-	public Video createAttribute(VideoCreator videoCreator) {
+	public Video createAttribute(VideoCreator videoCreator, String storingPath) {
 		Video video = new Video();
 		video.setId(videoCreator.getId());
 		video.setName(videoCreator.getName());
 		video.setAvatar(videoCreator.getAvatar());
 		video.setDirector(videoCreator.getDirector());
 		video.setLanguage(videoCreator.getLanguage());
+
+		video = createOtherEntity(videoCreator, video);
+
+		video.setVideoDetail(createVideoDetail(storingPath, video));
+
+		video.setVideoTag(createVideoTag(video));
+
 		return video;
 	}
 
-	public VideoDetail createVideoDetail(Video video, String storingPath) {
+	public Video createOtherEntity(VideoCreator videoCreator, Video video) {
+		String countryName = videoCreator.getCountry();
+		String categoriesName = videoCreator.getCategories();
+		String studioName = videoCreator.getStudio();
+		Country country = null;
+		List<Category> categories = new ArrayList<Category>();
+		Studio studio = null;
+
+		if (countryName != null) {
+			country = countryInt.findCountry(countryName);
+		}
+
+		if (categoriesName != null) {
+			String[] categoryListStr = categoriesName.split(",");
+
+			for (String name : categoryListStr) {
+				Category category = categoryInt.findCategories(name);
+				categories.add(category);
+			}
+		}
+
+		if (studioName != null && countryName != null) {
+			studio = studioInt.setCountryAndVideoForStudio(studioName, country);
+		}
+
+		video.setCategories(categories);
+		video.setStudio(studio);
+		video.setCountry(country);
+
+		return video;
+	}
+
+	public VideoDetail createVideoDetail(String storingPath, Video video) {
 		VideoDetail detail = new VideoDetail(video.getId(), storingPath, video);
 		return detail;
 	}

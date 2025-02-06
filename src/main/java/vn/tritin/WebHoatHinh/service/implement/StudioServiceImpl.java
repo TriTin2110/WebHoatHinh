@@ -23,15 +23,15 @@ public class StudioServiceImpl implements StudioService {
 	}
 
 	@Override
-	public void add(Studio studio) {
+	public Studio add(Studio studio) {
 		// TODO Auto-generated method stub
-		dao.save(studio);
+		return dao.save(studio);
 	}
 
 	@Override
-	public void merge(Studio studio) {
+	public Studio merge(Studio studio) {
 		// TODO Auto-generated method stub
-		dao.saveAndFlush(studio);
+		return dao.saveAndFlush(studio);
 	}
 
 }

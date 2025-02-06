@@ -3,6 +3,7 @@ package vn.tritin.WebHoatHinh.service.implement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import vn.tritin.WebHoatHinh.dao.DAOCountry;
 import vn.tritin.WebHoatHinh.entity.Country;
 import vn.tritin.WebHoatHinh.service.CountryService;
@@ -23,15 +24,17 @@ public class CountryServiceImpl implements CountryService {
 	}
 
 	@Override
-	public void save(Country country) {
+	@Transactional
+	public Country save(Country country) {
 		// TODO Auto-generated method stub
-		dao.save(country);
+		return dao.save(country);
 	}
 
 	@Override
-	public void merge(Country country) {
+	@Transactional
+	public Country merge(Country country) {
 		// TODO Auto-generated method stub
-		dao.saveAndFlush(country);
+		return dao.saveAndFlush(country);
 	}
 
 }

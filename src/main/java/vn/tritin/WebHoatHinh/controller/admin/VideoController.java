@@ -42,10 +42,7 @@ public class VideoController {
 				e.printStackTrace();
 				return;
 			}
-			video = addition.createAttribute(videoCreator);
-			video = addition.createOtherEntity(videoCreator, video);
-			video.setVideoDetail(addition.createVideoDetail(video, storingPath));
-			video.setVideoTag(addition.createVideoTag(video));
+			video = addition.createAttribute(videoCreator, storingPath);
 			service.save(video);
 		}
 	}

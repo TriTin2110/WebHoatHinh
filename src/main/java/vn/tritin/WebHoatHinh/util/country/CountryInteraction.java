@@ -19,17 +19,17 @@ public class CountryInteraction {
 		Country country = service.findByName(countryName);
 		if (country == null) {
 			country = new Country(countryName);
-			add(country);
-			country = service.findByName(countryName);
+			country = add(country);
 		}
 		return country;
 	}
 
-	public void add(Country country) {
-		service.save(country);
+	public Country add(Country country) {
+		return service.save(country);
 	}
 
 	public void update(Country country) {
 		service.merge(country);
 	}
+
 }

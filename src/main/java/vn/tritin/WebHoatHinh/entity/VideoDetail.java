@@ -17,6 +17,11 @@ public class VideoDetail {
 	public VideoDetail() {
 	}
 
+	public VideoDetail(String id, String path) {
+		this.id = id;
+		this.path = path;
+	}
+
 	public VideoDetail(String id, String path, Video video) {
 		super();
 		this.id = id;

@@ -5,7 +5,7 @@ import vn.tritin.WebHoatHinh.entity.Studio;
 public interface StudioService {
 	public Studio findByName(String name);
 
-	public void add(Studio studio);
+	public Studio add(Studio studio);
 
-	public void merge(Studio studio);
+	public Studio merge(Studio studio);
 }

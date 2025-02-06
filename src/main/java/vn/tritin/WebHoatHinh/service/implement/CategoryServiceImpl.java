@@ -23,15 +23,15 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
-	public void save(Category category) {
+	public Category save(Category category) {
 		// TODO Auto-generated method stub
-		dao.save(category);
+		return dao.save(category);
 	}
 
 	@Override
-	public void merge(Category category) {
+	public Category merge(Category category) {
 		// TODO Auto-generated method stub
-		dao.saveAndFlush(category);
+		return dao.saveAndFlush(category);
 	}
 
 }
