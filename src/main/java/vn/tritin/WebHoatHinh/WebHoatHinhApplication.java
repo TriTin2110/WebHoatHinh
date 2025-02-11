@@ -10,5 +10,4 @@ public class WebHoatHinhApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(WebHoatHinhApplication.class, args);
 	}
-
 }

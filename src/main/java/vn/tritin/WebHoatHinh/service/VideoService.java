@@ -1,5 +1,7 @@
 package vn.tritin.WebHoatHinh.service;
 
+import java.util.List;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import vn.tritin.WebHoatHinh.entity.Video;
@@ -9,5 +11,9 @@ public interface VideoService {
 
 	public void save(Video video);
 
-	public String postVideo(String path, MultipartFile file) throws Exception;
+	public List<Video> selectAll();
+
+	public String saveFile(String path, MultipartFile file) throws Exception;
+
+	public List<Video> updateCache();
 }

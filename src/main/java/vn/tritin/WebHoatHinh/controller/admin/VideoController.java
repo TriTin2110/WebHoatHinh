@@ -19,8 +19,12 @@ import vn.tritin.WebHoatHinh.util.video.AttributeAddition;
 public class VideoController {
 	private VideoService service;
 	private AttributeAddition addition;
+
 	@Value("${path.video}")
-	private String path;
+	private String pathVideo;
+
+	@Value("${path.avatar}")
+	private String pathAvatar;
 
 	@Autowired
 	public VideoController(VideoService service, AttributeAddition addition) {
@@ -30,20 +34,28 @@ public class VideoController {
 
 	@PostMapping("/post")
 	public void postVideo(@ModelAttribute("video") VideoCreator videoCreator,
-			@RequestParam("video") MultipartFile file) {
+			@RequestParam("video") MultipartFile videoFile, @RequestParam("avatar") MultipartFile avatarFile) {
 		Video video = service.findById(videoCreator.getId());
 		if (video != null) {
+			System.out.println("Video đã tồn tại");
 		} else {
-			String storingPath = null;
+			String storingVideoPath = null;
+			String storingAvatarPath = null;
 			try {
-				storingPath = service.postVideo(path, file);
+				storingVideoPath = service.saveFile(pathVideo, videoFile);
+				storingAvatarPath = service.saveFile(pathAvatar, avatarFile);
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 				return;
 			}
-			video = addition.createAttribute(videoCreator, storingPath);
+
+			videoCreator.setPathVideo(storingVideoPath);
+			videoCreator.setPathAvatar(storingAvatarPath);
+
+			video = addition.createAttribute(videoCreator);
 			service.save(video);
+			service.updateCache();
 		}
 	}
 }

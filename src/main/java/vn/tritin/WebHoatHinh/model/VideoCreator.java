@@ -12,18 +12,18 @@ public class VideoCreator {
 	@Size(min = 3, message = "Độ dài tối thiểu là 6 ký tự!")
 	private String name;
 
-	private String avatar, director, language, country, categories, studio;
+	private String pathAvatar, pathVideo, director, language, country, categories, studio;
 
 	public VideoCreator() {
 	}
 
-	public VideoCreator(
-			@NotBlank(message = "Không được để trống ID!") @Size(min = 7, message = "Độ dài tối thiểu là 6 ký tự!") String id,
-			@NotBlank(message = "Không được để trống tên!") @Size(min = 3, message = "Độ dài tối thiểu là 6 ký tự!") String name,
-			String avatar, String director, String language, String country, String categories, String studio) {
+	public VideoCreator(String id, String name, String pathAvatar, String pathVideo, String director, String language,
+			String country, String categories, String studio) {
+		super();
 		this.id = id;
 		this.name = name;
-		this.avatar = avatar;
+		this.pathAvatar = pathAvatar;
+		this.pathVideo = pathVideo;
 		this.director = director;
 		this.language = language;
 		this.country = country;
@@ -47,12 +47,20 @@ public class VideoCreator {
 		this.name = name;
 	}
 
-	public String getAvatar() {
-		return avatar;
+	public String getPathAvatar() {
+		return pathAvatar;
 	}
 
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
+	public void setPathAvatar(String pathAvatar) {
+		this.pathAvatar = pathAvatar;
+	}
+
+	public String getPathVideo() {
+		return pathVideo;
+	}
+
+	public void setPathVideo(String pathVideo) {
+		this.pathVideo = pathVideo;
 	}
 
 	public String getDirector() {

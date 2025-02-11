@@ -3,9 +3,12 @@ package vn.tritin.WebHoatHinh.service.implement;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +27,7 @@ public class VideoServiceImpl implements VideoService {
 	}
 
 	@Override
+	@Cacheable("video_id")
 	public Video findById(String id) {
 		// TODO Auto-generated method stub
 		Optional<Video> opt = dao.findById(id);
@@ -38,19 +42,32 @@ public class VideoServiceImpl implements VideoService {
 	}
 
 	@Override
-	public String postVideo(String path, MultipartFile file) throws Exception {
+	public String saveFile(String path, MultipartFile file) throws Exception {
 		// TODO Auto-generated method stub
-		String videoName = file.getOriginalFilename();
+		String resultPath = file.getOriginalFilename();
+		String fileName = System.currentTimeMillis()
+				+ resultPath.substring(resultPath.lastIndexOf("."), resultPath.length());
 
-		String storingPath = path + File.separator + System.currentTimeMillis() + "-"
-				+ videoName.substring(videoName.lastIndexOf("."), videoName.length());
+		String storingPath = path + File.separator + fileName;
 
 		File pathDir = new File(path);
 		if (!pathDir.exists())
 			pathDir.mkdirs();
 
 		Files.copy(file.getInputStream(), Path.of(storingPath));
-		return videoName;
+		return fileName;
+	}
+
+	@Override
+	@Cacheable("videos")
+	public List<Video> selectAll() {
+		return dao.findAll();
+	}
+
+	@CachePut("videos")
+	public List<Video> updateCache() {
+		System.out.println("Đã thực hiện");
+		return dao.findAll();
 	}
 
 }

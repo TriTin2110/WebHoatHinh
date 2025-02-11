@@ -1,0 +1,118 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>MovieHunter</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="all" />
+
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-func.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+</head>
+<body>
+<!-- START PAGE SOURCE -->
+<div id="shell">
+  <div id="header" class="sticky-top">
+    <h1 id="logo"><a href="#">Web hoạt hình</a></h1>
+    <div id="right-header">
+      
+      <div id="navigation">
+        <ul>
+          <li><a class="active" href="#">Trang chủ</a></li>
+          <li><a href="#">Tin tức</a></li>
+          <li><a href="#">Thể loại</a></li>
+          <li><a href="#">Đăng nhập / Đăng ký</a></li>
+        </ul>
+        <div id="search">
+          <form id="search-form" action="#" method="get" accept-charset="utf-8">
+            <input type="text" name="search field" placeholder="Nhập nội dung tìm kiếm..." id="search-field"
+              class="blink search-field form-control" />
+            <input type="submit" value="Tìm!" style="margin-bottom: 8px;" class="btn btn-success" />
+          </form>
+        </div>
+    </div>
+    
+    </div>
+  </div>
+
+  <div id="main">
+    <div id="content">
+	
+      <div class="box">
+      	
+      
+        <div class="movie" th:each="video : ${videos}">
+        <div th:text="${video.name}" style="color: white">...</div>
+           <div class="movie-image"> <a href="#"><img th:src="@{'img/video-avatar/'+${video.avatar}}" alt="" /></a> </div>
+          <div ><a href="#" class="name" th:text="${video.name}"></a></div>
+          <div class="rating">
+              <p>RATING</p>
+              <div class="stars">
+                <div class="stars-in"> </div>
+              </div>
+            <div class="comments">12</div> </div>
+        </div>
+        
+        <div class="cl">&nbsp;</div>
+      </div>
+    </div>
+
+    <div id="news">
+      <div class="head">
+        <h3>NEWS</h3>
+        <p class="text-right"><a href="#">See all</a></p>
+      </div>
+      <div class="content">
+        <p class="date">12.04.09</p>
+        <h4 class="header-news">Disney's A Christmas Carol</h4>
+        <p>&quot;Disney's A Christmas Carol,&quot; a multi-sensory thrill ride re-envisioned by Academy Award&reg;-winning filmmaker Robert Zemeckis, captures... </p>
+        <a href="#">Read more</a> </div>
+      <div class="content">
+        <p class="date">11.04.09</p>
+        <h4 class="header-news">Where the Wild Things Are</h4>
+        <p>Innovative director Spike Jonze collaborates with celebrated author Maurice Sendak to bring one of the most beloved books of all time to the big screen in &quot;Where the Wild Things Are,&quot;...</p>
+        <a href="#">Read more</a> </div>
+      <div class="content">
+        <p class="date">10.04.09</p>
+        <h4 class="header-news">The Box</h4>
+        <p>Norma and Arthur Lewis are a suburban couple with a young child who receive an anonymous gift bearing fatal and irrevocable consequences.</p>
+        <a href="#">Read more</a> </div>
+    </div>
+    <div id="coming">
+      <div class="head">
+        <h3>COMING SOON<strong>!</strong></h3>
+        <p class="text-right"><a href="#">See all</a></p>
+      </div>
+      <div class="content">
+        <h4 class="header-news">The Princess and the Frog </h4>
+        <a href="#"><img src="css/images/coming-soon1.jpg" alt="" /></a>
+        <p>Walt Disney Animation Studios presents the musical &quot;The Princess and the Frog,&quot; an animated comedy set in the great city of New Orleans...</p>
+        <a href="#">Read more</a> </div>
+      <div class="cl">&nbsp;</div>
+      <div class="content">
+        <h4 class="header-news">The Princess and the Frog </h4>
+        <a href="#"><img src="css/images/coming-soon2.jpg" alt="" /></a>
+        <p>Walt Disney Animation Studios presents the musical &quot;The Princess and the Frog,&quot; an animated comedy set in the great city of New Orleans...</p>
+        <a href="#">Read more</a> </div>
+    </div>
+    <div class="cl">&nbsp;</div>
+  </div>
+
+  <div id="footer">
+    <p class="lf">
+      <span>Copyright &copy; 2010 <a href="#">SiteName</a> - All Rights Reserved</span>
+      <div class="social"> <span>Theo dõi chúng tôi tại:</span>
+        <ul>
+          <li><a class="twitter" href="#">twitter</a></li>
+          <li><a class="facebook" href="#">facebook</a></li>
+          <li><a class="vimeo" href="#">vimeo</a></li>
+          <li><a class="rss" href="#">rss</a></li>
+        </ul>
+      </div>
+    </p>
+  </div>
+</div>
+<!-- END PAGE SOURCE -->
+</body>
+</html>

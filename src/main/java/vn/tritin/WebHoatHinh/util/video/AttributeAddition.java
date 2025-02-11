@@ -31,17 +31,21 @@ public class AttributeAddition {
 		this.studioInt = studioInt;
 	}
 
-	public Video createAttribute(VideoCreator videoCreator, String storingPath) {
+	public Video createAttribute(VideoCreator videoCreator) {
 		Video video = new Video();
+
+		String videoPath = videoCreator.getPathVideo();
+		String avatarPath = videoCreator.getPathAvatar();
+
 		video.setId(videoCreator.getId());
 		video.setName(videoCreator.getName());
-		video.setAvatar(videoCreator.getAvatar());
+		video.setAvatar(avatarPath);
 		video.setDirector(videoCreator.getDirector());
 		video.setLanguage(videoCreator.getLanguage());
 
 		video = createOtherEntity(videoCreator, video);
 
-		video.setVideoDetail(createVideoDetail(storingPath, video));
+		video.setVideoDetail(createVideoDetail(videoPath, video));
 
 		video.setVideoTag(createVideoTag(video));
 
@@ -80,8 +84,8 @@ public class AttributeAddition {
 		return video;
 	}
 
-	public VideoDetail createVideoDetail(String storingPath, Video video) {
-		VideoDetail detail = new VideoDetail(video.getId(), storingPath, video);
+	public VideoDetail createVideoDetail(String videoPath, Video video) {
+		VideoDetail detail = new VideoDetail(video.getId(), videoPath, video);
 		return detail;
 	}
 
