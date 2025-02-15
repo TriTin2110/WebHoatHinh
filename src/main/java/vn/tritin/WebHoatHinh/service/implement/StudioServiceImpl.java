@@ -1,6 +1,10 @@
 package vn.tritin.WebHoatHinh.service.implement;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import vn.tritin.WebHoatHinh.dao.DAOStudio;
@@ -19,7 +23,8 @@ public class StudioServiceImpl implements StudioService {
 	@Override
 	public Studio findByName(String name) {
 		// TODO Auto-generated method stub
-		return dao.findByName(name);
+		Optional<Studio> studio = dao.findById(name);
+		return studio == null ? null : studio.get();
 	}
 
 	@Override
@@ -32,6 +37,13 @@ public class StudioServiceImpl implements StudioService {
 	public Studio merge(Studio studio) {
 		// TODO Auto-generated method stub
 		return dao.saveAndFlush(studio);
+	}
+
+	@Override
+	@Cacheable("studios")
+	public List<Studio> findAll() {
+		// TODO Auto-generated method stub
+		return dao.findAll();
 	}
 
 }

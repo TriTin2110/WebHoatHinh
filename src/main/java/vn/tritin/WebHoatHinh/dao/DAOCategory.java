@@ -6,6 +6,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import vn.tritin.WebHoatHinh.entity.Category;
 
 @RepositoryRestResource
-public interface DAOCategory extends JpaRepository<Category, Integer> {
-	public Category findByName(String name);
+public interface DAOCategory extends JpaRepository<Category, String> {
 }

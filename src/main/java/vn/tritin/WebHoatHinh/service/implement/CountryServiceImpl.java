@@ -1,6 +1,10 @@
 package vn.tritin.WebHoatHinh.service.implement;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -20,7 +24,8 @@ public class CountryServiceImpl implements CountryService {
 	@Override
 	public Country findByName(String name) {
 		// TODO Auto-generated method stub
-		return dao.findByName(name);
+		Optional<Country> country = dao.findById(name);
+		return country == null ? null : country.get();
 	}
 
 	@Override
@@ -35,6 +40,13 @@ public class CountryServiceImpl implements CountryService {
 	public Country merge(Country country) {
 		// TODO Auto-generated method stub
 		return dao.saveAndFlush(country);
+	}
+
+	@Override
+	@Cacheable("countries")
+	public List<Country> findAll() {
+		// TODO Auto-generated method stub
+		return dao.findAll();
 	}
 
 }

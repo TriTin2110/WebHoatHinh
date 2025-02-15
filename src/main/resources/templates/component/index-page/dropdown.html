@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div id="navigation" th:fragment="dropdown">
+		<ul>
+			<li><a class="active" href="/">Trang chủ</a></li>
+			<li><a href="#">Tin tức</a></li>
+			<li>
+				<div id="drop-down">
+					<a href="#" id="drop-button">Thể loại</a>
+					<div id="drop-box">
+						<a class="item">Item 1</a> <a class="item">Item 1</a> <a
+							class="item">Item 1</a> <a class="item">Item 1</a>
+					</div>
+				</div>
+			</li>
+			<li><a href="#">Đăng nhập / Đăng ký</a></li>
+		</ul>
+		<div id="search">
+			<form id="search-form" action="#" method="get" accept-charset="utf-8">
+				<input type="text" name="search field"
+					placeholder="Nhập nội dung tìm kiếm..." id="search-field"
+					class="blink search-field form-control" /> <input type="submit"
+					value="Tìm!" style="margin-bottom: 8px;" class="btn btn-success" />
+			</form>
+		</div>
+	</div>
+</body>
+</html>

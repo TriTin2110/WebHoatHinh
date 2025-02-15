@@ -6,6 +6,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import vn.tritin.WebHoatHinh.entity.Country;
 
 @RepositoryRestResource
-public interface DAOCountry extends JpaRepository<Country, Integer> {
-	public Country findByName(String name);
+public interface DAOCountry extends JpaRepository<Country, String> {
 }

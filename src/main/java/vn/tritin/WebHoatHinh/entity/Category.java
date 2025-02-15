@@ -3,20 +3,21 @@ package vn.tritin.WebHoatHinh.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Category {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
 	private String name;
+
+	@OneToOne(mappedBy = "category", cascade = CascadeType.ALL)
+	private CategoryMenuComponent categoryMenuComponent;
 
 	@ManyToMany
 	@JoinTable(name = "videos_categories", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "video_id"))
@@ -35,14 +36,6 @@ public class Category {
 		this.videos = videos;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -57,6 +50,14 @@ public class Category {
 
 	public void setVideos(List<Video> videos) {
 		this.videos = videos;
+	}
+
+	public CategoryMenuComponent getCategoryMenuComponent() {
+		return categoryMenuComponent;
+	}
+
+	public void setCategoryMenuComponent(CategoryMenuComponent categoryMenuComponent) {
+		this.categoryMenuComponent = categoryMenuComponent;
 	}
 
 }

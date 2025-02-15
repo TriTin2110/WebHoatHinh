@@ -6,6 +6,5 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import vn.tritin.WebHoatHinh.entity.Studio;
 
 @RepositoryRestResource
-public interface DAOStudio extends JpaRepository<Studio, Integer> {
-	public Studio findByName(String name);
+public interface DAOStudio extends JpaRepository<Studio, String> {
 }

@@ -5,8 +5,6 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -15,8 +13,6 @@ import jakarta.persistence.OneToMany;
 @Entity
 public class Studio {
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
 	private String name;
 
 	@OneToMany(mappedBy = "studio", cascade = { CascadeType.MERGE, CascadeType.REMOVE })
@@ -38,14 +34,6 @@ public class Studio {
 		this.name = name;
 		this.videos = videos;
 		this.country = country;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -70,11 +58,6 @@ public class Studio {
 
 	public void setCountry(Country country) {
 		this.country = country;
-	}
-
-	@Override
-	public String toString() {
-		return "Studio [id=" + id + ", name=" + name + "]";
 	}
 
 }

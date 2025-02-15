@@ -11,7 +11,7 @@ public interface VideoService {
 
 	public void save(Video video);
 
-	public List<Video> selectAll();
+	public List<Video> findAll();
 
 	public String saveFile(String path, MultipartFile file) throws Exception;
 

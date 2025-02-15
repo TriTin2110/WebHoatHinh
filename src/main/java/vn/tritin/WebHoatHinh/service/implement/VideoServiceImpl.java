@@ -61,7 +61,7 @@ public class VideoServiceImpl implements VideoService {
 
 	@Override
 	@Cacheable("videos")
-	public List<Video> selectAll() {
+	public List<Video> findAll() {
 		return dao.findAll();
 	}
 
