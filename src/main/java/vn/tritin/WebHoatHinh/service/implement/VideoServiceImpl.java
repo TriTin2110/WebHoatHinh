@@ -31,7 +31,8 @@ public class VideoServiceImpl implements VideoService {
 	public Video findById(String id) {
 		// TODO Auto-generated method stub
 		Optional<Video> opt = dao.findById(id);
-		return (opt.isEmpty()) ? null : opt.get();
+		Video video = (opt.isEmpty()) ? null : opt.get();
+		return video;
 	}
 
 	@Override
@@ -66,7 +67,6 @@ public class VideoServiceImpl implements VideoService {
 
 	@CachePut("videos")
 	public List<Video> updateCache() {
-		System.out.println("Đã thực hiện");
 		return dao.findAll();
 	}
 

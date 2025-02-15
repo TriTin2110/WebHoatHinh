@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<div id="header" class="sticky-top" th:fragment="header">
+			<h1 id="logo">
+				<a href="/">Web hoạt hình</a>
+			</h1>
+			<div id="right-header">
+
+				<div id="navigation">
+					<ul>
+						<li><a class="active" href="/">Trang chủ</a></li>
+						<li><a href="#">Tin tức</a></li>
+						<li><a href="#">Thể loại</a></li>
+						<li><a href="#">Đăng nhập / Đăng ký</a></li>
+					</ul>
+					<div id="search">
+						<form id="search-form" action="#" method="get"
+							accept-charset="utf-8">
+							<input type="text" name="search field"
+								placeholder="Nhập nội dung tìm kiếm..." id="search-field"
+								class="blink search-field form-control" /> <input type="submit"
+								value="Tìm!" style="margin-bottom: 8px;" class="btn btn-success" />
+						</form>
+					</div>
+				</div>
+
+			</div>
+		</div>
+</body>
+</html>

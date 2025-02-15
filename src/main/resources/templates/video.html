@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title th:text="${video?.name}">Document</title>
+<link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
+<link rel="stylesheet" href="css/video.css" type="text/css" media="all" />
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"
+	media="all" />
+
+<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-func.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+	<div id="shell">
+		<div th:replace="~{component/index-page/header.html :: header}"></div>
+
+		<div id="main">
+			<div>
+				<h3 th:text="${video?.name}" style="color: white;">...</h3>
+				<video id="video-show"
+					th:src="@{video/{path}(path=${videoDetail?.path})}" controls></video>
+			</div>
+
+			<div th:replace="~{component/video-page/slider.html :: slider(${videos})}"></div>
+
+		</div>
+
+		<div th:replace="~{component/index-page/footer.html :: footer}"></div>
+	</div>
+</body>
+<script type="text/javascript" src="js/video.js"></script>
+
+</html>

@@ -78,6 +78,11 @@ h4 {
 #header {
 	background: url('images/body-bg.gif');
 	height: 90px;
+	opacity: 0.8;
+}
+#header:hover
+{
+	opacity: 1.0;
 }
 h1#logo {
 	position:absolute;

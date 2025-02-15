@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+	<div id="carouselExample" class="carousel slide"
+		th:fragment="slider(videos)">
+		<div class="carousel-inner">
+
+			<div class="carousel-item active">
+				<div class="card-group">
+					<a class="card video-content" th:each="v, sta : ${videos}"
+						th:if="${sta.count} <= 4" th:href="@{${v.id}}">
+						<img
+							class="video-avatar card-img-top"
+							th:src="'img/video-avatar/'+${v.avatar}" alt="..."> <span
+							class="card-body" style="color: white;"> <span
+								class="card-text" th:text="${v.name}">...</span>
+						</span>
+					</a>
+				</div>
+			</div>
+
+			<div class="carousel-item">
+				<div class="card-group">
+					<a class="card video-content"
+						th:each="v, iter : ${videos}"
+						th:if="${iter.count} > 4 and ${iter.count} <= 8" th:href="@{${v.id}}">
+						<img class="video-avatar card-img-top"
+							th:src="'img/video-avatar/'+${v.avatar}" alt="..."> <span
+							class="card-body" style="color: white;"> <span
+								class="card-text" th:text="${v.name}">...</span>
+						</span>
+					</a>
+				</div>
+			</div>
+		</div>
+		<button class="carousel-control-prev slider-button" type="button"
+			data-bs-target="#carouselExample" data-bs-slide="prev"
+			style="width: 3%;">
+			<span class="carousel-control-prev-icon" aria-hidden="true"></span> <span
+				class="visually-hidden">Previous</span>
+		</button>
+		<button class="carousel-control-next slider-button" type="button"
+			data-bs-target="#carouselExample" data-bs-slide="next"
+			style="width: 3%;">
+			<span class="carousel-control-next-icon" aria-hidden="true"></span> <span
+				class="visually-hidden">Next</span>
+		</button>
+	</div>
+</body>
+</html>
