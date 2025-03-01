@@ -16,4 +16,6 @@ public interface VideoService {
 	public String saveFile(String path, MultipartFile file) throws Exception;
 
 	public List<Video> updateCache();
+
+	public List<Video> getVideoByName(List<Video> videos, String name);
 }

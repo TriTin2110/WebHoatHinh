@@ -24,7 +24,7 @@ public class CategoryServiceImpl implements CategoryService {
 	public Category findByName(String name) {
 		// TODO Auto-generated method stub
 		Optional<Category> category = dao.findById(name);
-		return category == null ? null : category.get();
+		return category.isEmpty() ? null : category.get();
 	}
 
 	@Override

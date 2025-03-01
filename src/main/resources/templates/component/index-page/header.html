@@ -5,12 +5,12 @@
 <title>Insert title here</title>
 </head>
 <body>
-<div id="header" class="sticky-top" th:fragment="header">
+<div id="header" class="sticky-top" th:fragment="header(categories)">
 			<h1 id="logo">
 				<a href="/">Web hoạt hình</a>
 			</h1>
 			<div id="right-header">
-			<div th:replace="~{/component/index-page/dropdown.html :: dropdown}">
+			<div th:replace="~{/component/index-page/dropdown.html :: dropdown(${categories})}">
 			</div>
 			</div>
 		</div>

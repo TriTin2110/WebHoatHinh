@@ -12,4 +12,5 @@ public interface CategoryService {
 	public Category merge(Category category);
 
 	public List<Category> findAll();
+
 }

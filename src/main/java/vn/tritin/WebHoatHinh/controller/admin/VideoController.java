@@ -32,30 +32,27 @@ public class VideoController {
 		this.addition = addition;
 	}
 
-	@PostMapping("/post")
+	@PostMapping("/saving")
 	public void postVideo(@ModelAttribute("video") VideoCreator videoCreator,
 			@RequestParam("video") MultipartFile videoFile, @RequestParam("avatar") MultipartFile avatarFile) {
 		Video video = service.findById(videoCreator.getId());
-		if (video != null) {
-			System.out.println("Video đã tồn tại");
-		} else {
-			String storingVideoPath = null;
-			String storingAvatarPath = null;
-			try {
-				storingVideoPath = service.saveFile(pathVideo, videoFile);
-				storingAvatarPath = service.saveFile(pathAvatar, avatarFile);
-			} catch (Exception e) {
-				// TODO: handle exception
-				e.printStackTrace();
-				return;
-			}
-
-			videoCreator.setPathVideo(storingVideoPath);
-			videoCreator.setPathAvatar(storingAvatarPath);
-
-			video = addition.createAttribute(videoCreator);
-			service.save(video);
-			service.updateCache();
+		String storingVideoPath = null;
+		String storingAvatarPath = null;
+		try {
+			storingVideoPath = service.saveFile(pathVideo, videoFile);
+			storingAvatarPath = service.saveFile(pathAvatar, avatarFile);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return;
 		}
+
+		videoCreator.setPathVideo(storingVideoPath);
+		videoCreator.setPathAvatar(storingAvatarPath);
+
+		video = addition.createAttribute(videoCreator);
+		service.save(video);
+		service.updateCache();
 	}
+
 }

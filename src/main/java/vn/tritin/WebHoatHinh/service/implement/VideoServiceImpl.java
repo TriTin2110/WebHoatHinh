@@ -5,6 +5,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -31,15 +33,14 @@ public class VideoServiceImpl implements VideoService {
 	public Video findById(String id) {
 		// TODO Auto-generated method stub
 		Optional<Video> opt = dao.findById(id);
-		Video video = (opt.isEmpty()) ? null : opt.get();
-		return video;
+		return (opt.isEmpty()) ? null : opt.get();
 	}
 
 	@Override
 	@Transactional
 	public void save(Video video) {
 		// TODO Auto-generated method stub
-		dao.save(video);
+		dao.saveAndFlush(video);
 	}
 
 	@Override
@@ -68,6 +69,22 @@ public class VideoServiceImpl implements VideoService {
 	@CachePut("videos")
 	public List<Video> updateCache() {
 		return dao.findAll();
+	}
+
+	@Override
+	public List<Video> getVideoByName(List<Video> videos, String name) {
+		// TODO Auto-generated method stub
+		String[] nameSplit = name.split(" ");
+
+		List<Video> foundVideos = videos.stream().filter(o -> {
+			for (String n : nameSplit) {
+				Pattern pattern = Pattern.compile(n, Pattern.CASE_INSENSITIVE);
+				Matcher matcher = pattern.matcher(o.getName());
+				return matcher.find();
+			}
+			return false;
+		}).toList();
+		return foundVideos;
 	}
 
 }

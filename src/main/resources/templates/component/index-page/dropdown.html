@@ -5,24 +5,23 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<div id="navigation" th:fragment="dropdown">
+	<div id="navigation" th:fragment="dropdown(categories)">
 		<ul>
 			<li><a class="active" href="/">Trang chủ</a></li>
 			<li><a href="#">Tin tức</a></li>
 			<li>
 				<div id="drop-down">
 					<a href="#" id="drop-button">Thể loại</a>
-					<div id="drop-box">
-						<a class="item">Item 1</a> <a class="item">Item 1</a> <a
-							class="item">Item 1</a> <a class="item">Item 1</a>
+					<div id="drop-box" th:each = "category: ${categories}">
+						<a class="item" th:text="${category.name}"></a>
 					</div>
 				</div>
 			</li>
 			<li><a href="#">Đăng nhập / Đăng ký</a></li>
 		</ul>
 		<div id="search">
-			<form id="search-form" action="#" method="get" accept-charset="utf-8">
-				<input type="text" name="search field"
+			<form id="search-form" th:action="@{/searching-video}" th:method="get" accept-charset="utf-8">
+				<input type="text" name="content-searched"
 					placeholder="Nhập nội dung tìm kiếm..." id="search-field"
 					class="blink search-field form-control" /> <input type="submit"
 					value="Tìm!" style="margin-bottom: 8px;" class="btn btn-success" />

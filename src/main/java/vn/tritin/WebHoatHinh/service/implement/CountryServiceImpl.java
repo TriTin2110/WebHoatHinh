@@ -25,7 +25,7 @@ public class CountryServiceImpl implements CountryService {
 	public Country findByName(String name) {
 		// TODO Auto-generated method stub
 		Optional<Country> country = dao.findById(name);
-		return country == null ? null : country.get();
+		return country.isEmpty() ? null : country.get();
 	}
 
 	@Override

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+                <div class="row" id="description" th:fragment="description(video, categories)">
+                        <div class="col-sm-7">
+                                <table class="description-table">
+                                        <tr>
+                                                <td rowspan="6"><img alt="Không có ảnh" th:src="@{/img/video-avatar/{image}(image=${video.avatar})}"></td>
+                                        </tr>
+                                        <tr>
+                                                <td colspan="2" style="color: white;" th:text="${video.name}">Tên</td>
+                                        </tr>
+                                        <tr>
+                                                <td>Ngôn ngữ: </td>
+                                                <td th:text="${video.language}">Tên Ngôn ngữ</td>
+                                        </tr>
+                                        <tr>
+                                                <td>Tình trạng: </td>
+                                                <td th:text="${video.status}">Tên Ngôn ngữ</td>
+                                        </tr>
+                                        <tr>
+                                                <td>Lượt xem: </td>
+                                                <td th:text="${video.viewer}">Tên Ngôn ngữ</td>
+                                        </tr>
+                                        <tr>
+                                                <td>Thể loại: </td>
+                                                <td th:each="category : ${categories}">
+                                                	<span th:text="${category.name}"></span>
+                                                </td>
+                                        </tr>
+                                        <tr>
+                                                <td>mô tả</td>
+                                        </tr>
+                                </table>
+                        </div>
+                        <div class="col-sm-1"></div>
+                        <div class="col-sm-4">
+                                <table class="description-table">
+                                        <tr>
+                                                <td>Tên studio: </td>
+                                                <td th:text="${video.studio.name}">Tên Studio</td>
+                                        </tr>
+                                        <tr>
+                                                <td>Quốc Gia: </td>
+                                                <td th:text="${video.country.name}"></td>
+                                        </tr>
+                                        <tr>
+                                                <td>mô tả</td>
+                                        </tr>
+                                </table>
+                        </div>
+                </div>
+</body>
+</html>

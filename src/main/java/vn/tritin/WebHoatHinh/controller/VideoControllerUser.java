@@ -7,59 +7,60 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.PostConstruct;
+import vn.tritin.WebHoatHinh.entity.Category;
 import vn.tritin.WebHoatHinh.entity.Video;
-import vn.tritin.WebHoatHinh.entity.VideoDetail;
 import vn.tritin.WebHoatHinh.service.CategoryService;
-import vn.tritin.WebHoatHinh.service.CountryService;
-import vn.tritin.WebHoatHinh.service.StudioService;
 import vn.tritin.WebHoatHinh.service.VideoService;
 
 @Controller
 public class VideoControllerUser {
+	private List<Video> videos;
+	private List<Category> categories;
+
 	private VideoService videoService;
 	private CategoryService categoryService;
-	private CountryService countryService;
-	private StudioService studioService;
 
 	@Autowired
-	public VideoControllerUser(VideoService videoService, CategoryService categoryService,
-			CountryService countryService, StudioService studioService) {
+	public VideoControllerUser(VideoService videoService, CategoryService categoryService) {
 		this.videoService = videoService;
 		this.categoryService = categoryService;
-		this.countryService = countryService;
-		this.studioService = studioService;
 	}
 
 	@PostConstruct
-	public void loadAllAttribute() {
-		videoService.findAll();
-		categoryService.findAll();
-		countryService.findAll();
-		studioService.findAll();
+	public void findAllData() {
+		videos = videoService.findAll();
+		categories = categoryService.findAll();
 	}
 
-	@GetMapping("/{videoId}")
+	@GetMapping("/view/{videoId}")
 	public String getVideo(@PathVariable String videoId, Model model) {
-		Video video = videoService.findById(videoId);
+		Video video = videos.stream().filter(o -> o.getId().equals(videoId)).findFirst().get();
 
 		if (video != null) {
-
-			VideoDetail videoDetail = video.getVideoDetail();
-
+			model.addAttribute("categories", video.getCategories());
 			model.addAttribute("video", video);
-			model.addAttribute("videoDetail", videoDetail);
-			model.addAttribute("videos", videoService.findAll());
+			model.addAttribute("videoDetail", video.getVideoDetail());
+			model.addAttribute("videos", videos);
 		}
 		return "video";
 	}
 
 	@GetMapping("/")
 	public String showHomePage(Model model) {
-		List<Video> videos = videoService.findAll();
+		model.addAttribute("categories", categories);
 		model.addAttribute("videos", videos);
 		return "index";
 	}
 
+	@GetMapping("/searching-video")
+	public String findVideoByName(@RequestParam("content-searched") String name, Model model) {
+		List<Video> foundVideos = videoService.getVideoByName(videos, name);
+
+		model.addAttribute("videos", foundVideos);
+		model.addAttribute("categories", categories);
+		return "index";
+	}
 }

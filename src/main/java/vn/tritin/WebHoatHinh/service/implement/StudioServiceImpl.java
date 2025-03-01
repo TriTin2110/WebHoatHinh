@@ -24,7 +24,7 @@ public class StudioServiceImpl implements StudioService {
 	public Studio findByName(String name) {
 		// TODO Auto-generated method stub
 		Optional<Studio> studio = dao.findById(name);
-		return studio == null ? null : studio.get();
+		return studio.isEmpty() ? null : studio.get();
 	}
 
 	@Override
