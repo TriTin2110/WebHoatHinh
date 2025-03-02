@@ -12,10 +12,12 @@
 <link rel="stylesheet" href="/css/description.css" type="text/css">
 <link rel="stylesheet" href="/css/dropdown.css" type="text/css"
 	media="all" />
+<link rel="stylesheet" href="/css/comment.css" type="text/css"
+	media="all" />
 
-<script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="js/jquery-func.js"></script>
-<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="/js/jquery-1.4.2.min.js"></script>
+<script type="text/javascript" src="/js/jquery-func.js"></script>
+<script type="text/javascript" src="/js/bootstrap.min.js"></script>
 
 </head>
 
@@ -38,9 +40,13 @@
 		</div>
 		<div
 			th:replace="~{component/index-page/description.html :: description(${video}, ${categories})}"></div>
+		<div>
+			<div th:insert="~{component/video-page/comment.html :: comment}"></div>
+			
+		</div>
 		<div th:replace="~{component/index-page/footer.html :: footer}"></div>
 	</div>
 </body>
-<script type="text/javascript" src="js/video.js"></script>
+<script type="text/javascript" th:src="@{/js/video.js}"></script>
 
 </html>

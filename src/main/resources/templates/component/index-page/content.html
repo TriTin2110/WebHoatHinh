@@ -5,21 +5,36 @@
 <title>Insert title here</title>
 </head>
 <body>
-<div id="content" th:fragment="content">
-      <div class="box">
-        <div class="movie" th:each="video : ${videos}">
-           <div class="movie-image"> <a th:href="@{/view/{id}(id=${video.id})}"><img th:src="@{'img/video-avatar/'+${video.avatar}}" alt="" /></a> </div>
-          <div ><a th:href="@{/view/{id}(id = ${video.id})}" class="name" th:text="${video.name}"></a></div>
-          <div class="rating">
-              <p>RATING</p>
-              <div class="stars">
-                <div class="stars-in"> </div>
-              </div>
-            <div class="comments">12</div> </div>
-        </div>
-        
-        <div class="cl">&nbsp;</div>
-      </div>
-    </div>
+	<div id="content" th:fragment="content">
+
+		<div class="box">
+
+			<div style="text-align: center; font-size: 30px; color: white;"
+				th:each="video, sta : ${videos}" th:if="${sta.size == 0}"
+				><span th:text="Không
+				có kết quả nào phù hợp!"></span> </div>
+
+			<div class="movie" th:each="video, sta : ${videos}"
+				th:if="${sta.size > 0}">
+				<div class="movie-image">
+					<a th:href="@{/view/{id}(id=${video.id})}"><img
+						th:src="@{'img/video-avatar/'+${video.avatar}}" style="border-radius: 18px;" alt="" /></a>
+				</div>
+				<div>
+					<a th:href="@{/view/{id}(id = ${video.id})}" class="name"
+						th:text="${video.name}"></a>
+				</div>
+				<div class="rating">
+					<p>RATING</p>
+					<div class="stars">
+						<div class="stars-in"></div>
+					</div>
+					<div class="comments" th:text="'👀'+${video.viewer}">0</div>
+				</div>
+			</div>
+
+			<div class="cl">&nbsp;</div>
+		</div>
+	</div>
 </body>
 </html>

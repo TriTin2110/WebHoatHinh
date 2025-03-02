@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+		<div th:fragment="comment" class="comment-container">
+        <div class="comment-list" id="commentList"></div>
+        <div class="comment-box">
+            <img src="https://i.pravatar.cc/40" alt="User Avatar">
+            <div class="input-container">
+                <textarea id="commentInput" placeholder="Bình luận..."></textarea>
+                <button onclick="addComment()">Đăng</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

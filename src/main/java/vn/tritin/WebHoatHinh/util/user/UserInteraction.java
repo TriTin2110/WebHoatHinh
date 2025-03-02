@@ -12,23 +12,20 @@ import vn.tritin.WebHoatHinh.entity.User;
 import vn.tritin.WebHoatHinh.model.RegisterUser;
 import vn.tritin.WebHoatHinh.service.UserService;
 import vn.tritin.WebHoatHinh.service.util.MailService;
-import vn.tritin.WebHoatHinh.util.role.RoleInteraction;
 
 @Component
 public class UserInteraction {
 	private UserService userSer;
-	private RoleInteraction roleInt;
 	private MailService mailSer;
 
 	@Autowired
-	public UserInteraction(UserService userSer, RoleInteraction roleInt, MailService mailSer) {
+	public UserInteraction(UserService userSer, MailService mailSer) {
 		this.userSer = userSer;
-		this.roleInt = roleInt;
 		this.mailSer = mailSer;
 	}
 
 	public User createUser(RegisterUser ru) {
-		Role role = roleInt.find(ru.getRole());
+		Role role = new Role(ru.getRole());
 		Account account = new Account(ru.getUserName(), new BCryptPasswordEncoder().encode(ru.getPassword()), role);
 		User user = new User(ru.getEmail(), ru.getFullName(), null, ru.isGender(), 0, ru.getDateOfBirth(), account);
 

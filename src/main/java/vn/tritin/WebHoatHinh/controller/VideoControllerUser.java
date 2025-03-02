@@ -40,6 +40,11 @@ public class VideoControllerUser {
 		Video video = videos.stream().filter(o -> o.getId().equals(videoId)).findFirst().get();
 
 		if (video != null) {
+			// Increase Viewer
+			video.setViewer(video.getViewer() + 1);
+			videos.remove(video);
+			videos.add(video);
+
 			model.addAttribute("categories", video.getCategories());
 			model.addAttribute("video", video);
 			model.addAttribute("videoDetail", video.getVideoDetail());
@@ -58,7 +63,7 @@ public class VideoControllerUser {
 	@GetMapping("/searching-video")
 	public String findVideoByName(@RequestParam("content-searched") String name, Model model) {
 		List<Video> foundVideos = videoService.getVideoByName(videos, name);
-
+		System.out.println(foundVideos.size());
 		model.addAttribute("videos", foundVideos);
 		model.addAttribute("categories", categories);
 		return "index";

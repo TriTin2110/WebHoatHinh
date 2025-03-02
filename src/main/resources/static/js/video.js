@@ -15,3 +15,26 @@ for (let video of videoContents) {
         }
 
 }
+
+//Comment
+function addComment() {
+            var commentText = document.getElementById("commentInput").value;
+            if (commentText.trim() === "") return;
+            var commentList = document.getElementById("commentList");
+            var newComment = document.createElement("div");
+            newComment.classList.add("comment");
+            newComment.innerHTML = `
+                <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                <div>
+                    <div class="comment-content">${commentText}</div>
+                    <div class="comment-actions">
+                        <span>Thích</span>
+                        <span>Phản hồi</span>
+                        <span>1 phút trước</span>
+                    </div>
+                </div>
+            `;
+            commentList.appendChild(newComment);
+            document.getElementById("commentInput").value = "";
+            commentList.scrollTop = commentList.scrollHeight;
+        }

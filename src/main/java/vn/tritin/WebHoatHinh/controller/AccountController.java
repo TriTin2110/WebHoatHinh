@@ -1,21 +1,22 @@
 package vn.tritin.WebHoatHinh.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
 import vn.tritin.WebHoatHinh.entity.Account;
 import vn.tritin.WebHoatHinh.entity.User;
 import vn.tritin.WebHoatHinh.model.RegisterUser;
 import vn.tritin.WebHoatHinh.service.AccountService;
 import vn.tritin.WebHoatHinh.util.user.UserInteraction;
 
-@RestController
+@Controller
 @RequestMapping("/account")
 public class AccountController {
 	private AccountService accSer;
@@ -35,7 +36,7 @@ public class AccountController {
 	@GetMapping("/sign-up")
 	public String showSignUpPage(Model model) {
 		model.addAttribute("ru", new RegisterUser());
-		return "sign-up";
+		return "user/sign-up";
 	}
 
 	@GetMapping("/sign-in")
@@ -44,19 +45,24 @@ public class AccountController {
 	}
 
 	@PostMapping("/create-user")
-	public String checkingRegisterUser(@ModelAttribute("ru") RegisterUser ru, BindingResult result) {
+	public String checkingRegisterUser(@Valid @ModelAttribute("ru") RegisterUser ru, BindingResult result,
+			Model model) {
+		System.out.println(ru.getUserName());
 		Account accountInDB = accSer.selectAccountByUsername(ru.getUserName());
-		if (accountInDB != null)
-			return "Không thành công";
+		if (accountInDB != null) {
+			model.addAttribute("errors", "Tài khoản đã tồn tại!");
+			return "user/sign-up";
+		}
+
 		else if (result.hasErrors()) {
-			return "Không thành công lỗi result";
+			return "user/sign-up";
 		} else {
 			User user = userInt.createUser(ru);
 			boolean addingResult = userInt.addingUser(user);
 			if (addingResult)
-				return "Thành công";
+				return "index";
 			else
-				return "Không thành công";
+				return "user/sign-up";
 		}
 
 	}

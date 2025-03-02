@@ -1,5 +1,6 @@
 package vn.tritin.WebHoatHinh.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -11,7 +12,7 @@ public class Account {
 	@Id
 	private String userName;
 	private String password;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "role_id")
 	private Role role;
 	@OneToOne(mappedBy = "account")
