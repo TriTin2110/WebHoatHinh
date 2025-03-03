@@ -5,16 +5,25 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="/css/sign-up.css" type="text/css"
 	media="all" />
+<style type="text/css">
+	.error{
+		color: red;
+	}
+</style>
 </head>
 <body>
 <div class="container">
                 <h2>Đăng ký</h2>
                 <form th:action="@{/account/create-user}" onsubmit="return checkPassword();" th:method="post" th:object="${ru}">
+                		<input type="hidden" th:field="*{role}" value="User"> 
+                		<div style="text-align: center;" th:class="error" th:if="${errors} != null">
+                			<span th:text="${errors}">User đã tồn tại!</span>
+                		</div>
                         <div class="form-group">
                                 <label for="username">Tên đăng nhập *</label>
                                 <input type="text" id="username" th:field="*{userName}" required>
                                 <ul th:if="${#fields.hasErrors('userName')}">
-                                	<li th:each="error: ${#fields.errors('userName')}" th:text="${error}" style="color: red;"></li>
+                                	<li th:each="error: ${#fields.errors('userName')}" th:text="${error}" th:class="error"></li>
                                 </ul>
                         </div>
                         <div class="form-group">
@@ -25,13 +34,13 @@
                                 <label for="password">Mật khẩu *</label>
                                 <input type="password" id="password" th:field="*{password}" required>
                                 <ul th:if="${#fields.hasErrors('password')}">
-                                	<li th:each="error : ${#fields.errors('password')}" th:text="${error}" style="color: red;"></li>
+                                	<li th:each="error : ${#fields.errors('password')}" th:text="${error}" th:class="error"></li>
                                 </ul>
                         </div>
                         <div class="form-group">
                                 <label for="confirm-password">Xác nhận mật khẩu *</label>
                                 <input type="password" id="confirm-password" required>
-                                <div id="password-error" style="padding-top: 5px; display: none; color: red;">Mật khẩu không khớp!</div>
+                                <div id="password-error" style="padding-top: 5px; display: none;" th:class="error">Mật khẩu không khớp!</div>
                         </div>
                         <div class="form-group">
                                 <label for="full-name">Tên đầy đủ</label>
@@ -40,8 +49,8 @@
                         <div class="form-group">
                                 <label for="gender">Giới tính</label>
                                 <select id="gender" th:field="*{gender}">
-                                        <option value="false">Nam</option>
-                                        <option value="true">Nữ</option>
+                                        <option value="true">Nam</option>
+                                        <option value="false">Nữ</option>
                                 </select>
                         </div>
                         <div class="form-group">

@@ -26,9 +26,9 @@ public class RoleServiceImpl implements RoleService {
 	}
 
 	@Override
-	public void save(Role role) {
+	public Role save(Role role) {
 		// TODO Auto-generated method stub
-		dao.save(role);
+		return dao.save(role);
 	}
 
 	@Override

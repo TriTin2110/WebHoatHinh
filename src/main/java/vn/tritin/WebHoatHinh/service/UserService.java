@@ -3,7 +3,7 @@ package vn.tritin.WebHoatHinh.service;
 import vn.tritin.WebHoatHinh.entity.User;
 
 public interface UserService {
-	public void add(User user) throws Exception;
+	public User add(User user) throws Exception;
 
 	public boolean update(User user);
 

@@ -1,10 +1,12 @@
 package vn.tritin.WebHoatHinh.util.user;
 
+import java.util.Calendar;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.UnexpectedRollbackException;
 
 import vn.tritin.WebHoatHinh.entity.Account;
 import vn.tritin.WebHoatHinh.entity.Role;
@@ -12,22 +14,28 @@ import vn.tritin.WebHoatHinh.entity.User;
 import vn.tritin.WebHoatHinh.model.RegisterUser;
 import vn.tritin.WebHoatHinh.service.UserService;
 import vn.tritin.WebHoatHinh.service.util.MailService;
+import vn.tritin.WebHoatHinh.util.role.RoleInteraction;
 
 @Component
 public class UserInteraction {
 	private UserService userSer;
+	private RoleInteraction roleInt;
 	private MailService mailSer;
 
 	@Autowired
-	public UserInteraction(UserService userSer, MailService mailSer) {
+	public UserInteraction(UserService userSer, RoleInteraction roleInt, MailService mailSer) {
 		this.userSer = userSer;
+		this.roleInt = roleInt;
 		this.mailSer = mailSer;
 	}
 
+	@SuppressWarnings("deprecation")
 	public User createUser(RegisterUser ru) {
-		Role role = new Role(ru.getRole());
+		int age = Calendar.getInstance().get(Calendar.YEAR) - (ru.getDateOfBirth().getYear() + 1900);
+
+		Role role = roleInt.find("User");
 		Account account = new Account(ru.getUserName(), new BCryptPasswordEncoder().encode(ru.getPassword()), role);
-		User user = new User(ru.getEmail(), ru.getFullName(), null, ru.isGender(), 0, ru.getDateOfBirth(), account);
+		User user = new User(ru.getEmail(), ru.getFullName(), null, ru.isGender(), age, ru.getDateOfBirth(), account);
 
 		account.setUser(user);
 		return user;
@@ -35,13 +43,15 @@ public class UserInteraction {
 
 	public boolean addingUser(User user) {
 		try {
-			userSer.add(user);
-			return true;
+			user = userSer.add(user);
+		} catch (UnexpectedRollbackException e) {
+			// TODO: handle exception
+			return false;
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
-		return false;
+		return (user != null);
 	}
 
 	public String sendingAuthenticationCode(String email) {

@@ -19,8 +19,7 @@ public class RoleInteraction {
 		Role role = roleSer.selectById(id);
 		if (role == null) {
 			role = new Role(id);
-			roleSer.save(role);
-			role = roleSer.selectById(id);
+			role = roleSer.save(role);
 		}
 		return role;
 	}

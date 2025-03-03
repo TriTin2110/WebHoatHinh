@@ -1,6 +1,7 @@
 package vn.tritin.WebHoatHinh.service.implement;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -19,8 +20,15 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional
-	public void add(User user) throws Exception {
-		dao.save(user);
+	public User add(User user) {
+		try {
+			user = dao.save(user);
+		} catch (DataIntegrityViolationException e) {
+			// TODO: handle exception
+			return null;
+		}
+		return user;
+
 	}
 
 	@Override

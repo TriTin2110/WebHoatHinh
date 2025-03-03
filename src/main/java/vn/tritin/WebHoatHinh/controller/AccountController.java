@@ -10,21 +10,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
-import vn.tritin.WebHoatHinh.entity.Account;
 import vn.tritin.WebHoatHinh.entity.User;
 import vn.tritin.WebHoatHinh.model.RegisterUser;
-import vn.tritin.WebHoatHinh.service.AccountService;
 import vn.tritin.WebHoatHinh.util.user.UserInteraction;
 
 @Controller
 @RequestMapping("/account")
 public class AccountController {
-	private AccountService accSer;
 	private UserInteraction userInt;
 
 	@Autowired
-	public AccountController(AccountService accSer, UserInteraction userInt) {
-		this.accSer = accSer;
+	public AccountController(UserInteraction userInt) {
 		this.userInt = userInt;
 	}
 
@@ -47,22 +43,25 @@ public class AccountController {
 	@PostMapping("/create-user")
 	public String checkingRegisterUser(@Valid @ModelAttribute("ru") RegisterUser ru, BindingResult result,
 			Model model) {
-		System.out.println(ru.getUserName());
-		Account accountInDB = accSer.selectAccountByUsername(ru.getUserName());
-		if (accountInDB != null) {
-			model.addAttribute("errors", "Tài khoản đã tồn tại!");
-			return "user/sign-up";
-		}
-
-		else if (result.hasErrors()) {
+//		Account accountInDB = accSer.selectAccountByUsername(ru.getUserName());
+//		if (accountInDB != null) {
+//			
+//			return "user/sign-up";
+//		}
+//
+//		else 
+		if (result.hasErrors()) {
 			return "user/sign-up";
 		} else {
 			User user = userInt.createUser(ru);
 			boolean addingResult = userInt.addingUser(user);
 			if (addingResult)
 				return "index";
-			else
+			else {
+				model.addAttribute("errors", "Tài khoản đã tồn tại!");
 				return "user/sign-up";
+			}
+
 		}
 
 	}
