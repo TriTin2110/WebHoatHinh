@@ -2,6 +2,7 @@ package vn.tritin.WebHoatHinh.model;
 
 import java.sql.Date;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
@@ -12,7 +13,10 @@ public class RegisterUser {
 	@NotBlank(message = "Mật khẩu không được để trống")
 	@Size(min = 3, message = "Mật khẩu phải có độ dài lớn hơn 3")
 	private String password;
-	private String role, email, fullName;
+	@NotBlank(message = "Email không được để trống")
+	@Email(message = "Email không hợp lệ")
+	private String email;
+	private String role, fullName;
 	private boolean gender;
 	private Date dateOfBirth;
 

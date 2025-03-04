@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import vn.tritin.WebHoatHinh.entity.Category;
+import vn.tritin.WebHoatHinh.entity.User;
 import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.service.CategoryService;
 import vn.tritin.WebHoatHinh.service.VideoService;
@@ -19,7 +22,7 @@ import vn.tritin.WebHoatHinh.service.VideoService;
 public class VideoControllerUser {
 	private List<Video> videos;
 	private List<Category> categories;
-
+	private HttpSession session;
 	private VideoService videoService;
 	private CategoryService categoryService;
 
@@ -44,6 +47,7 @@ public class VideoControllerUser {
 			video.setViewer(video.getViewer() + 1);
 			videos.remove(video);
 			videos.add(video);
+			checkCurrentUser(model);
 
 			model.addAttribute("categories", video.getCategories());
 			model.addAttribute("video", video);
@@ -54,18 +58,34 @@ public class VideoControllerUser {
 	}
 
 	@GetMapping("/")
-	public String showHomePage(Model model) {
+	public String showHomePage(Model model, HttpServletRequest request) {
+		if (session == null)
+			session = request.getSession();
+
+		checkCurrentUser(model);
 		model.addAttribute("categories", categories);
 		model.addAttribute("videos", videos);
 		return "index";
 	}
 
+	@GetMapping("/setup-session")
+	public String setupSession(HttpSession session) {
+		this.session.setAttribute("user", (User) session.getAttribute("user"));
+		return "redirect:/";
+	}
+
 	@GetMapping("/searching-video")
 	public String findVideoByName(@RequestParam("content-searched") String name, Model model) {
 		List<Video> foundVideos = videoService.getVideoByName(videos, name);
-		System.out.println(foundVideos.size());
 		model.addAttribute("videos", foundVideos);
 		model.addAttribute("categories", categories);
 		return "index";
+	}
+
+	private Model checkCurrentUser(Model model) {
+		if (session != null && session.getAttribute("user") != null) {
+			model.addAttribute("user", session.getAttribute("user"));
+		}
+		return model;
 	}
 }

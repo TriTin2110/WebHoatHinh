@@ -29,6 +29,9 @@
                         <div class="form-group">
                                 <label for="email">Email *</label>
                                 <input type="email" id="email" th:field="*{email}" required>
+                                <ul th:if="${#fields.hasErrors('email')}">
+                                	<li th:each="error : ${#fields.errors('email')}" th:text="${error}" th:class="error"></li>
+                                </ul>
                         </div>
                         <div class="form-group">
                                 <label for="password">Mật khẩu *</label>

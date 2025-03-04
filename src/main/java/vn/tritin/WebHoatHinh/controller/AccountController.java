@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import vn.tritin.WebHoatHinh.entity.User;
 import vn.tritin.WebHoatHinh.model.RegisterUser;
@@ -41,22 +42,18 @@ public class AccountController {
 	}
 
 	@PostMapping("/create-user")
-	public String checkingRegisterUser(@Valid @ModelAttribute("ru") RegisterUser ru, BindingResult result,
-			Model model) {
-//		Account accountInDB = accSer.selectAccountByUsername(ru.getUserName());
-//		if (accountInDB != null) {
-//			
-//			return "user/sign-up";
-//		}
-//
-//		else 
+	public String checkingRegisterUser(@Valid @ModelAttribute("ru") RegisterUser ru, BindingResult result, Model model,
+			HttpServletRequest request) {
 		if (result.hasErrors()) {
 			return "user/sign-up";
 		} else {
 			User user = userInt.createUser(ru);
 			boolean addingResult = userInt.addingUser(user);
-			if (addingResult)
-				return "index";
+			if (addingResult) {
+				request.getSession().setAttribute("user", user);
+				return "redirect:/setup-session";
+			}
+
 			else {
 				model.addAttribute("errors", "Tài khoản đã tồn tại!");
 				return "user/sign-up";
