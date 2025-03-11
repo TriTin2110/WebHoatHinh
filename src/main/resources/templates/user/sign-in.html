@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" href="/css/sign-up.css" type="text/css"
+	media="all" />
+<style type="text/css">
+	.error{
+		color: red;
+	}
+</style>
+</head>
+<body>
+<div class="container">
+                <h2>Đăng ký</h2>
+                <form th:action="@{/account/checking-in}" th:method="post" th:object="${ru}">
+                		<div style="text-align: center;" th:class="error" th:if="${errors} != null">
+                			<span th:text="${errors}">Tài khoản không tồn tại!</span>
+                		</div>
+                        <div class="form-group">
+                                <label for="username">Tên đăng nhập</label>
+                                <input type="text" id="username" th:field="*{userName}" required>
+                                <ul th:if="${#fields.hasErrors('userName')}">
+                                	<li th:each="error: ${#fields.errors('userName')}" th:text="${error}" th:class="error"></li>
+                                </ul>
+                        </div>
+                        <div class="form-group">
+                                <label for="password">Mật khẩu</label>
+                                <input type="password" id="password" th:field="*{password}" required>
+                                <ul th:if="${#fields.hasErrors('password')}">
+                                	<li th:each="error : ${#fields.errors('password')}" th:text="${error}" th:class="error"></li>
+                                </ul>
+                        </div>
+                        <button type="submit" class="btn">Đăng nhập</button>
+                </form>
+        </div>
+</body>
+</html>

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class MailServiceImpl implements MailService {
 	private JavaMailSender mailSender;
+	private final String FROM = "nguyenvanmoi1306@gmail.com";
+	private final String SUBJECT = "Mã xác thực từ WebHoatHinh";
 
 	@Autowired
 	public MailServiceImpl(JavaMailSender mailSender) {
@@ -15,16 +17,16 @@ public class MailServiceImpl implements MailService {
 	}
 
 	public void sendMail(String to, String text) {
-		String from = "nguyenvanmoi1306@gmail.com";
-		String subject = "Thử nghiệm mail Spring Boot";
+
 		text = "Mã của bạn là: " + text;
 
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
-		mailMessage.setFrom(from);
+		mailMessage.setFrom(FROM);
 		mailMessage.setTo(to);
-		mailMessage.setSubject(subject);
+		mailMessage.setSubject(SUBJECT);
 		mailMessage.setText(text);
 
 		mailSender.send(mailMessage);
 	}
+
 }

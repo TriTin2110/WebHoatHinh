@@ -59,8 +59,7 @@ public class VideoControllerUser {
 
 	@GetMapping("/")
 	public String showHomePage(Model model, HttpServletRequest request) {
-		if (session == null)
-			session = request.getSession();
+		session = request.getSession();
 
 		checkCurrentUser(model);
 		model.addAttribute("categories", categories);
@@ -83,8 +82,8 @@ public class VideoControllerUser {
 	}
 
 	private Model checkCurrentUser(Model model) {
-		if (session != null && session.getAttribute("user") != null) {
-			model.addAttribute("user", session.getAttribute("user"));
+		if (session != null && session.getAttribute("account") != null) {
+			model.addAttribute("account", session.getAttribute("account"));
 		}
 		return model;
 	}

@@ -60,4 +60,5 @@ public class UserInteraction {
 		mailSer.sendMail(email, randomCode);
 		return randomCode;
 	}
+
 }

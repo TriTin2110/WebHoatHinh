@@ -5,7 +5,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<div id="navigation" th:fragment="dropdown(categories)">
+	<div id="navigation" th:fragment="dropdown">
 		<ul>
 			<li><a class="active" href="/">Trang chủ</a></li>
 			<li><a href="#">Tin tức</a></li>
@@ -17,8 +17,8 @@
 					</div>
 				</div>
 			</li>
-			<li th:if="${user == null}"><a href="/account/sign-up">Đăng nhập / Đăng ký</a></li>
-			<li th:if="${user != null}"><a href="#" th:text="${user.fullName}">User</a></li>
+			<li th:if="${account == null}"><a href="/account/sign-up">Đăng nhập / Đăng ký</a></li>
+			<li th:if="${account != null}"><a href="#" th:text="${account.user.fullName}">User</a></li>
 		</ul>
 		<div id="search">
 			<form id="search-form" th:action="@{/searching-video}" th:method="get" accept-charset="utf-8">

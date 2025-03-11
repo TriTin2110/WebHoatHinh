@@ -13,7 +13,6 @@ public class RegisterUser {
 	@NotBlank(message = "Mật khẩu không được để trống")
 	@Size(min = 3, message = "Mật khẩu phải có độ dài lớn hơn 3")
 	private String password;
-	@NotBlank(message = "Email không được để trống")
 	@Email(message = "Email không hợp lệ")
 	private String email;
 	private String role, fullName;

@@ -1,8 +1,10 @@
 package vn.tritin.WebHoatHinh.service.implement;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,6 +39,13 @@ public class AccountServiceImpl implements AccountService {
 					.roles(accInDB.getRole().getName()).build();
 		}
 		return null;
+	}
+
+	@Override
+	@Cacheable("users")
+	public List<Account> selectAll() {
+		// TODO Auto-generated method stub
+		return dao.findAll();
 	}
 
 }
