@@ -14,6 +14,7 @@ import vn.tritin.WebHoatHinh.entity.User;
 import vn.tritin.WebHoatHinh.model.RegisterUser;
 import vn.tritin.WebHoatHinh.service.UserService;
 import vn.tritin.WebHoatHinh.service.util.MailService;
+import vn.tritin.WebHoatHinh.util.enums.ERole;
 import vn.tritin.WebHoatHinh.util.role.RoleInteraction;
 
 @Component
@@ -21,6 +22,8 @@ public class UserInteraction {
 	private UserService userSer;
 	private RoleInteraction roleInt;
 	private MailService mailSer;
+
+	private final String ROLE_USER = ERole.USER.name();
 
 	@Autowired
 	public UserInteraction(UserService userSer, RoleInteraction roleInt, MailService mailSer) {
@@ -33,7 +36,7 @@ public class UserInteraction {
 	public User createUser(RegisterUser ru) {
 		int age = Calendar.getInstance().get(Calendar.YEAR) - (ru.getDateOfBirth().getYear() + 1900);
 
-		Role role = roleInt.find("User");
+		Role role = roleInt.find(ROLE_USER);
 		Account account = new Account(ru.getUserName(), new BCryptPasswordEncoder().encode(ru.getPassword()), role);
 		User user = new User(ru.getEmail(), ru.getFullName(), null, ru.isGender(), age, ru.getDateOfBirth(), account);
 

@@ -1,15 +1,16 @@
 package vn.tritin.WebHoatHinh.security;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 import vn.tritin.WebHoatHinh.service.AccountService;
 
+@Configuration
 public class AccountSecurity {
 	@Bean
 	public DaoAuthenticationProvider createAuthenticationProvider(AccountService service) {
@@ -20,13 +21,19 @@ public class AccountSecurity {
 	}
 
 	@Bean
-	public SecurityFilterChain createChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(
-				con -> con.requestMatchers(HttpMethod.GET, "/home").authenticated().anyRequest().permitAll())
-				.formLogin(login -> login.loginProcessingUrl("/authenticateTheUser"));
-		http.httpBasic(Customizer.withDefaults());
-		http.csrf(csrf -> csrf.disable());
-		return http.build();
+	public SecurityFilterChain createChain(HttpSecurity http) {
+		try {
+			http.authorizeHttpRequests(
+					con -> con.requestMatchers(HttpMethod.GET, "/").authenticated().anyRequest().permitAll())
+					.formLogin(login -> login.loginPage("/account/sign-in").loginProcessingUrl("/authenticateTheUser")
+							.permitAll());
+			return http.build();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return null;
+
 	}
 
 }

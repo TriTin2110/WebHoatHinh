@@ -15,10 +15,10 @@ public class RoleInteraction {
 		this.roleSer = roleSer;
 	}
 
-	public Role find(String id) {
-		Role role = roleSer.selectById(id);
+	public Role find(String name) {
+		Role role = roleSer.selectById(name);
 		if (role == null) {
-			role = new Role(id);
+			role = new Role(name);
 			role = roleSer.save(role);
 		}
 		return role;

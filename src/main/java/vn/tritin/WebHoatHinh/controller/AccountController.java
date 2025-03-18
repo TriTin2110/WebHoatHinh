@@ -1,6 +1,6 @@
 package vn.tritin.WebHoatHinh.controller;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -31,19 +30,16 @@ public class AccountController {
 	private UserInteraction userInt;
 	private AccountService accSer;
 	private HttpSession session;
-	private ArrayList<String> codesEmail;
+	private List<String> codesEmail;
 	private MailService mailSer;
 
 	@Autowired
-	public AccountController(UserInteraction userInt, AccountService accSer, MailService mailSer) {
+	public AccountController(UserInteraction userInt, AccountService accSer, MailService mailSer,
+			List<String> codesEmail) {
 		this.userInt = userInt;
 		this.accSer = accSer;
 		this.mailSer = mailSer;
-	}
-
-	@PostConstruct
-	public void createEmailsConfirm() {
-		codesEmail = new ArrayList<String>();
+		this.codesEmail = codesEmail;
 	}
 
 	@GetMapping("/home")
@@ -72,7 +68,7 @@ public class AccountController {
 			User user = userInt.createUser(ru);
 			boolean addingResult = userInt.addingUser(user);
 			if (addingResult) {
-				return "redirect:account/sign-in";
+				return "redirect:sign-in";
 			} else {
 				model.addAttribute("errors", "Tài khoản đã tồn tại!");
 				return "redirect:account/sign-up";
@@ -115,7 +111,6 @@ public class AccountController {
 
 	@GetMapping("/checking-code")
 	public void checkingCode(@RequestParam("code") String code, Model model) {
-		codesEmail.stream().forEach(System.out::println);
 		String codeEncrypted = Encoder.base64Encode(code);
 		boolean codeIsCorrected = codesEmail.contains(codeEncrypted);
 		if (!codeIsCorrected) {

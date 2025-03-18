@@ -14,7 +14,7 @@
 <body>
 <div class="container">
                 <h2>Đăng ký</h2>
-                <form th:action="@{/account/checking-in}" th:method="post" th:object="${ru}">
+                <form th:action="@{/authenticateTheUser}" th:method="post" th:object="${ru}">
                 		<div style="text-align: center;" th:class="error" th:if="${errors} != null">
                 			<span th:text="${errors}">Tài khoản không tồn tại!</span>
                 		</div>

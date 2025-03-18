@@ -9,13 +9,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import vn.tritin.WebHoatHinh.entity.Category;
 import vn.tritin.WebHoatHinh.entity.User;
 import vn.tritin.WebHoatHinh.entity.Video;
-import vn.tritin.WebHoatHinh.service.CategoryService;
 import vn.tritin.WebHoatHinh.service.VideoService;
 
 @Controller
@@ -24,23 +22,23 @@ public class VideoControllerUser {
 	private List<Category> categories;
 	private HttpSession session;
 	private VideoService videoService;
-	private CategoryService categoryService;
 
 	@Autowired
-	public VideoControllerUser(VideoService videoService, CategoryService categoryService) {
+	public VideoControllerUser(VideoService videoService, List<Video> videos, List<Category> categories) {
 		this.videoService = videoService;
-		this.categoryService = categoryService;
-	}
-
-	@PostConstruct
-	public void findAllData() {
-		videos = videoService.findAll();
-		categories = categoryService.findAll();
+		this.videos = videos;
+		this.categories = categories;
 	}
 
 	@GetMapping("/view/{videoId}")
 	public String getVideo(@PathVariable String videoId, Model model) {
-		Video video = videos.stream().filter(o -> o.getId().equals(videoId)).findFirst().get();
+		Video video = null;
+		for (Video v : videos) {
+			if (v.getId().equals(videoId)) {
+				video = v;
+				break;
+			}
+		}
 
 		if (video != null) {
 			// Increase Viewer
@@ -53,8 +51,11 @@ public class VideoControllerUser {
 			model.addAttribute("video", video);
 			model.addAttribute("videoDetail", video.getVideoDetail());
 			model.addAttribute("videos", videos);
+			return "video";
+		} else {
+			return "index";
 		}
-		return "video";
+
 	}
 
 	@GetMapping("/")
