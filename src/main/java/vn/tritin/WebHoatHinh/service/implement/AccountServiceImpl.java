@@ -31,14 +31,14 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	public UserDetails loadUserByUsername(String username) {
 		// TODO Auto-generated method stub
 		Account accInDB = selectAccountByUsername(username);
-		if (accInDB != null) {
-			return User.builder().username(accInDB.getUserName()).password(accInDB.getPassword())
-					.roles(accInDB.getRole().getName()).build();
-		}
-		return null;
+		if (accInDB == null)
+			throw new UsernameNotFoundException(username + " cannot found!");
+
+		return User.builder().username(accInDB.getUserName()).password(accInDB.getPassword())
+				.roles(accInDB.getRole().getName()).build();
 	}
 
 	@Override
