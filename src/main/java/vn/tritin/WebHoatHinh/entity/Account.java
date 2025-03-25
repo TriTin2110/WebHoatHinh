@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import vn.tritin.WebHoatHinh.service.util.Encoder;
 
 @Entity
 public class Account {
@@ -39,7 +40,7 @@ public class Account {
 	}
 
 	public void setPassword(String password) {
-		this.password = password;
+		this.password = Encoder.encode(password);
 	}
 
 	public Role getRole() {
@@ -56,6 +57,11 @@ public class Account {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	@Override
+	public String toString() {
+		return "Account [userName=" + userName + ", password=" + password + ", role=" + role + ", user=" + user + "]";
 	}
 
 }

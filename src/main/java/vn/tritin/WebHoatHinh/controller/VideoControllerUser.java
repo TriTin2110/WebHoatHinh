@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import vn.tritin.WebHoatHinh.entity.Account;
 import vn.tritin.WebHoatHinh.entity.Category;
-import vn.tritin.WebHoatHinh.entity.User;
 import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.service.VideoService;
 
@@ -20,7 +20,6 @@ import vn.tritin.WebHoatHinh.service.VideoService;
 public class VideoControllerUser {
 	private List<Video> videos;
 	private List<Category> categories;
-	private HttpSession session;
 	private VideoService videoService;
 
 	@Autowired
@@ -31,47 +30,31 @@ public class VideoControllerUser {
 	}
 
 	@GetMapping("/view/{videoId}")
-	public String getVideo(@PathVariable String videoId, Model model) {
-		Video video = null;
-		for (Video v : videos) {
-			if (v.getId().equals(videoId)) {
-				video = v;
-				break;
+	public String getVideo(@PathVariable String videoId, Model model, HttpSession session) {
+		for (Video video : videos) {
+			if (video.getId().equals(videoId)) {
+				video.setViewer(video.getViewer() + 1);
+				videos.remove(video);
+				videos.add(video);
+				model.addAttribute("account", (Account) session.getAttribute("account"));
+				model.addAttribute("categories", video.getCategories());
+				model.addAttribute("video", video);
+				model.addAttribute("videoDetail", video.getVideoDetail());
+				model.addAttribute("videos", videos);
+				return "video";
 			}
 		}
-
-		if (video != null) {
-			// Increase Viewer
-			video.setViewer(video.getViewer() + 1);
-			videos.remove(video);
-			videos.add(video);
-			checkCurrentUser(model);
-
-			model.addAttribute("categories", video.getCategories());
-			model.addAttribute("video", video);
-			model.addAttribute("videoDetail", video.getVideoDetail());
-			model.addAttribute("videos", videos);
-			return "video";
-		} else {
-			return "index";
-		}
-
+		return "index";
 	}
 
 	@GetMapping("/")
 	public String showHomePage(Model model, HttpServletRequest request) {
-		session = request.getSession();
-
-		checkCurrentUser(model);
+		HttpSession session = request.getSession();
+		Account account = (Account) session.getAttribute("account");
+		model.addAttribute("account", account);
 		model.addAttribute("categories", categories);
 		model.addAttribute("videos", videos);
 		return "index";
-	}
-
-	@GetMapping("/setup-session")
-	public String setupSession(HttpSession session) {
-		this.session.setAttribute("user", (User) session.getAttribute("user"));
-		return "redirect:/";
 	}
 
 	@GetMapping("/searching-video")
@@ -82,10 +65,4 @@ public class VideoControllerUser {
 		return "index";
 	}
 
-	private Model checkCurrentUser(Model model) {
-		if (session != null && session.getAttribute("account") != null) {
-			model.addAttribute("account", session.getAttribute("account"));
-		}
-		return model;
-	}
 }

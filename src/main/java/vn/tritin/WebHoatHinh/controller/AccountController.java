@@ -1,9 +1,13 @@
 package vn.tritin.WebHoatHinh.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,12 +18,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import vn.tritin.WebHoatHinh.entity.Account;
+import vn.tritin.WebHoatHinh.entity.Role;
 import vn.tritin.WebHoatHinh.entity.User;
 import vn.tritin.WebHoatHinh.model.RegisterUser;
 import vn.tritin.WebHoatHinh.service.AccountService;
+import vn.tritin.WebHoatHinh.service.RoleService;
 import vn.tritin.WebHoatHinh.service.util.Encoder;
 import vn.tritin.WebHoatHinh.service.util.MailService;
 import vn.tritin.WebHoatHinh.util.user.UserInteraction;
@@ -29,22 +34,18 @@ import vn.tritin.WebHoatHinh.util.user.UserInteraction;
 public class AccountController {
 	private UserInteraction userInt;
 	private AccountService accSer;
-	private HttpSession session;
-	private List<String> codesEmail;
+	private Map<String, String> codesEmail;
 	private MailService mailSer;
+	private RoleService roleSer;
 
 	@Autowired
 	public AccountController(UserInteraction userInt, AccountService accSer, MailService mailSer,
-			List<String> codesEmail) {
+			List<String> codesEmail, RoleService roleSer) {
 		this.userInt = userInt;
 		this.accSer = accSer;
 		this.mailSer = mailSer;
-		this.codesEmail = codesEmail;
-	}
-
-	@GetMapping("/home")
-	public String showHomePage() {
-		return "home";
+		this.roleSer = roleSer;
+		this.codesEmail = new HashMap<String, String>();
 	}
 
 	@GetMapping("/sign-up")
@@ -77,21 +78,16 @@ public class AccountController {
 		}
 	}
 
-	@PostMapping("/checking-in")
-	public String checkingAccount(@Valid @ModelAttribute("ru") RegisterUser ru, BindingResult result, Model model,
-			HttpServletRequest request) {
-		session = request.getSession();
-		Account account = accSer.selectAccountByUsername(ru.getUserName());
-		if (result.hasErrors()) {
-			return "user/sign-in";
-		} else if (account == null) {
-			model.addAttribute("errors", "Sai tên tài khoản hoặc mật khẩu!");
-			return "user/sign-in";
-		} else if (!Encoder.check(ru.getPassword(), account.getPassword())) {
-			model.addAttribute("errors", "Sai tên tài khoản hoặc mật khẩu!");
-			return "user/sign-in";
+	@PostMapping("/generate-user")
+	public String checkingAccount(HttpServletRequest request) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		List<Account> accounts = accSer.selectAll();
+		for (Account account : accounts) {
+			if (account.getUserName().equals(authentication.getName())) {
+				request.getSession().setAttribute("account", account);
+				break;
+			}
 		}
-		session.setAttribute("account", account);
 		return "redirect:/";
 	}
 
@@ -105,19 +101,33 @@ public class AccountController {
 		Random random = new Random();
 		int code = random.nextInt(100000, 999999);
 		mailSer.sendMail(gmail, String.valueOf(code));
-		codesEmail.add(Encoder.base64Encode(code));
+		codesEmail.put(Encoder.base64Encode(code), gmail); // Add code authenticate for user by email
 		return "user/password-enter-code";
 	}
 
 	@GetMapping("/checking-code")
-	public void checkingCode(@RequestParam("code") String code, Model model) {
+	public String checkingCode(@RequestParam("code") String code, Model model) {
 		String codeEncrypted = Encoder.base64Encode(code);
-		boolean codeIsCorrected = codesEmail.contains(codeEncrypted);
-		if (!codeIsCorrected) {
+		String email = codesEmail.get(codeEncrypted);
+		if (email == null) {
 			model.addAttribute("erorrs", "Mã xác thực không chính xác!");
-			System.out.println("Mã xác thực không chính xác!");
+			return "user/password-enter-code";
 		} else {
-			System.out.println("Chuyển đến trang tiếp theo!");
+			User user = userInt.findUserByEmail(email);
+			Account account = user.getAccount();
+			model.addAttribute("account", account);
+			model.addAttribute("role", account.getRole());
+			return "user/password-input";
 		}
+	}
+
+	@PostMapping("/update-password")
+	public String updatePassword(@ModelAttribute("account") Account account) {
+		// vấn đề: role từ th:field == null
+		Role role = roleSer.selectById("USER");
+		account.setRole(role);
+
+		accSer.update(account);
+		return "user/sign-in";
 	}
 }

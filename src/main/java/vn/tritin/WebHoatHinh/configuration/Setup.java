@@ -39,4 +39,5 @@ public class Setup {
 	public List<String> getAllEmail() {
 		return this.codesEmail;
 	}
+
 }

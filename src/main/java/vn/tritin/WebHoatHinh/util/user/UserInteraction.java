@@ -64,4 +64,7 @@ public class UserInteraction {
 		return randomCode;
 	}
 
+	public User findUserByEmail(String email) {
+		return userSer.selectUserByEmail(email);
+	}
 }

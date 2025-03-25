@@ -11,4 +11,6 @@ public interface AccountService extends UserDetailsService {
 
 	public List<Account> selectAll();
 
+	public Account update(Account account);
+
 }
