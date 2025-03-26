@@ -71,6 +71,12 @@ public class VideoServiceImpl implements VideoService {
 		return dao.findAll();
 	}
 
+	/*-
+	 * First we will go one by one video in the list
+	 * So here i splitted the inputed video name 
+	 * Then each word will be compare to the video tittle
+	 * If the return is true then the video will be add to the foundVideos list
+	 * */
 	@Override
 	public List<Video> getVideoByName(List<Video> videos, String name) {
 		// TODO Auto-generated method stub

@@ -12,6 +12,7 @@ public class Account {
 	@Id
 	private String userName;
 	private String password;
+	private String email;
 	@ManyToOne
 	@JoinColumn(name = "role_id")
 	private Role role;
@@ -21,9 +22,10 @@ public class Account {
 	public Account() {
 	}
 
-	public Account(String userName, String password, Role role) {
+	public Account(String userName, String password, String email, Role role) {
 		this.userName = userName;
 		this.password = password;
+		this.email = email;
 		this.role = role;
 	}
 
@@ -57,6 +59,14 @@ public class Account {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	@Override

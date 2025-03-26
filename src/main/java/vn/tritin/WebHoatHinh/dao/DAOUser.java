@@ -7,5 +7,4 @@ import vn.tritin.WebHoatHinh.entity.User;
 
 @RepositoryRestResource
 public interface DAOUser extends JpaRepository<User, Integer> {
-	public User findByEmail(String email);
 }

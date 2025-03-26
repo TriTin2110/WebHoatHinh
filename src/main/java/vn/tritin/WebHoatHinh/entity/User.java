@@ -15,7 +15,7 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	private String email, fullName, avatar;
+	private String fullName, avatar;
 	private boolean gender;
 	private int age;
 	private Date dateOfBirth;
@@ -26,9 +26,7 @@ public class User {
 	public User() {
 	}
 
-	public User(String email, String fullName, String avatar, boolean gender, int age, Date dateOfBirth,
-			Account account) {
-		this.email = email;
+	public User(String fullName, String avatar, boolean gender, int age, Date dateOfBirth, Account account) {
 		this.fullName = fullName;
 		this.avatar = avatar;
 		this.gender = gender;
@@ -43,14 +41,6 @@ public class User {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 	public String getFullName() {

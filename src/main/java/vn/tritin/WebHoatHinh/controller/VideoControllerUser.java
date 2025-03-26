@@ -29,6 +29,7 @@ public class VideoControllerUser {
 		this.categories = categories;
 	}
 
+	// Redirect user to the Video page (index page if the video requested not found)
 	@GetMapping("/view/{videoId}")
 	public String getVideo(@PathVariable String videoId, Model model, HttpSession session) {
 		for (Video video : videos) {

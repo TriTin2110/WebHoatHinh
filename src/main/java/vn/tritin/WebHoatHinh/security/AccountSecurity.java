@@ -26,7 +26,7 @@ public class AccountSecurity {
 			http.authorizeHttpRequests(
 					con -> con.requestMatchers(HttpMethod.GET, "/").authenticated().anyRequest().permitAll())
 					.formLogin(login -> login.loginPage("/account/sign-in").loginProcessingUrl("/authenticateTheUser")
-							.successForwardUrl("/account/generate-user").permitAll());
+							.successForwardUrl("/account/generate-user-session").permitAll());
 			return http.build();
 		} catch (Exception e) {
 			// TODO: handle exception

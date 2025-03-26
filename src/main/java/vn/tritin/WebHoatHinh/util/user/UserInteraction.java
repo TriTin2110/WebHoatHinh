@@ -37,8 +37,9 @@ public class UserInteraction {
 		int age = Calendar.getInstance().get(Calendar.YEAR) - (ru.getDateOfBirth().getYear() + 1900);
 
 		Role role = roleInt.find(ROLE_USER);
-		Account account = new Account(ru.getUserName(), new BCryptPasswordEncoder().encode(ru.getPassword()), role);
-		User user = new User(ru.getEmail(), ru.getFullName(), null, ru.isGender(), age, ru.getDateOfBirth(), account);
+		Account account = new Account(ru.getUserName(), new BCryptPasswordEncoder().encode(ru.getPassword()),
+				ru.getEmail(), role);
+		User user = new User(ru.getFullName(), null, ru.isGender(), age, ru.getDateOfBirth(), account);
 
 		account.setUser(user);
 		return user;
@@ -62,9 +63,5 @@ public class UserInteraction {
 		String randomCode = random.nextInt(900000) + 100000 + "";
 		mailSer.sendMail(email, randomCode);
 		return randomCode;
-	}
-
-	public User findUserByEmail(String email) {
-		return userSer.selectUserByEmail(email);
 	}
 }

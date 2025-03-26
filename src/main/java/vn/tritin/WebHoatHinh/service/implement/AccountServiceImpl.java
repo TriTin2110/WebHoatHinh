@@ -12,8 +12,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import vn.tritin.WebHoatHinh.dao.DAOAccount;
 import vn.tritin.WebHoatHinh.entity.Account;
+import vn.tritin.WebHoatHinh.model.AccountDTO;
 import vn.tritin.WebHoatHinh.service.AccountService;
 
 @Service
@@ -53,6 +55,12 @@ public class AccountServiceImpl implements AccountService {
 		return accounts;
 	}
 
+	@Override
+	public AccountDTO selectAccountByEmail(String email) {
+		// TODO Auto-generated method stub
+		return dao.findByEmail(email);
+	}
+
 	@CachePut("accounts")
 	public List<Account> updateListUser(Account account) {
 		for (Account accInList : accounts) {
@@ -63,10 +71,11 @@ public class AccountServiceImpl implements AccountService {
 		return this.accounts;
 	}
 
+	@Transactional
 	@Override
-	public Account update(Account account) {
+	public void updateDTO(AccountDTO accountDTO) {
 		// TODO Auto-generated method stub
-		return dao.saveAndFlush(account);
+		dao.updateDTO(accountDTO.getPassword(), accountDTO.getUsername());
 	}
 
 }
