@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hồ sơ người dùng</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<style>
+body {
+	background-color: #121212;
+	color: white;
+	font-family: Arial, sans-serif;
+}
+
+.profile-card {
+	background-color: #1e1e1e;
+	border-radius: 10px;
+	padding: 20px;
+	box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+	text-align: center;
+	height: 100%;
+	position: relative;
+}
+
+.profile-img-container {
+	position: relative;
+	display: inline-block;
+}
+
+.profile-img {
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+	border: 3px solid #ffcc00;
+	display: block;
+	margin: 0 auto 20px;
+	cursor: pointer;
+	transition: filter 0.3s ease;
+}
+
+.profile-img-container:hover .profile-img {
+	filter: brightness(50%);
+}
+
+.change-avatar-btn {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: rgba(0, 0, 0, 0.7);
+	color: white;
+	border: none;
+	padding: 8px 12px;
+	border-radius: 5px;
+	font-size: 14px;
+	display: none;
+}
+
+.profile-img-container:hover .change-avatar-btn {
+	display: block;
+}
+
+.btn-custom {
+	background-color: #ffcc00;
+	color: black;
+}
+
+.btn-custom:hover {
+	background-color: #e6b800;
+}
+
+.movies {
+	background-color: #1e1e1e;
+	padding: 15px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+	height: 100%;
+}
+
+.rating {
+	color: gold;
+}
+
+#avatarInput {
+	display: none;
+}
+
+.video-item {
+	width: 240px;
+	background-color: #232323;
+	padding: 10px 10px;
+	border-radius: 5%;
+}
+
+.poster {
+	transition: transform 0.3s ease-in-out;
+}
+
+.poster:hover {
+	transform: scale(1.2);
+}
+.video-name{
+	transition: color 0.3s;
+}
+.video-name:hover{
+	color: yellow;
+}
+</style>
+</head>
+<body>
+	<div class="container mt-4">
+		<div class="row">
+			<!-- Hồ sơ bên trái -->
+			<div class="col-md-4">
+				<div class="profile-card p-4 h-100">
+					<input type="file" id="avatarInput" accept="image/*"
+						onchange="previewAvatar(event)">
+					<div class="profile-img-container">
+						<img id="avatarImage"
+							src="https://yt3.ggpht.com/yti/ANjgQV_j8OVcYa15kw3KSQ9kvUSdTexZwRqkjNaPtrvct6w=s88-c-k-c0x00ffffff-no-rj"
+							alt="Avatar" class="profile-img"
+							onclick="document.getElementById('avatarInput').click();">
+						<button class="change-avatar-btn"
+							onclick="document.getElementById('avatarInput').click();">Thay
+							đổi</button>
+					</div>
+					<h2 class="mt-3 text-center" th:text="${ru.fullName}">Họ tên</h2>
+					<div class="text-start">
+						<p>
+							<strong>Tuổi:</strong> <span>21</span>
+						</p>
+						<p>
+							<strong>Giới tính:</strong> <span th:if="${ru.gender}">Nam</span>
+							<span th:unless="${ru.gender}">Nữ</span>
+						</p>
+						<p>
+							<strong>Ngày sinh:</strong> <span th:text="${ru.dateOfBirth}">21/10/1232</span>
+						</p>
+						<p>
+							<strong>Email:</strong> <span th:text="${ru.email}">tin@gmail.com</span>
+						</p>
+					</div>
+					<button class="btn btn-custom mt-2" data-bs-toggle="modal"
+						data-bs-target="#editProfileModal">Chỉnh sửa hồ sơ</button>
+				</div>
+			</div>
+			<!-- Danh sách phim bên phải -->
+			<div class="col-md-8">
+				<div class="movies h-100">
+					<h3>Phim yêu thích</h3>
+					<div class="row">
+						<div class="col-md-4" th:each="video : ${videos}">
+							<div class="video-item">
+								<div style="overflow: hidden;">
+									<img
+										th:src="@{/img/video-avatar/{avatar} (avatar=${video.videoTag.avatar})}"
+										class="d-block w-100 poster" alt="video Poster"
+										style="border-radius: 5%;">
+								</div>
+								<div class="text-center video-name" style="padding-top: 10px;">
+									<strong th:text="${video.name}"></strong>
+								</div>
+								<div>
+									<strong>RATING:</strong> <span class="rating">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+								</div>
+								<div>
+									<strong>Views:</strong> <span th:text="${video.viewer}"></span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- Modal chỉnh sửa hồ sơ -->
+		<div class="modal fade" id="editProfileModal" tabindex="-1"
+			aria-labelledby="editProfileModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header" style="color: black;">
+						<h5 class="modal-title" id="editProfileModalLabel">Chỉnh sửa
+							hồ sơ</h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal"
+							aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<form style="color: black">
+							<div class="mb-3">
+								<label for="name" class="form-label">Họ tên</label> <input
+									type="text" class="form-control" id="name"
+									th:value="${ru.fullName}">
+							</div>
+							<div class="mb-3">
+								<label for="email" class="form-label">Email</label> <input
+									type="email" class="form-control" id="email"
+									th:value="${ru.email}">
+							</div>
+							<div class="mb-3">
+								<label for="gender" class="form-label">Giới tính</label> <select
+									class="form-control">
+									<option value="true">Nam</option>
+									<option value="false">Nữ</option>
+								</select>
+							</div>
+							<div class="mb-3">
+								<label for="dOB" class="form-label">Ngày sinh</label> <input
+									type="date" class="form-control" id="dOB"
+									th:value="${ru.dateOfBirth}">
+							</div>
+							<div style="display: flex; justify-content: space-around;">
+								<button class="btn btn-secondary w-25" data-bs-dismiss="modal">Hủy</button>
+								<button type="submit" class="btn btn-primary w-25">Lưu
+									thay đổi</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript" th:src="@{/js/profile.js}"></script>
+</body>
+</html>

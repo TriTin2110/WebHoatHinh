@@ -59,8 +59,9 @@ public class VideoControllerUser {
 	}
 
 	@GetMapping("/searching-video")
-	public String findVideoByName(@RequestParam("content-searched") String name, Model model) {
+	public String findVideoByName(@RequestParam("content-searched") String name, Model model, HttpSession session) {
 		List<Video> foundVideos = videoService.getVideoByName(videos, name);
+		model.addAttribute("account", (Account) session.getAttribute("account"));
 		model.addAttribute("videos", foundVideos);
 		model.addAttribute("categories", categories);
 		return "index";

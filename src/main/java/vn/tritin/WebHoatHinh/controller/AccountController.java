@@ -66,8 +66,8 @@ public class AccountController {
 	 * Create new User then save to the DB
 	 * */
 	@PostMapping("/create-user")
-	public String checkingRegisterUser(@Valid @ModelAttribute("ru") RegisterUser ru, BindingResult result, Model model,
-			HttpServletRequest request) {
+	public String checkingRegisterUser(@Valid @ModelAttribute("ru") RegisterUser ru, BindingResult result,
+			Model model) {
 		if (result.hasErrors()) { // When data is not valid
 			return "user/sign-up";
 		} else {
@@ -157,4 +157,5 @@ public class AccountController {
 		passwordForgotCodeAndAccount.remove(Encoder.base64Encode(code));
 		return "user/sign-in";
 	}
+
 }

@@ -18,8 +18,17 @@ public class RegisterUser {
 	private String role, fullName;
 	private boolean gender;
 	private Date dateOfBirth;
+	private String avatar;
 
 	public RegisterUser() {
+	}
+
+	public RegisterUser(String email, String fullName, String avatar, boolean gender, Date dateOfBirth) {
+		this.email = email;
+		this.fullName = fullName;
+		this.avatar = avatar;
+		this.gender = gender;
+		this.dateOfBirth = dateOfBirth;
 	}
 
 	public RegisterUser(String userName, String password, String role, String email, String fullName, boolean gender,
@@ -87,6 +96,14 @@ public class RegisterUser {
 
 	public void setDateOfBirth(Date dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public String getAvatar() {
+		return avatar;
+	}
+
+	public void setAvatar(String avatar) {
+		this.avatar = avatar;
 	}
 
 }

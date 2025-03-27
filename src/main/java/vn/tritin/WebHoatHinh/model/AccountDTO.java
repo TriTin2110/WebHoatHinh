@@ -11,10 +11,9 @@ public class AccountDTO {
 	public AccountDTO() {
 	}
 
-	public AccountDTO(String email, String password, String username) {
-		this.email = email;
-		this.password = password;
+	public AccountDTO(String username, String password) {
 		this.username = username;
+		this.password = password;
 	}
 
 	public String getEmail() {
