@@ -103,10 +103,12 @@ body {
 .poster:hover {
 	transform: scale(1.2);
 }
-.video-name{
+
+.video-name {
 	transition: color 0.3s;
 }
-.video-name:hover{
+
+.video-name:hover {
 	color: yellow;
 }
 </style>
@@ -116,38 +118,90 @@ body {
 		<div class="row">
 			<!-- Hồ sơ bên trái -->
 			<div class="col-md-4">
-				<div class="profile-card p-4 h-100">
-					<input type="file" id="avatarInput" accept="image/*"
-						onchange="previewAvatar(event)">
-					<div class="profile-img-container">
-						<img id="avatarImage"
-							src="https://yt3.ggpht.com/yti/ANjgQV_j8OVcYa15kw3KSQ9kvUSdTexZwRqkjNaPtrvct6w=s88-c-k-c0x00ffffff-no-rj"
-							alt="Avatar" class="profile-img"
-							onclick="document.getElementById('avatarInput').click();">
-						<button class="change-avatar-btn"
-							onclick="document.getElementById('avatarInput').click();">Thay
-							đổi</button>
+				<form th:action="@{/profile}" th:method="post"
+					enctype="multipart/form-data" th:object="${account}">
+					<div class="profile-card p-4 h-100">
+						<input type="file" id="avatarInput" accept="image/*"
+							onchange="previewAvatar(event)">
+						<div class="profile-img-container">
+							<img id="avatarImage"
+								th:src="@{/img/user-avatar/{avatar} (avatar = ${account.user.avatar})}"
+								alt="Avatar" class="profile-img"
+								onclick="document.getElementById('avatarInput').click();">
+							<button class="change-avatar-btn"
+								onclick="document.getElementById('avatarInput').click();">Thay
+								đổi</button>
+						</div>
+						<h2 class="mt-3 text-center" th:text="${account.user.fullName}">Họ
+							tên</h2>
+						<div class="text-start">
+							<p>
+								<strong>Tuổi:</strong> <span>21</span>
+							</p>
+							<p>
+								<strong>Giới tính:</strong> <span th:if="${account.user.gender}">Nam</span>
+								<span th:unless="${account.user.gender}">Nữ</span>
+							</p>
+							<p>
+								<strong>Ngày sinh:</strong> <span
+									th:text="${account.user.dateOfBirth}">21/10/1232</span>
+							</p>
+							<p>
+								<strong>Email:</strong> <span th:text="${account.email}">tin@gmail.com</span>
+							</p>
+						</div>
+						<button class="btn btn-custom mt-2"
+							style="background-color: yellow;" data-bs-toggle="modal"
+							data-bs-target="#editProfileModal" type="button">Chỉnh
+							sửa hồ sơ</button>
 					</div>
-					<h2 class="mt-3 text-center" th:text="${ru.fullName}">Họ tên</h2>
-					<div class="text-start">
-						<p>
-							<strong>Tuổi:</strong> <span>21</span>
-						</p>
-						<p>
-							<strong>Giới tính:</strong> <span th:if="${ru.gender}">Nam</span>
-							<span th:unless="${ru.gender}">Nữ</span>
-						</p>
-						<p>
-							<strong>Ngày sinh:</strong> <span th:text="${ru.dateOfBirth}">21/10/1232</span>
-						</p>
-						<p>
-							<strong>Email:</strong> <span th:text="${ru.email}">tin@gmail.com</span>
-						</p>
+					<!-- Modal chỉnh sửa hồ sơ -->
+					<div class="modal fade" id="editProfileModal" tabindex="-1"
+						aria-labelledby="editProfileModalLabel" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header" style="color: black;">
+									<h5 class="modal-title" id="editProfileModalLabel">Chỉnh
+										sửa hồ sơ</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<div class="modal-body">
+									<div>
+										<label for="name" class="form-label">Họ tên</label> <input
+											type="text" class="form-control" id="name"
+											th:field="*{user.fullName}">
+									</div>
+									<div>
+										<label for="email" class="form-label">Email</label> <input
+											type="email" class="form-control" id="email"
+											th:field="*{email}">
+									</div>
+									<div>
+										<label for="gender" class="form-label">Giới tính</label> <select
+											class="form-control" th:field="*{user.gender}">
+											<option value="true">Nam</option>
+											<option value="false">Nữ</option>
+										</select>
+									</div>
+									<div class="mb-3">
+										<label for="dOB" class="form-label">Ngày sinh</label> <input
+											type="date" class="form-control" id="dOB"
+											th:field="*{user.dateOfBirth}">
+									</div>
+									<div style="display: flex; justify-content: space-around;">
+										<button class="btn btn-secondary w-25" data-bs-dismiss="modal">Hủy</button>
+										<button type="submit" class="btn btn-primary w-25">Lưu
+											thay đổi</button>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-					<button class="btn btn-custom mt-2" data-bs-toggle="modal"
-						data-bs-target="#editProfileModal">Chỉnh sửa hồ sơ</button>
-				</div>
+				</form>
 			</div>
+
+
 			<!-- Danh sách phim bên phải -->
 			<div class="col-md-8">
 				<div class="movies h-100">
@@ -172,51 +226,6 @@ body {
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- Modal chỉnh sửa hồ sơ -->
-		<div class="modal fade" id="editProfileModal" tabindex="-1"
-			aria-labelledby="editProfileModalLabel" aria-hidden="true">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header" style="color: black;">
-						<h5 class="modal-title" id="editProfileModalLabel">Chỉnh sửa
-							hồ sơ</h5>
-						<button type="button" class="btn-close" data-bs-dismiss="modal"
-							aria-label="Close"></button>
-					</div>
-					<div class="modal-body">
-						<form style="color: black">
-							<div class="mb-3">
-								<label for="name" class="form-label">Họ tên</label> <input
-									type="text" class="form-control" id="name"
-									th:value="${ru.fullName}">
-							</div>
-							<div class="mb-3">
-								<label for="email" class="form-label">Email</label> <input
-									type="email" class="form-control" id="email"
-									th:value="${ru.email}">
-							</div>
-							<div class="mb-3">
-								<label for="gender" class="form-label">Giới tính</label> <select
-									class="form-control">
-									<option value="true">Nam</option>
-									<option value="false">Nữ</option>
-								</select>
-							</div>
-							<div class="mb-3">
-								<label for="dOB" class="form-label">Ngày sinh</label> <input
-									type="date" class="form-control" id="dOB"
-									th:value="${ru.dateOfBirth}">
-							</div>
-							<div style="display: flex; justify-content: space-around;">
-								<button class="btn btn-secondary w-25" data-bs-dismiss="modal">Hủy</button>
-								<button type="submit" class="btn btn-primary w-25">Lưu
-									thay đổi</button>
-							</div>
-						</form>
 					</div>
 				</div>
 			</div>

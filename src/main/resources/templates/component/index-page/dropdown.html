@@ -18,7 +18,7 @@
 				</div>
 			</li>
 			<li th:if="${account == null}"><a href="/account/sign-up">Đăng nhập / Đăng ký</a></li>
-			<li th:if="${account != null}"><a style="display: flex;" th:href="@{/profile/{userName} (userName = ${account.userName})}">Xin chào, <span style="display: inline-block; width: 100px; overflow: hidden; text-overflow: ellipsis;" th:text="${account.user.fullName}"></span></a></li>
+			<li th:if="${account != null}"><a style="display: flex;" th:href="@{/profile}">Xin chào, <span style="display: inline-block; width: 100px; overflow: hidden; text-overflow: ellipsis;" th:text="${account.user.fullName}"></span></a></li>
 		</ul>
 		<div id="search">
 			<form id="search-form" th:action="@{/searching-video}" th:method="get" accept-charset="utf-8">
