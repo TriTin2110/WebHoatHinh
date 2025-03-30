@@ -73,9 +73,22 @@ public class AccountServiceImpl implements AccountService {
 
 	@Transactional
 	@Override
-	public void updateDTO(AccountDTO accountDTO) {
+	public void updatePassword(AccountDTO accountDTO) {
 		// TODO Auto-generated method stub
-		dao.updateDTO(accountDTO.getPassword(), accountDTO.getUsername());
+		dao.updatePassword(accountDTO.getPassword(), accountDTO.getUsername());
 	}
 
-}
+	@Transactional
+	@Override
+	public Account update(Account account) {
+		// TODO Auto-generated method stub
+		try {
+			return dao.saveAndFlush(account);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+};

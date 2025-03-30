@@ -153,7 +153,7 @@ public class AccountController {
 	public String updatePassword(@RequestParam("code") String code, @RequestParam("password") String password) {
 		AccountDTO accountDTO = passwordForgotCodeAndAccount.get(Encoder.base64Encode(code));
 		accountDTO.setPassword(Encoder.encode(password));
-		accSer.updateDTO(accountDTO);
+		accSer.updatePassword(accountDTO);
 		passwordForgotCodeAndAccount.remove(Encoder.base64Encode(code));
 		return "user/sign-in";
 	}

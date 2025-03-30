@@ -15,6 +15,7 @@ public interface AccountService extends UserDetailsService {
 
 	public AccountDTO selectAccountByEmail(@Param("email") String email);
 
-	public void updateDTO(AccountDTO accountDTO);
+	public void updatePassword(AccountDTO accountDTO);
 
+	public Account update(Account account);
 }

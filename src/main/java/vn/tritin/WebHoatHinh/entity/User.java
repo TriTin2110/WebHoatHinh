@@ -91,4 +91,26 @@ public class User {
 		this.account = account;
 	}
 
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", fullName=" + fullName + ", avatar=" + avatar + ", gender=" + gender + ", age="
+				+ age + ", dateOfBirth=" + dateOfBirth + ", account=" + account + "]";
+	}
+
+	public User updateProfile(Account account, Account accountInDB, String avatar) {
+		User user = account.getUser();
+		String fullName = user.getFullName();
+		boolean gender = user.isGender();
+		int age = (new Date(System.currentTimeMillis()).getYear() + 1900) - user.getDateOfBirth().getYear() + 1900;
+		Date dateOfBirth = user.getDateOfBirth();
+
+		User userInDB = accountInDB.getUser();
+		userInDB.setFullName(fullName);
+		userInDB.setAvatar(avatar);
+		userInDB.setGender(gender);
+		userInDB.setAge(age);
+		userInDB.setDateOfBirth(dateOfBirth);
+		return userInDB;
+	}
+
 }

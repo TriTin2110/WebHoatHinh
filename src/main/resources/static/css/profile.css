@@ -1,0 +1,105 @@
+@charset "UTF-8";
+body {
+	background-color: #121212;
+	color: white;
+	font-family: Arial, sans-serif;
+}
+
+.profile-card {
+	background-color: #1e1e1e;
+	border-radius: 10px;
+	padding: 20px;
+	box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+	text-align: center;
+	height: 100%;
+	position: relative;
+}
+
+.profile-img-container {
+	position: relative;
+	display: inline-block;
+}
+
+.profile-img {
+	width: 150px;
+	height: 150px;
+	border-radius: 50%;
+	border: 3px solid #ffcc00;
+	display: block;
+	margin: 0 auto 20px;
+	cursor: pointer;
+	transition: filter 0.3s ease;
+}
+
+.profile-img-container:hover .profile-img {
+	filter: brightness(50%);
+}
+
+.change-avatar-btn {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: rgba(0, 0, 0, 0.7);
+	color: white;
+	border: none;
+	padding: 8px 12px;
+	border-radius: 5px;
+	font-size: 14px;
+	display: none;
+}
+
+.profile-img-container:hover .change-avatar-btn {
+	display: block;
+}
+
+.btn-custom {
+	background-color: #ffcc00;
+	color: black;
+}
+
+.btn-custom:hover {
+	background-color: #e6b800;
+}
+
+.movies {
+	background-color: #1e1e1e;
+	padding: 15px;
+	border-radius: 10px;
+	box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+	height: 100%;
+}
+
+.rating {
+	color: gold;
+}
+
+#avatarInput {
+	display: none;
+}
+
+.video-item {
+	width: 240px;
+	background-color: #232323;
+	padding: 10px 10px;
+	border-radius: 5%;
+}
+
+.poster {
+	transition: transform 0.3s ease-in-out;
+}
+
+.poster:hover {
+	transform: scale(1.2);
+}
+
+.video-name {
+	transition: color 0.3s;
+}
+
+.video-name:hover {
+	color: yellow;
+}
+label{
+color: black
+}

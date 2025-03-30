@@ -21,5 +21,5 @@ public interface DAOAccount extends JpaRepository<Account, String> {
 	 */
 	@Modifying
 	@Query("UPDATE Account SET password = :password WHERE userName = :userName")
-	public void updateDTO(@Param("password") String password, @Param("userName") String username);
+	public void updatePassword(@Param("password") String password, @Param("userName") String username);
 }

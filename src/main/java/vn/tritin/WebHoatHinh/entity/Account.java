@@ -1,5 +1,6 @@
 package vn.tritin.WebHoatHinh.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -16,7 +17,7 @@ public class Account {
 	@ManyToOne
 	@JoinColumn(name = "role_id")
 	private Role role;
-	@OneToOne(mappedBy = "account")
+	@OneToOne(mappedBy = "account", cascade = { CascadeType.MERGE })
 	private User user;
 
 	public Account() {
@@ -74,4 +75,7 @@ public class Account {
 		return "Account [userName=" + userName + ", password=" + password + ", role=" + role + ", user=" + user + "]";
 	}
 
+	public String showUser() {
+		return "Account [user=" + user + "]";
+	}
 }
