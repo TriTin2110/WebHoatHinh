@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<!-- Modal chỉnh sửa hồ sơ -->
+	<div th:fragment="input-modal" class="modal fade" id="editProfileModal" tabindex="-1"
+		aria-labelledby="editProfileModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header" style="color: black;">
+					<h5 class="modal-title" id="editProfileModalLabel">Chỉnh sửa
+						hồ sơ</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div class="mb-3">
+						<label for="name" class="form-label">Họ tên</label> <input
+							type="text" class="form-control" id="name"
+							th:field="*{user.fullName}">
+					</div>
+					<div class="mb-3">
+						<label for="email" class="form-label">Email</label> <input
+							type="email" class="form-control" id="email" th:field="*{email}">
+					</div>
+					<div class="mb-3">
+						<label for="gender" class="form-label">Giới tính</label> <select
+							class="form-control" th:field="*{user.gender}">
+							<option value="true">Nam</option>
+							<option value="false">Nữ</option>
+						</select>
+					</div>
+					<div class="mb-3">
+						<label for="dOB" class="form-label">Ngày sinh</label> <input
+							type="date" class="form-control" id="dOB"
+							th:field="*{user.dateOfBirth}">
+					</div>
+					<div style="display: flex; justify-content: space-around;">
+						<button type="button"
+							class="btn btn-secondary w-25 regular-button"
+							data-bs-dismiss="modal">Đóng</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

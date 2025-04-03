@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Favorite Movie</title>
+</head>
+<body>
+		<!-- Danh sách phim bên phải -->
+		<div th:fragment="favorite-movie(videos)" class="col-md-8">
+			<div class="movies h-100">
+				<h3>Gợi ý cho bạn</h3>
+				<div class="row">
+					<div class="col-md-4" th:each="video : ${videos}">
+						<div class="video-item">
+							<div style="overflow: hidden;">
+								<img
+									th:src="@{/img/video-avatar/{avatar} (avatar=${video.videoTag.avatar})}"
+									class="d-block w-100 poster" alt="video Poster"
+									style="border-radius: 5%;">
+							</div>
+							<div class="text-center video-name" style="padding-top: 10px;">
+								<strong th:text="${video.name}"></strong>
+							</div>
+							<div>
+								<strong>RATING:</strong> <span class="rating">&#9733;&#9733;&#9733;&#9733;&#9734;</span>
+							</div>
+							<div>
+								<strong>Views:</strong> <span th:text="${video.viewer}"></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</body>
+</html>

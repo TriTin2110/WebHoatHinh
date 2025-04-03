@@ -42,12 +42,12 @@ public class MyProfileController {
 		List<Video> videosSuggesttion = videoSuggestSer.getSuggestionVideo();
 		model.addAttribute("account", account);
 		model.addAttribute("videos", videosSuggesttion);
-		return "/user/profile";
+		return "/user/profile/profile";
 	}
 
 	/*-
 	 * This mapping will update the profile information base on the account client request
-	 * First will update date avatar (if there is an image on request)
+	 * First will update avatar (if there is any image on request)
 	 * Then we will update information on the account and user entity
 	 * */
 	@PostMapping("/update")
@@ -59,7 +59,7 @@ public class MyProfileController {
 			return "/user/profile";
 		}
 
-		String avatar = null;
+		String avatar = accountInDB.getUser().getAvatar();
 		try {
 			if (avatarFile.getSize() != 0) {
 				FileService fileSer = new FileServiceImpl();
@@ -69,12 +69,10 @@ public class MyProfileController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (avatar != null) {
-			accountInDB.setEmail(account.getEmail());
-			accountInDB.setUser(accountInDB.getUser().updateProfile(account, accountInDB, avatar));
-			accountInDB = accSer.update(accountInDB);
-			request.getSession().setAttribute("account", accountInDB);
-		}
+		accountInDB.setEmail(account.getEmail());
+		accountInDB.setUser(accountInDB.getUser().updateProfile(account, accountInDB, avatar));
+		accountInDB = accSer.update(accountInDB);
+		request.getSession().setAttribute("account", accountInDB);
 
 		List<Video> videosSuggesttion = videoSuggestSer.getSuggestionVideo();
 		model.addAttribute("account", accountInDB);
