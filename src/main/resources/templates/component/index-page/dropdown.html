@@ -13,11 +13,11 @@
 				<div id="drop-down">
 					<a href="#" id="drop-button">Thể loại</a>
 					<div id="drop-box" th:each = "category: ${categories}">
-						<a class="item" th:text="${category.name}"></a>
+						<a class="item" th:href="@{/filter-category?category={name} (name=${category.name})}" th:text="${category.name}"></a>
 					</div>
 				</div>
 			</li>
-			<li th:if="${account == null}"><a href="/account/sign-up">Đăng nhập / Đăng ký</a></li>
+			<li th:if="${account == null}"><a href="/account/sign-in">Đăng nhập / Đăng ký</a></li>
 			<li th:if="${account != null}"><a style="display: flex;" th:href="@{/user-profile}">Xin chào, <span style="display: inline-block; width: 100px; overflow: hidden; text-overflow: ellipsis;" th:text="${account.user.fullName}"></span></a></li>
 		</ul>
 		<div id="search">

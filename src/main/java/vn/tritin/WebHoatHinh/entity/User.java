@@ -97,6 +97,7 @@ public class User {
 				+ age + ", dateOfBirth=" + dateOfBirth + ", account=" + account + "]";
 	}
 
+	@SuppressWarnings("deprecation")
 	public User updateProfile(Account account, Account accountInDB, String avatar) {
 		User user = account.getUser();
 		String fullName = user.getFullName();

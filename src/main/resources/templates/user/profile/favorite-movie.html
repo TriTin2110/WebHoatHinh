@@ -5,12 +5,13 @@
 <title>Favorite Movie</title>
 </head>
 <body>
-		<!-- Danh sách phim bên phải -->
-		<div th:fragment="favorite-movie(videos)" class="col-md-8">
-			<div class="movies h-100">
-				<h3>Gợi ý cho bạn</h3>
-				<div class="row">
-					<div class="col-md-4" th:each="video : ${videos}">
+	<!-- Danh sách phim bên phải -->
+	<div th:fragment="favorite-movie(videos)" class="col-md-8">
+		<div class="movies h-100">
+			<h3>Gợi ý cho bạn</h3>
+			<div class="row">
+				<div class="col-md-4" th:each="video : ${videos}">
+					<a style="text-decoration: none; color: white;" th:href="@{/view/{videoId} (videoId=${video.id})}">
 						<div class="video-item">
 							<div style="overflow: hidden;">
 								<img
@@ -28,9 +29,11 @@
 								<strong>Views:</strong> <span th:text="${video.viewer}"></span>
 							</div>
 						</div>
-					</div>
+					</a>
 				</div>
+
 			</div>
 		</div>
+	</div>
 </body>
 </html>

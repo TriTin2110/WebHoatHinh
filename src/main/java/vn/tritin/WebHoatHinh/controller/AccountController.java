@@ -89,15 +89,11 @@ public class AccountController {
 	 * After all redirect to index.html with user session
 	 */
 	@PostMapping("/generate-user-session")
-	public String checkingAccount(HttpServletRequest request) {
+	public String checkingAccount(HttpServletRequest request, Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		List<Account> accounts = accSer.selectAll();
-		for (Account account : accounts) {
-			if (account.getUserName().equals(authentication.getName())) {
-				request.getSession().setAttribute("account", account);
-				break;
-			}
-		}
+		Account account = accSer.selectAccountByUsername(authentication.getName());
+		if (account != null)
+			request.getSession().setAttribute("account", account);
 		return "redirect:/";
 	}
 
@@ -158,4 +154,8 @@ public class AccountController {
 		return "user/sign-in";
 	}
 
+	@GetMapping("/logout/{username}")
+	public void logout(@RequestParam("username") String username) {
+		System.out.println("Da dang xuat");
+	}
 }

@@ -1,5 +1,6 @@
 package vn.tritin.WebHoatHinh.controller;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +38,9 @@ public class VideoControllerUser {
 				video.setViewer(video.getViewer() + 1);
 				videos.remove(video);
 				videos.add(video);
-				model.addAttribute("account", (Account) session.getAttribute("account"));
-				model.addAttribute("categories", video.getCategories());
+				model = setupBasicModel(model, session, videos);
 				model.addAttribute("video", video);
 				model.addAttribute("videoDetail", video.getVideoDetail());
-				model.addAttribute("videos", videos);
 				return "video";
 			}
 		}
@@ -51,20 +50,41 @@ public class VideoControllerUser {
 	@GetMapping("/")
 	public String showHomePage(Model model, HttpServletRequest request) {
 		HttpSession session = request.getSession();
-		Account account = (Account) session.getAttribute("account");
-		model.addAttribute("account", account);
-		model.addAttribute("categories", categories);
-		model.addAttribute("videos", videos);
+		model = setupBasicModel(model, session, videos);
 		return "index";
 	}
 
 	@GetMapping("/searching-video")
 	public String findVideoByName(@RequestParam("content-searched") String name, Model model, HttpSession session) {
 		List<Video> foundVideos = videoService.getVideoByName(videos, name);
-		model.addAttribute("account", (Account) session.getAttribute("account"));
-		model.addAttribute("videos", foundVideos);
-		model.addAttribute("categories", categories);
+		model = setupBasicModel(model, session, foundVideos);
 		return "index";
+	}
+
+	@GetMapping("/filter-category")
+	public String filterVideoByCategory(@RequestParam("category") String categoryName, Model model,
+			HttpSession session) {
+		List<Video> filtedVideos = new LinkedList<Video>();
+
+		out: for (Video video : videos) {
+			List<Category> categories = video.getCategories();
+			for (Category category : categories) {
+				if (category.getName().equals(categoryName)) {
+					filtedVideos.add(video);
+					continue out;
+				}
+			}
+		}
+		model = setupBasicModel(model, session, filtedVideos);
+		return "index";
+	}
+
+	// Any API will also have 1 basic model
+	private Model setupBasicModel(Model model, HttpSession session, List<Video> videos) {
+		model.addAttribute("account", (Account) session.getAttribute("account"));
+		model.addAttribute("categories", categories);
+		model.addAttribute("videos", videos);
+		return model;
 	}
 
 }

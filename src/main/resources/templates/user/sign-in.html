@@ -13,11 +13,15 @@
 </head>
 <body>
 	<div class="container">
-		<h2>Đăng ký</h2>
+		<h2>Đăng Nhập</h2>
 		<form th:action="@{/authenticateTheUser}" th:method="post">
 			<div style="text-align: center;" th:class="error"
 				th:if="${param.error} != null">
 				<span>Tài khoản không tồn tại!</span>
+			</div>
+			<div style="text-align: center;" th:class="error"
+				th:if="${error} != null">
+				<span th:text="${error}"></span>
 			</div>
 			<div class="form-group">
 				<label for="username">Tên đăng nhập</label> <input type="text"

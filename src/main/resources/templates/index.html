@@ -1,31 +1,40 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>MovieHunter</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
-<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="all" />
-<link rel="stylesheet" href="css/dropdown.css" type="text/css" media="all" />
+<link rel="stylesheet" href="css/bootstrap.min.css" type="text/css"
+	media="all" />
+<link rel="stylesheet" href="css/dropdown.css" type="text/css"
+	media="all" />
 
 <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="js/jquery-func.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 </head>
-<body>
-<!-- START PAGE SOURCE -->
-<div id="shell">
-  <div th:replace="~{component/index-page/header.html :: header}"></div>
+<body onload="checkingLogin()">
+	<!-- START PAGE SOURCE -->
+	<div id="shell">
+		<div th:replace="~{component/index-page/header.html :: header}"></div>
 
-  <div id="main">
-  
-    <div th:replace="~{component/index-page/content.html :: content}"></div>
+		<div id="main">
 
-    <div th:replace="~{component/index-page/news.html :: news}"></div>
-    
-  </div>
+			<div th:replace="~{component/index-page/content.html :: content}"></div>
 
-  <div th:replace="~{component/index-page/footer.html :: footer}"></div>
-</div>
-<!-- END PAGE SOURCE -->
+			<div th:replace="~{component/index-page/news.html :: news}"></div>
+
+		</div>
+
+		<div th:replace="~{component/index-page/footer.html :: footer}"></div>
+	</div>
+	<!-- END PAGE SOURCE -->
+	<script th:inline="javascript">
+window.addEventListener("beforeunload", () =>{
+	let data = JSON.stringify({username: username})
+	navigator.sendBeacon("localhost:8080/account/logout", data)
+})
+</script>
 </body>
 </html>

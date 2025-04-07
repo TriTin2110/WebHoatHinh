@@ -61,7 +61,7 @@ public class MyProfileController {
 
 		String avatar = accountInDB.getUser().getAvatar();
 		try {
-			if (avatarFile.getSize() != 0) {
+			if (avatarFile.getSize() != 0) { // If user want to change image
 				FileService fileSer = new FileServiceImpl();
 				avatar = fileSer.saveUserAvatar(avatarPath, avatarFile);
 			}
