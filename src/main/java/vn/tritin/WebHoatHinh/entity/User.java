@@ -1,13 +1,17 @@
 package vn.tritin.WebHoatHinh.entity;
 
 import java.sql.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -23,6 +27,9 @@ public class User {
 	@JoinColumn(name = "account_id")
 	private Account account;
 
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	private List<Comment> comments;
+
 	public User() {
 	}
 
@@ -33,6 +40,7 @@ public class User {
 		this.age = age;
 		this.dateOfBirth = dateOfBirth;
 		this.account = account;
+		this.comments = new LinkedList<Comment>();
 	}
 
 	public int getId() {
@@ -89,6 +97,14 @@ public class User {
 
 	public void setAccount(Account account) {
 		this.account = account;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
 	}
 
 	@Override

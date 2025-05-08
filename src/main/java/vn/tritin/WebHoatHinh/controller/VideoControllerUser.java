@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import vn.tritin.WebHoatHinh.entity.Account;
 import vn.tritin.WebHoatHinh.entity.Category;
 import vn.tritin.WebHoatHinh.entity.Video;
@@ -32,13 +31,11 @@ public class VideoControllerUser {
 
 	// Redirect user to the Video page (index page if the video requested not found)
 	@GetMapping("/view/{videoId}")
-	public String getVideo(@PathVariable String videoId, Model model, HttpSession session) {
+	public String getVideo(@PathVariable String videoId, Model model, HttpServletRequest request) {
 		for (Video video : videos) {
 			if (video.getId().equals(videoId)) {
 				video.setViewer(video.getViewer() + 1);
-				videos.remove(video);
-				videos.add(video);
-				model = setupBasicModel(model, session, videos);
+				model = setupBasicModel(model, request, videos);
 				model.addAttribute("video", video);
 				model.addAttribute("videoDetail", video.getVideoDetail());
 				return "video";
@@ -49,21 +46,21 @@ public class VideoControllerUser {
 
 	@GetMapping("/")
 	public String showHomePage(Model model, HttpServletRequest request) {
-		HttpSession session = request.getSession();
-		model = setupBasicModel(model, session, videos);
+		model = setupBasicModel(model, request, videos);
 		return "index";
 	}
 
 	@GetMapping("/searching-video")
-	public String findVideoByName(@RequestParam("content-searched") String name, Model model, HttpSession session) {
+	public String findVideoByName(@RequestParam("content-searched") String name, Model model,
+			HttpServletRequest request) {
 		List<Video> foundVideos = videoService.getVideoByName(videos, name);
-		model = setupBasicModel(model, session, foundVideos);
+		model = setupBasicModel(model, request, foundVideos);
 		return "index";
 	}
 
 	@GetMapping("/filter-category")
 	public String filterVideoByCategory(@RequestParam("category") String categoryName, Model model,
-			HttpSession session) {
+			HttpServletRequest request) {
 		List<Video> filtedVideos = new LinkedList<Video>();
 
 		out: for (Video video : videos) {
@@ -75,13 +72,13 @@ public class VideoControllerUser {
 				}
 			}
 		}
-		model = setupBasicModel(model, session, filtedVideos);
+		model = setupBasicModel(model, request, filtedVideos);
 		return "index";
 	}
 
 	// Any API will also have 1 basic model
-	private Model setupBasicModel(Model model, HttpSession session, List<Video> videos) {
-		model.addAttribute("account", (Account) session.getAttribute("account"));
+	private Model setupBasicModel(Model model, HttpServletRequest request, List<Video> videos) {
+		model.addAttribute("account", (Account) request.getSession().getAttribute("account"));
 		model.addAttribute("categories", categories);
 		model.addAttribute("videos", videos);
 		return model;

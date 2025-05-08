@@ -72,7 +72,7 @@ public class Account {
 
 	@Override
 	public String toString() {
-		return "Account [userName=" + userName + ", password=" + password + ", role=" + role + ", user=" + user + "]";
+		return "Account [userName=" + userName + ", password=" + password + ", role=" + role + "]";
 	}
 
 	public String showUser() {

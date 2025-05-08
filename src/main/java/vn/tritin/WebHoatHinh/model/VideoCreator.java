@@ -9,7 +9,7 @@ public class VideoCreator {
 	private String id;
 
 	@NotBlank(message = "Không được để trống tên!")
-	@Size(min = 3, message = "Độ dài tối thiểu là 6 ký tự!")
+	@Size(min = 3, message = "Độ dài tối thiểu là 2 ký tự!")
 	private String name;
 
 	private String pathAvatar, pathVideo, director, language, country, categories, studio;
@@ -17,13 +17,11 @@ public class VideoCreator {
 	public VideoCreator() {
 	}
 
-	public VideoCreator(String id, String name, String pathAvatar, String pathVideo, String director, String language,
-			String country, String categories, String studio) {
+	public VideoCreator(String id, String name, String director, String language, String country, String categories,
+			String studio) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.pathAvatar = pathAvatar;
-		this.pathVideo = pathVideo;
 		this.director = director;
 		this.language = language;
 		this.country = country;

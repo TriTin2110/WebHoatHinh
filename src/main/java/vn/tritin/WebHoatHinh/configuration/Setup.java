@@ -24,6 +24,10 @@ public class Setup {
 		this.categoryService = categoryService;
 	}
 
+	/*-
+	 * When the application running it will load all videos from db
+	 * Then save to cache
+	 * */
 	@Bean
 	public List<Video> getAllVideo() {
 		return videoService.findAll();

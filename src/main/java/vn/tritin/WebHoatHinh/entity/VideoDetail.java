@@ -1,8 +1,14 @@
 package vn.tritin.WebHoatHinh.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -13,6 +19,9 @@ public class VideoDetail {
 	@OneToOne
 	@JoinColumn(name = "video_id")
 	private Video video;
+
+	@OneToMany(mappedBy = "videoDetail", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	private List<Comment> comments;
 
 	public VideoDetail() {
 	}
@@ -27,6 +36,7 @@ public class VideoDetail {
 		this.id = id;
 		this.path = path;
 		this.video = video;
+		this.comments = new ArrayList<Comment>();
 	}
 
 	public String getId() {
@@ -51,6 +61,14 @@ public class VideoDetail {
 
 	public void setVideo(Video video) {
 		this.video = video;
+	}
+
+	public List<Comment> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
 	}
 
 }
