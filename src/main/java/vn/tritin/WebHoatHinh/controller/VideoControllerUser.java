@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpServletRequest;
 import vn.tritin.WebHoatHinh.entity.Account;
 import vn.tritin.WebHoatHinh.entity.Category;
+import vn.tritin.WebHoatHinh.entity.Comment;
 import vn.tritin.WebHoatHinh.entity.Video;
+import vn.tritin.WebHoatHinh.entity.VideoDetail;
+import vn.tritin.WebHoatHinh.service.CommentService;
 import vn.tritin.WebHoatHinh.service.VideoService;
 
 @Controller
@@ -21,12 +24,15 @@ public class VideoControllerUser {
 	private List<Video> videos;
 	private List<Category> categories;
 	private VideoService videoService;
+	private CommentService commmentService;
 
 	@Autowired
-	public VideoControllerUser(VideoService videoService, List<Video> videos, List<Category> categories) {
+	public VideoControllerUser(VideoService videoService, List<Video> videos, List<Category> categories,
+			CommentService commmentService) {
 		this.videoService = videoService;
 		this.videos = videos;
 		this.categories = categories;
+		this.commmentService = commmentService;
 	}
 
 	// Redirect user to the Video page (index page if the video requested not found)
@@ -36,8 +42,14 @@ public class VideoControllerUser {
 			if (video.getId().equals(videoId)) {
 				video.setViewer(video.getViewer() + 1);
 				model = setupBasicModel(model, request, videos);
+
+				// Get all comment of video
+				VideoDetail videoDetail = video.getVideoDetail();
+				List<Comment> comments = this.commmentService.selectByVideoDetail(videoDetail);
+
 				model.addAttribute("video", video);
-				model.addAttribute("videoDetail", video.getVideoDetail());
+				model.addAttribute("videoDetail", videoDetail);
+				model.addAttribute("comments", comments);
 				return "video";
 			}
 		}

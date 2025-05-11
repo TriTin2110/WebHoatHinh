@@ -11,7 +11,7 @@ import vn.tritin.WebHoatHinh.model.AccountDTO;
 
 @RepositoryRestResource
 public interface DAOAccount extends JpaRepository<Account, String> {
-	@Query("SELECT new vn.tritin.WebHoatHinh.model.AccountDTO(userName, password) FROM Account a WHERE a.email= :email")
+	@Query("SELECT new vn.tritin.WebHoatHinh.model.AccountDTO(username, password) FROM Account a WHERE a.email= :email")
 	public AccountDTO findByEmail(String email);
 
 	/*
@@ -20,6 +20,6 @@ public interface DAOAccount extends JpaRepository<Account, String> {
 	 * even DDL queries.
 	 */
 	@Modifying
-	@Query("UPDATE Account SET password = :password WHERE userName = :userName")
+	@Query("UPDATE Account SET password = :password WHERE username = :userName")
 	public void updatePassword(@Param("password") String password, @Param("userName") String username);
 }

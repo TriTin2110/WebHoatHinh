@@ -33,6 +33,8 @@ public class CommentSocket extends TextWebSocketHandler {
 	private final Logger log = Logger.getLogger(CommentSocket.class.getName());
 	@Autowired
 	private List<Video> videos;
+
+	// We need a Map for storing VideoDetailId and users current watching it
 	private static Map<String, List<WebSocketSession>> sessions = new HashMap<String, List<WebSocketSession>>();
 	@Autowired
 	private AccountService accSer;
@@ -47,7 +49,7 @@ public class CommentSocket extends TextWebSocketHandler {
 	public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) throws Exception {
 		// TODO Auto-generated method stub
 		String videoDetailId = (String) session.getAttributes().get("videoDetailId");
-		if (videoDetailId == null) // When load page
+		if (videoDetailId == null) // When new connection established
 			addUserToList(session, message);
 		else {
 			Comment comment = saveComment(session, message);
@@ -78,8 +80,9 @@ public class CommentSocket extends TextWebSocketHandler {
 	}
 
 	private Comment createComment(WebSocketSession session, CommentDTO commentDTO) {
-		Account account = (Account) session.getAttributes().get("account");
-		if (account == null) {
+		Account account = (Account) session.getAttributes().get("account"); // Get the account storing in the session
+		if (account == null) {// If in current session user doesn't make any comment then we will select that
+								// user
 			account = accSer.selectAccountByUsername(commentDTO.getAccountId());
 			session.getAttributes().put("account", account);
 		}
@@ -95,29 +98,21 @@ public class CommentSocket extends TextWebSocketHandler {
 		StringBuilder idComment = new StringBuilder();
 		idComment.append(date.getTime());
 		idComment.append("-");
-		idComment.append(account.getUserName());
+		idComment.append(account.getUsername());
 		Comment comment = new Comment(idComment.toString(), commentDTO.getText(), date, account.getUser(), videoDetail);
 		return comment;
 	}
 
 	private void addUserToList(WebSocketSession session, WebSocketMessage<?> message) {
-		String videoDetailId = (String) session.getAttributes().get("videoDetailId");
-		if (videoDetailId == null) // When load page
-		{
-			try {
-				videoDetailId = om.readValue(message.getPayload().toString(), String.class);
-			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			if (sessions.get(videoDetailId) == null) {
-				sessions.put(videoDetailId, new ArrayList<WebSocketSession>());
-			}
-			List<WebSocketSession> list = sessions.get(videoDetailId);
-			list.add(session);
-			sessions.replace(videoDetailId, list);
-			session.getAttributes().put("videoDetailId", videoDetailId);
+		String videoDetailId = null;
+		videoDetailId = message.getPayload().toString();
+		if (sessions.get(videoDetailId) == null) { // If the list doesn't contain this video
+			sessions.put(videoDetailId, new ArrayList<WebSocketSession>());
 		}
+		List<WebSocketSession> list = sessions.get(videoDetailId);
+		list.add(session);
+		sessions.replace(videoDetailId, list); // Update list user by videoDetailId
+		session.getAttributes().put("videoDetailId", videoDetailId); // Save video status on user
 	}
 
 	private void sendMessageForAllUser(WebSocketSession session, Comment comment) {

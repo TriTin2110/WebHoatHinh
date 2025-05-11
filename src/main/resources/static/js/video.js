@@ -1,5 +1,5 @@
+let videoDetailId = document.getElementById("video-detail-id").innerText + ''
 let videoContents = document.querySelectorAll(".video-content")
-console.log(videoContents)
 for (let video of videoContents) {
         if (video instanceof HTMLElement) {
                 video.addEventListener('mouseenter', function (e) {
@@ -42,7 +42,6 @@ function addComment(text) {
 var socket = new WebSocket("ws://localhost:8080/comment");
 
 socket.onopen = function() {
-    let videoDetailId = document.getElementById("video-detail-id").value
     socket.send(videoDetailId);
 };
 
@@ -58,7 +57,6 @@ socket.onmessage = function(event) {
 function sendMessage()
 {
 	let accountId = document.getElementById("user-name").value
-	let videoDetailId = document.getElementById("video-detail-id").value
 	let text = document.getElementById("text-field").value
 	let object = {id: "comment-id", accountId: accountId, text: text, videoDetailId: videoDetailId, date: Date.now().toString()}
 	socket.send(JSON.stringify(object))

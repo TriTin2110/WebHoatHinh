@@ -8,6 +8,4 @@ import vn.tritin.WebHoatHinh.entity.Video;
 @RepositoryRestResource
 public interface DAOVideo extends JpaRepository<Video, String> {
 
-//	@Query("SELECT v FROM Video v JOIN FETCH v.categories where v.id = :id")
-//	public Video receiveAll(@Param("id") String id);
 }

@@ -53,7 +53,7 @@ public class MyProfileController {
 	@PostMapping("/update")
 	public String update(@ModelAttribute("account") Account account, @RequestParam("avatar") MultipartFile avatarFile,
 			Model model, HttpServletRequest request) {
-		Account accountInDB = accSer.selectAccountByUsername(account.getUserName());
+		Account accountInDB = accSer.selectAccountByUsername(account.getUsername());
 		if (accountInDB == null) {
 			model.addAttribute("error", "Tài khoản không tồn tại!");
 			return "/user/profile";

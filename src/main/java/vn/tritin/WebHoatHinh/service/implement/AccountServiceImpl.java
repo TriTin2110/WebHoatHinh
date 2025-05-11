@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -39,13 +38,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public UserDetails loadUserByUsername(String username) {
 		// TODO Auto-generated method stub
-		Account accInDB = selectAccountByUsername(username);
-		if (accInDB == null)
-			throw new UsernameNotFoundException(username + " cannot found!");
-
-		updateListUser(accInDB);
-		return User.builder().username(accInDB.getUserName()).password(accInDB.getPassword())
-				.roles(accInDB.getRole().getName()).build();
+		return dao.findById(username).orElseThrow(() -> new UsernameNotFoundException(username + " cannot found!"));
 	}
 
 	@Override
@@ -64,7 +57,7 @@ public class AccountServiceImpl implements AccountService {
 	@CachePut("accounts")
 	public List<Account> updateListUser(Account account) {
 		for (Account accInList : accounts) {
-			if (accInList.getUserName().equals(account.getUserName()))
+			if (accInList.getUsername().equals(account.getUsername()))
 				return this.accounts;
 		}
 		accounts.add(account);

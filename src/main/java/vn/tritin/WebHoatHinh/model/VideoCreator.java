@@ -8,20 +8,14 @@ public class VideoCreator {
 	@Size(min = 7, message = "Độ dài tối thiểu là 6 ký tự!")
 	private String id;
 
-	@NotBlank(message = "Không được để trống tên!")
-	@Size(min = 3, message = "Độ dài tối thiểu là 2 ký tự!")
-	private String name;
-
 	private String pathAvatar, pathVideo, director, language, country, categories, studio;
 
 	public VideoCreator() {
 	}
 
-	public VideoCreator(String id, String name, String director, String language, String country, String categories,
-			String studio) {
+	public VideoCreator(String id, String director, String language, String country, String categories, String studio) {
 		super();
 		this.id = id;
-		this.name = name;
 		this.director = director;
 		this.language = language;
 		this.country = country;
@@ -35,14 +29,6 @@ public class VideoCreator {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getPathAvatar() {

@@ -5,7 +5,6 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
@@ -20,7 +19,7 @@ public class VideoDetail {
 	@JoinColumn(name = "video_id")
 	private Video video;
 
-	@OneToMany(mappedBy = "videoDetail", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "videoDetail", cascade = CascadeType.REMOVE)
 	private List<Comment> comments;
 
 	public VideoDetail() {

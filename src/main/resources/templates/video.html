@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title th:text="${video?.name}">Document</title>
+<title th:text="${video?.id}">Document</title>
 <link rel="stylesheet" href="/css/style.css" type="text/css" media="all" />
 <link rel="stylesheet" href="/css/video.css" type="text/css" media="all" />
 <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css"
@@ -28,7 +28,7 @@
 
 		<div id="main">
 			<div>
-				<h3 th:text="${video?.name}" style="color: white;">...</h3>
+				<h3 th:text="${video?.id}" id="video-detail-id" style="color: white;">...</h3>
 				<video id="video-show"
 					th:src="@{/video/{path}(path=${videoDetail?.path})}" controls></video>
 			</div>
@@ -39,9 +39,9 @@
 			</div>
 		</div>
 		<div
-			th:replace="~{component/index-page/description.html :: description(${video}, ${categories})}"></div>
+			th:replace="~{component/video-page/description.html :: description(${video}, ${categories})}"></div>
 		<div>
-			<div th:insert="~{component/video-page/comment.html :: comment(${account},${videoDetail})}"></div>
+			<div th:insert="~{component/video-page/comment.html :: comment(${account},${comments})}"></div>
 			
 		</div>
 		<div th:replace="~{component/index-page/footer.html :: footer}"></div>

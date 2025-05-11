@@ -38,7 +38,6 @@ public class AttributeAddition {
 		String avatarPath = videoCreator.getPathAvatar();
 
 		video.setId(videoCreator.getId());
-		video.setName(videoCreator.getName());
 		video.setAvatar(avatarPath);
 		video.setDirector(videoCreator.getDirector());
 		video.setLanguage(videoCreator.getLanguage());
@@ -90,7 +89,7 @@ public class AttributeAddition {
 	}
 
 	public VideoTag createVideoTag(Video video) {
-		VideoTag tag = new VideoTag(video.getId(), video.getName(), video.getAvatar(), "Phim lẻ", null, 0, video);
+		VideoTag tag = new VideoTag(video.getId(), video.getAvatar(), "Phim lẻ", null, 0, video);
 		return tag;
 	}
 }

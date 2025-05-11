@@ -5,16 +5,15 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<div th:fragment="comment(account, videoDetail)" class="comment-container">
+	<div th:fragment="comment(account, comments)" class="comment-container">
 		<div class="comment-list" id="commentList">
-			<div id="messages" th:if="${#lists.isEmpty(videoDetail.comments) == false}" th:each="comment : ${videoDetail.comments}">
+			<div id="messages" th:if="${#lists.isEmpty(comments) == false}" th:each="comment : ${comments}">
 				<div th:text="${comment.content}"></div>
 			</div>
 		</div>
 		<div class="comment-box">
 			<img src="https://i.pravatar.cc/40" alt="User Avatar">
 			<input type="hidden" th:value="${account.userName}" id="user-name">
-			<input type="hidden" th:value="${videoDetail.id}" id="video-detail-id">
 			<div class="input-container">
 				<textarea id="text-field" placeholder="Bình luận..." ></textarea>
 				<button onclick="sendMessage()">Đăng</button>

@@ -16,7 +16,7 @@ import jakarta.persistence.OneToOne;
 public class Video {
 	@Id
 	private String id;
-	private String name, avatar, status, director, language, duration, quality;
+	private String avatar, status, director, language, duration, quality;
 	private int viewer;
 
 	@OneToOne(mappedBy = "video", cascade = CascadeType.ALL)
@@ -40,10 +40,9 @@ public class Video {
 	public Video() {
 	}
 
-	public Video(String id, String name, String avatar, String status, String director, String language,
-			String duration, String quality, int viewer) {
+	public Video(String id, String avatar, String status, String director, String language, String duration,
+			String quality, int viewer) {
 		this.id = id;
-		this.name = name;
 		this.avatar = avatar;
 		this.status = status;
 		this.director = director;
@@ -59,14 +58,6 @@ public class Video {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getAvatar() {
@@ -167,8 +158,7 @@ public class Video {
 
 	@Override
 	public String toString() {
-		return "Video [id=" + id + ", name=" + name + ", categories=" + categories + ", studio=" + studio + ", country="
-				+ country + "]";
+		return "Video [id=" + id + ", categories=" + categories + ", studio=" + studio + ", country=" + country + "]";
 	}
 
 }

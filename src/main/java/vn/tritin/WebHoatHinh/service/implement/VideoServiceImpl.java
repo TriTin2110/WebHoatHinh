@@ -3,10 +3,10 @@ package vn.tritin.WebHoatHinh.service.implement;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
@@ -80,16 +80,29 @@ public class VideoServiceImpl implements VideoService {
 	@Override
 	public List<Video> getVideoByName(List<Video> videos, String name) {
 		// TODO Auto-generated method stub
-		String[] nameSplit = name.split(" ");
-
-		List<Video> foundVideos = videos.stream().filter(o -> {
-			for (String n : nameSplit) {
-				Pattern pattern = Pattern.compile(n, Pattern.CASE_INSENSITIVE);
-				Matcher matcher = pattern.matcher(o.getName());
-				return matcher.find();
+		long begin = System.nanoTime();
+		String[] nameSplits = name.split(" ");
+		List<Video> foundVideos = new ArrayList<Video>();
+		String videoName = null;
+		for (Video video : foundVideos) {
+			videoName = video.getId().toLowerCase();
+			for (String nameSplit : nameSplits) {
+				if (videoName.contains(nameSplit.toLowerCase())) {
+					foundVideos.add(video);
+					continue;
+				}
 			}
-			return false;
-		}).toList();
+		}
+		long end = System.nanoTime();
+		Logger.getLogger(this.getClass().getName()).info("Time: " + (end - begin));
+//		List<Video> foundVideos = videos.stream().filter(o -> {
+//			for (String n : nameSplit) {
+//				Pattern pattern = Pattern.compile(n, Pattern.CASE_INSENSITIVE);
+//				Matcher matcher = pattern.matcher(o.getName());
+//				return matcher.find();
+//			}
+//			return false;
+//		}).toList();
 		return foundVideos;
 	}
 

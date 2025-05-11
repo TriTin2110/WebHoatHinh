@@ -20,10 +20,10 @@ public class FileServiceImpl implements FileService {
 		// TODO Auto-generated method stub
 		// Creating new video entity
 		Video video = new Video();
-		video.setName(file.getOriginalFilename());
+		video.setId(file.getOriginalFilename());
 
 		// Get storing path
-		String storingPath = path + File.separator + video.getName();
+		String storingPath = path + File.separator + video.getId();
 
 		// Create dir for storing
 		File dir = new File(path);

@@ -9,7 +9,7 @@ import jakarta.persistence.OneToOne;
 public class VideoTag {
 	@Id
 	private String id;
-	private String name, avatar, typeOfVideo, duration;
+	private String avatar, typeOfVideo, duration;
 	private int viewer;
 	@OneToOne
 	@JoinColumn(name = "video_id")
@@ -18,19 +18,16 @@ public class VideoTag {
 	public VideoTag() {
 	}
 
-	public VideoTag(String id, String name, String avatar, String typeOfVideo, String duration, int viewer) {
+	public VideoTag(String id, String avatar, String typeOfVideo, String duration, int viewer) {
 		this.id = id;
-		this.name = name;
 		this.avatar = avatar;
 		this.typeOfVideo = typeOfVideo;
 		this.duration = duration;
 		this.viewer = viewer;
 	}
 
-	public VideoTag(String id, String name, String avatar, String typeOfVideo, String duration, int viewer,
-			Video video) {
+	public VideoTag(String id, String avatar, String typeOfVideo, String duration, int viewer, Video video) {
 		this.id = id;
-		this.name = name;
 		this.avatar = avatar;
 		this.typeOfVideo = typeOfVideo;
 		this.duration = duration;
@@ -44,14 +41,6 @@ public class VideoTag {
 
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getAvatar() {

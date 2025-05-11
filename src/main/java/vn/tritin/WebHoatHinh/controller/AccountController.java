@@ -6,8 +6,7 @@ import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -84,14 +83,11 @@ public class AccountController {
 	}
 
 	/*-
-	 * Cause we will need user information to display on their session 
-	 * So I get all their information when they logged in 
-	 * After all redirect to index.html with user session
+	 * When user login the UserDetail(Account) will be store at SecurityContextHolder by Spring Security
+	 * @AuthenticationPrincipal will get that UserDetail
 	 */
 	@PostMapping("/generate-user-session")
-	public String checkingAccount(HttpServletRequest request, Model model) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Account account = accSer.selectAccountByUsername(authentication.getName());
+	public String checkingAccount(@AuthenticationPrincipal Account account, HttpServletRequest request, Model model) {
 		if (account != null)
 			request.getSession().setAttribute("account", account);
 		return "redirect:/";
