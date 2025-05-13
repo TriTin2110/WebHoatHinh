@@ -7,15 +7,31 @@
 <body>
 	<div th:fragment="comment(account, comments)" class="comment-container">
 		<div class="comment-list" id="commentList">
-			<div id="messages" th:if="${#lists.isEmpty(comments) == false}" th:each="comment : ${comments}">
-				<div th:text="${comment.content}"></div>
+			<div id="messages" th:if="${#lists.isEmpty(comments) == false}"
+				th:each="comment : ${comments}">
+				<div class="comment">
+					<img th:src="@{/img/user-avatar/{avatar} (avatar=${comment.user.avatar})}" alt="User Avatar">
+					<div>
+						<div class="comment-content">
+							<a th:href="@{/user-profile/{id} (id=${comment.user.account.username})}"><b th:text="${comment.user.fullName}">User name</b></a> <br> <span th:text="${comment.content}"></span>
+						</div>
+						<div class="comment-actions">
+							<span>Thích</span> <span>Phản hồi</span> <span>Vừa xong</span>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="comment-box">
-			<img src="https://i.pravatar.cc/40" alt="User Avatar">
-			<input type="hidden" th:value="${account.userName}" id="user-name">
+			<img
+				th:src="@{/img/user-avatar/{avatar} (avatar = ${account.user.avatar})}"
+				alt="User Avatar"> <input type="hidden"
+				th:value="${account.username}" id="user-name"> <input
+				type="hidden" th:value="${account.user.fullName}"
+				id="user-full-name"> <input type="hidden"
+				th:value="${account.user.avatar}" id="user-avatar">
 			<div class="input-container">
-				<textarea id="text-field" placeholder="Bình luận..." ></textarea>
+				<textarea id="text-field" placeholder="Bình luận..."></textarea>
 				<button onclick="sendMessage()">Đăng</button>
 			</div>
 		</div>

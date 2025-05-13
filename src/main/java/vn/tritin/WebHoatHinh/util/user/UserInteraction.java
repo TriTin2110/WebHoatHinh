@@ -39,7 +39,7 @@ public class UserInteraction {
 		Role role = roleInt.find(ROLE_USER);
 		Account account = new Account(ru.getUserName(), new BCryptPasswordEncoder().encode(ru.getPassword()),
 				ru.getEmail(), role);
-		User user = new User(ru.getFullName(), null, ru.isGender(), age, ru.getDateOfBirth(), account);
+		User user = new User(ru.getFullName(), ru.isGender(), age, ru.getDateOfBirth(), account);
 
 		account.setUser(user);
 		return user;

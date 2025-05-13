@@ -1,5 +1,8 @@
 let videoDetailId = document.getElementById("video-detail-id").innerText + ''
 let videoContents = document.querySelectorAll(".video-content")
+let username = document.getElementById("user-full-name").value
+let avatar = document.getElementById("user-avatar").value
+
 for (let video of videoContents) {
         if (video instanceof HTMLElement) {
                 video.addEventListener('mouseenter', function (e) {
@@ -24,13 +27,15 @@ function addComment(text) {
             var newComment = document.createElement("div");
             newComment.classList.add("comment");
             newComment.innerHTML = `
-                <img src="https://i.pravatar.cc/40" alt="User Avatar">
+                <img src="/img/user-avatar/${avatar}" alt="User Avatar">
                 <div>
-                    <div class="comment-content">${commentText}</div>
+                    <div class="comment-content"><a href="#"><b>${username}</b></a> <br> 
+	                    ${commentText}
+                    </div>
                     <div class="comment-actions">
                         <span>Thích</span>
                         <span>Phản hồi</span>
-                        <span>1 phút trước</span>
+                        <span>Vừa xong</span>
                     </div>
                 </div>
             `;

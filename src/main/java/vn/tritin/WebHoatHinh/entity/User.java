@@ -30,12 +30,14 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Comment> comments;
 
+	private final String DEFAULT_AVATAR_NAME = "DefaultAvatar.jpeg";
+
 	public User() {
 	}
 
-	public User(String fullName, String avatar, boolean gender, int age, Date dateOfBirth, Account account) {
+	public User(String fullName, boolean gender, int age, Date dateOfBirth, Account account) {
 		this.fullName = fullName;
-		this.avatar = avatar;
+		this.avatar = DEFAULT_AVATAR_NAME;
 		this.gender = gender;
 		this.age = age;
 		this.dateOfBirth = dateOfBirth;
