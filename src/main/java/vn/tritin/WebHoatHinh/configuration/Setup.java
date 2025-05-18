@@ -12,7 +12,7 @@ import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.service.CategoryService;
 import vn.tritin.WebHoatHinh.service.NewsService;
 import vn.tritin.WebHoatHinh.service.VideoService;
-import vn.tritin.WebHoatHinh.util.StringDeflater;
+import vn.tritin.WebHoatHinh.util.StringHandler;
 
 //This Setup class will load all videos, categories from the DB when the application begin
 
@@ -45,12 +45,10 @@ public class Setup {
 
 	@Bean
 	public List<News> getAllNews() {
-		StringDeflater deflater = new StringDeflater();
+		StringHandler stringHandler = new StringHandler();
 		List<News> news = newsService.findAll();
 		news = news.stream().map(o -> {
-			deflater.inflaterString(o.getByteLengthDescriptionAfterZip(), o.getDescription());
-			String output = deflater.getInflaterString();
-			o.setDescription(output.getBytes());
+			o.setDescription(stringHandler.decrypt(o.getDescription()));
 			return o;
 		}).toList();
 		return news;

@@ -23,7 +23,7 @@ import vn.tritin.WebHoatHinh.model.NewsCreator;
 import vn.tritin.WebHoatHinh.service.NewsService;
 import vn.tritin.WebHoatHinh.service.TagService;
 import vn.tritin.WebHoatHinh.service.util.FileService;
-import vn.tritin.WebHoatHinh.util.StringDeflater;
+import vn.tritin.WebHoatHinh.util.StringHandler;
 
 @Controller
 @RequestMapping("/admin/news")
@@ -49,14 +49,13 @@ public class NewsControllerManager {
 
 	@GetMapping("")
 	public void findAll() {
-		StringDeflater deflater = new StringDeflater();
+		StringHandler stringHandler = new StringHandler();
 		List<News> news = newsSer.findAll();
 		news = news.stream().map(o -> {
-			deflater.inflaterString(o.getByteLengthDescriptionAfterZip(), o.getDescription());
-			String output = deflater.getInflaterString();
-			o.setDescription(output.getBytes());
+			o.setDescription(stringHandler.decrypt(o.getDescription()));
 			return o;
 		}).toList();
+		news.forEach(System.out::println);
 	}
 
 	@GetMapping("/show-create")
@@ -68,18 +67,25 @@ public class NewsControllerManager {
 
 	@PostMapping("/save")
 	public void insert(@ModelAttribute("news") NewsCreator newsCreator, @RequestParam("banner") MultipartFile file) {
-		System.out.println(bannerPath);
 		News news = prepareData(newsCreator, file);
 		newsSer.save(news);
 	}
 
+	/*-
+	 * To save News 
+	 * First I will deflater description to minimum size (Notice that description will also contain tag html and img have been encrypted
+	 * Then I will save the banner image 
+	 * Also I will split all tags to an element of array (Split by ',') and put it to the tags list of news
+	 * After that I will save news to db
+	 *  
+	 * */
 	private News prepareData(NewsCreator newsCreator, @RequestParam("banner") MultipartFile file) {
 		// Deflater Description
 		String description = newsCreator.getDescription();
-		StringDeflater stringDeflater = new StringDeflater();
-		stringDeflater.deflaterString(description);
-		int length = stringDeflater.getLength();
-		byte[] output = stringDeflater.getOutput();
+		StringHandler stringHandler = new StringHandler();
+		String output = stringHandler.encrypt(description);
+		System.out.println("Before: " + description.getBytes().length);
+		System.out.println("After: " + output.getBytes().length);
 
 		String banner = null;
 		try {
@@ -93,7 +99,7 @@ public class NewsControllerManager {
 		String[] tagsSplitted = newsCreator.getTags().split(",");
 		List<Tag> tags = new LinkedList<Tag>();
 		Tag tempTag;
-		News news = new News(newsCreator.getId(), output, date, newsCreator.getAuthorName(), length, banner);
+		News news = new News(newsCreator.getId(), output, date, newsCreator.getAuthorName(), banner);
 		for (String tag : tagsSplitted) {
 			if (tag.isBlank())
 				continue;

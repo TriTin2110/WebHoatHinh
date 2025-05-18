@@ -50,39 +50,25 @@
   <div class="overlay">
     <div class="container news-container text-center">
       <!-- Tiêu đề chính -->
-      <h1 class="text-white mb-4">TIN TỨC PHIM</h1>
+      <h1 class="text-white mb-4" th:text="${news.id}">TIN TỨC PHIM</h1>
 
-      <!-- Banner ngẫu nhiên -->
-      <img src="https://picsum.photos/800/300?blur=2" class="img-fluid rounded mb-4" alt="Banner phim ngẫu nhiên">
+      <!-- Banner -->
+      <img th:src="@{/img/news-banner/{banner} (banner=${news.banner})}" class="img-fluid rounded mb-4" alt="Banner phim ngẫu nhiên">
 
       <!-- Tác giả & ngày -->
       <div class="author-date mb-4 text-end">
-        Tác giả: <strong>PhimHay.net</strong> | Ngày đăng: 17/05/2025
+        Tác giả: <strong th:text="${news.authorName}">WebHoatHinh</strong> | Ngày đăng: <span th:text="${news.dateUploaded}"></span>
       </div>
 
       <!-- Nội dung -->
-      <h3 class="news-title text-start">Phim "Hồi Sinh" chính thức công chiếu</h3>
-
-      <h5 class="news-subtitle text-start">1. Màn tái xuất bùng nổ</h5>
-      <p class="text-start">
-        Bộ phim hành động được mong chờ nhất năm <em>"Hồi Sinh"</em> đã chính thức đổ bộ các rạp trên toàn quốc. Tác phẩm đánh dấu sự trở lại của ngôi sao gạo cội sau 5 năm vắng bóng trên màn ảnh rộng, hứa hẹn mang đến những pha cháy nổ hoành tráng cùng cốt truyện gay cấn khiến khán giả phải nín thở.
-      </p>
-
-      <h5 class="news-subtitle text-start">2. Hành trình sản xuất kỳ công</h5>
-      <p class="text-start">
-        Đạo diễn tiết lộ đoàn phim đã dành hơn 200 ngày quay tại 7 quốc gia để ghi lại những pha mạo hiểm chân thực nhất. Khâu hậu kỳ mất thêm 8 tháng nhằm đảm bảo mọi khung hình đều đạt tiêu chuẩn IMAX, mang lại trải nghiệm hình ảnh sắc nét tột đỉnh.
-      </p>
-
-      <h5 class="news-subtitle text-start">3. Âm nhạc đẳng cấp Oscar</h5>
-      <p class="text-start">
-        Phần nhạc nền do nhà soạn nhạc từng đoạt giải Oscar thực hiện, hòa quyện hoàn hảo với nhịp phim, đẩy cao cảm xúc người xem trong những cảnh cao trào. Nhiều nhà phê bình dự đoán đây sẽ là ứng cử viên sáng giá cho hạng mục Nhạc phim hay nhất.
-      </p>
-
-      <h5 class="news-subtitle text-start">4. Phản hồi bùng nổ từ khán giả</h5>
-      <p class="text-start">
-        Theo thống kê, <strong>"Hồi Sinh"</strong> bán sạch 90% vé suất chiếu sớm chỉ sau 12 giờ mở bán. Rạp phải bổ sung thêm suất khuya để đáp ứng nhu cầu. Trên mạng xã hội, hashtag #HoiSinhMovie đạt 2 triệu lượt đề cập trong 24 giờ.
-      </p>
+      <div id="content"></div>
     </div>
   </div>
+  
+  <script type="text/javascript" th:inline="javascript">
+  	let description = /*[[${news.description}]]*/ ''
+	let content = document.getElementById("content")
+	content.innerHTML = description
+	</script>
 </body>
 </html>

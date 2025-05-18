@@ -23,7 +23,6 @@ public class NewsController {
 
 	@GetMapping("/{id}")
 	public String findNewsById(@PathVariable("id") String id, Model model) {
-		System.out.println(id);
 		News news = null;
 		for (News newsItem : newsList) {
 			if (id.equals(newsItem.getId())) {
@@ -32,7 +31,6 @@ public class NewsController {
 			}
 		}
 		model.addAttribute("news", news);
-		System.out.println("Da chuyen huong");
 		return "news";
 	}
 }

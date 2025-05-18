@@ -54,14 +54,6 @@ public class FileServiceImpl implements FileService {
 			storingFolder.mkdirs();
 		}
 		File img = new File(storingPath);
-		if (!img.exists()) {
-			try {
-				img.createNewFile();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 
 		try {
 			Files.copy(imageFile.getInputStream(), img.toPath());

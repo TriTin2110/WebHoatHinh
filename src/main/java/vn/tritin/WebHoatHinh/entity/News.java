@@ -25,9 +25,8 @@ public class News extends Content {
 		super(id);
 	}
 
-	public News(String id, byte[] description, Date dateUploaded, String authorName, int byteLengthDescriptionAfterZip,
-			String banner) {
-		super(id, description, dateUploaded, byteLengthDescriptionAfterZip, banner);
+	public News(String id, String description, Date dateUploaded, String authorName, String banner) {
+		super(id, description, dateUploaded, banner);
 		this.authorName = authorName;
 	}
 
@@ -50,9 +49,7 @@ public class News extends Content {
 	@Override
 	public String toString() {
 		return "News [authorName=" + authorName + ", tags=" + tags + ", getId()=" + getId() + ", getDescription()="
-				+ convertToString() + ", getDateUploaded()=" + getDateUploaded()
-				+ ", getByteLengthDescriptionAfterZip()=" + getByteLengthDescriptionAfterZip() + ", getBanner()="
-				+ getBanner() + "]";
+				+ convertToString() + ", getDateUploaded()=" + getDateUploaded() + ", getBanner()=" + getBanner() + "]";
 	}
 
 }

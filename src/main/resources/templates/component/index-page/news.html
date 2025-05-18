@@ -16,9 +16,11 @@
 			<div th:each="news: ${news}">
 				<div class="content">
 					<p class="date" th:text="${news.dateUploaded}"></p>
-					<h4 class="header-news" th:text="${news.id}">Disney's A Christmas Carol</h4>
-					<p th:text="${news.convertToString}" style="overflow: hidden; text-overflow: ellipsis;white-space: nowrap;"></p>
-					<a th:href="@{/movie-news/{id} (id=${news.id})}">Read more</a>
+					<a th:href="@{/movie-news/{id} (id=${news.id})}" style="text-decoration: none;"><h4 th:text="${news.id}" class="header-news"></h4></a>
+					<img  th:src="@{/img/news-banner/{banner} (banner=${news.banner})}">
+					<p id="small-text">
+						<div th:utext="${news.description}" style="overflow: hidden; text-overflow: ellipsis;white-space: nowrap; display:flex"></div>
+					</p>
 				</div>
 			</div>
 		</div>
@@ -51,6 +53,5 @@
 		</div>
 		<div class="cl">&nbsp;</div>
 	</div>
-
 </body>
 </html>

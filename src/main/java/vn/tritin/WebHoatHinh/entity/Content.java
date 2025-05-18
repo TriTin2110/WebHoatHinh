@@ -7,17 +7,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Lob;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Content {
 	@Id
 	private String id;
-	private byte[] description;
+	@Lob
+	private String description;
 	@Column(name = "date_uploaded")
 	private Date dateUploaded;
-	@Column(name = "byte_length_description_after_zip")
-	private int byteLengthDescriptionAfterZip;
 	private String banner;
 
 	public Content() {
@@ -33,11 +33,10 @@ public class Content {
 		this.banner = banner;
 	}
 
-	public Content(String id, byte[] description, Date dateUploaded, int byteLengthDescriptionAfterZip, String banner) {
+	public Content(String id, String description, Date dateUploaded, String banner) {
 		this.id = id;
 		this.description = description;
 		this.dateUploaded = dateUploaded;
-		this.byteLengthDescriptionAfterZip = byteLengthDescriptionAfterZip;
 		this.banner = banner;
 	}
 
@@ -49,11 +48,11 @@ public class Content {
 		this.id = id;
 	}
 
-	public byte[] getDescription() {
+	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(byte[] description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 
@@ -63,14 +62,6 @@ public class Content {
 
 	public void setDateUploaded(Date dateUploaded) {
 		this.dateUploaded = dateUploaded;
-	}
-
-	public int getByteLengthDescriptionAfterZip() {
-		return byteLengthDescriptionAfterZip;
-	}
-
-	public void setByteLengthDescriptionAfterZip(int byteLengthDescriptionAfterZip) {
-		this.byteLengthDescriptionAfterZip = byteLengthDescriptionAfterZip;
 	}
 
 	public String getBanner() {
