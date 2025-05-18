@@ -5,15 +5,12 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Studio {
-	@Id
-	private String name;
+public class Studio extends OutDoor {
 
 	@OneToMany(mappedBy = "studio", cascade = { CascadeType.MERGE, CascadeType.REMOVE })
 	private List<Video> videos;
@@ -26,22 +23,14 @@ public class Studio {
 	}
 
 	public Studio(String name) {
-		this.name = name;
+		super(name, 0);
 		this.videos = new ArrayList<Video>();
 	}
 
-	public Studio(String name, List<Video> videos, Country country) {
-		this.name = name;
+	public Studio(String name, int totalMovie, List<Video> videos, Country country) {
+		super(name, totalMovie);
 		this.videos = videos;
 		this.country = country;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public List<Video> getVideos() {

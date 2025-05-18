@@ -5,7 +5,6 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
@@ -13,10 +12,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 
 @Entity
-public class Video {
-	@Id
-	private String id;
-	private String avatar, status, director, language, duration, quality;
+public class Video extends Content {
+	private String status, director, language, duration, quality;
 	private int viewer;
 
 	@OneToOne(mappedBy = "video", cascade = CascadeType.ALL)
@@ -40,32 +37,15 @@ public class Video {
 	public Video() {
 	}
 
-	public Video(String id, String avatar, String status, String director, String language, String duration,
+	public Video(String id, String banner, String status, String director, String language, String duration,
 			String quality, int viewer) {
-		this.id = id;
-		this.avatar = avatar;
+		super(id, banner);
 		this.status = status;
 		this.director = director;
 		this.language = language;
 		this.duration = duration;
 		this.quality = quality;
 		this.viewer = viewer;
-	}
-
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getAvatar() {
-		return avatar;
-	}
-
-	public void setAvatar(String avatar) {
-		this.avatar = avatar;
 	}
 
 	public String getStatus() {
@@ -158,7 +138,7 @@ public class Video {
 
 	@Override
 	public String toString() {
-		return "Video [id=" + id + ", categories=" + categories + ", studio=" + studio + ", country=" + country + "]";
+		return "Video [categories=" + categories + ", studio=" + studio + ", country=" + country + "]";
 	}
 
 }

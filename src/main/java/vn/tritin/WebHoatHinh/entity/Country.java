@@ -5,13 +5,10 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Country {
-	@Id
-	private String name;
+public class Country extends OutDoor {
 
 	@OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
 	private List<Video> videos;
@@ -23,23 +20,15 @@ public class Country {
 	}
 
 	public Country(String name) {
-		this.name = name;
+		super(name, 0);
 		this.videos = new ArrayList<Video>();
 		this.studios = new ArrayList<Studio>();
 	}
 
-	public Country(String name, List<Video> videos, List<Studio> studios) {
-		this.name = name;
+	public Country(String name, int totalMovie, List<Video> videos, List<Studio> studios) {
+		super(name, totalMovie);
 		this.videos = videos;
 		this.studios = studios;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public List<Video> getVideos() {

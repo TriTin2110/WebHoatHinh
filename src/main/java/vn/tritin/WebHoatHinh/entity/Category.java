@@ -1,18 +1,14 @@
 package vn.tritin.WebHoatHinh.entity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 
 @Entity
-public class Category {
-	@Id
-	private String name;
+public class Category extends OutDoor {
 
 	@ManyToMany
 	@JoinTable(name = "videos_categories", joinColumns = @JoinColumn(name = "category_id"), inverseJoinColumns = @JoinColumn(name = "video_id"))
@@ -22,21 +18,12 @@ public class Category {
 	}
 
 	public Category(String name) {
-		this.name = name;
-		this.videos = new ArrayList<Video>();
+		super(name, 0);
 	}
 
-	public Category(String name, List<Video> videos) {
-		this.name = name;
+	public Category(String name, int totalMovie, List<Video> videos) {
+		super(name, totalMovie);
 		this.videos = videos;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public List<Video> getVideos() {

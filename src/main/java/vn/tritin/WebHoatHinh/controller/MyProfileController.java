@@ -75,7 +75,7 @@ public class MyProfileController {
 		try {
 			if (avatarFile.getSize() != 0) { // If user want to change image
 				FileService fileSer = new FileServiceImpl();
-				avatar = fileSer.saveUserAvatar(avatarPath, avatarFile);
+				avatar = fileSer.saveImage(avatarPath, avatarFile);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

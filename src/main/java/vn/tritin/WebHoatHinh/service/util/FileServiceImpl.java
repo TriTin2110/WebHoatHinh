@@ -1,11 +1,9 @@
 package vn.tritin.WebHoatHinh.service.util;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Random;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -40,25 +38,38 @@ public class FileServiceImpl implements FileService {
 	 * Then we will create the file from The MultipartFile and save it at static/img/user-avatar
 	 * if there is any error we will return null then the controller will stop update other information
 	 * */
-	public String saveUserAvatar(String avatarPath, MultipartFile avatarFile) {
-		String fileExtension = avatarFile.getOriginalFilename().substring(
-				avatarFile.getOriginalFilename().lastIndexOf("."), avatarFile.getOriginalFilename().length());
+	public String saveImage(String imagePath, MultipartFile imageFile) {
+		String fileExtension = imageFile.getOriginalFilename()
+				.substring(imageFile.getOriginalFilename().lastIndexOf("."), imageFile.getOriginalFilename().length());
 		if (!fileExtension.equals(".png") && !fileExtension.equals(".jpg") && !fileExtension.equals(".jpeg")) {
 			return null;
 		}
 
-		String fileName = new Random().nextInt(10) + "_" + System.currentTimeMillis() + fileExtension;
-		String path = avatarPath + File.separator + fileName;
-		File file = new File(path);
+		String fileName = System.currentTimeMillis() + fileExtension;
+
+		String storingPath = imagePath + File.separator + fileName;
+
+		File storingFolder = new File(imagePath);
+		if (!storingFolder.exists()) {
+			storingFolder.mkdirs();
+		}
+		File img = new File(storingPath);
+		if (!img.exists()) {
+			try {
+				img.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 		try {
-			file.createNewFile();
-			avatarFile.getInputStream().transferTo(new FileOutputStream(file));
-			Thread.sleep(1000);
-		} catch (Exception e) {
+			Files.copy(imageFile.getInputStream(), img.toPath());
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return null;
 		}
+
 		return fileName;
 	}
 }

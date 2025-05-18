@@ -14,24 +14,27 @@ import jakarta.servlet.http.HttpServletRequest;
 import vn.tritin.WebHoatHinh.entity.Account;
 import vn.tritin.WebHoatHinh.entity.Category;
 import vn.tritin.WebHoatHinh.entity.Comment;
+import vn.tritin.WebHoatHinh.entity.News;
 import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.entity.VideoDetail;
 import vn.tritin.WebHoatHinh.service.CommentService;
 import vn.tritin.WebHoatHinh.service.VideoService;
 
 @Controller
-public class VideoControllerUser {
+public class VideoController {
 	private List<Video> videos;
 	private List<Category> categories;
+	private List<News> news;
 	private VideoService videoService;
 	private CommentService commmentService;
 
 	@Autowired
-	public VideoControllerUser(VideoService videoService, List<Video> videos, List<Category> categories,
-			CommentService commmentService) {
+	public VideoController(VideoService videoService, List<Video> videos, List<Category> categories,
+			List<News> news, CommentService commmentService) {
 		this.videoService = videoService;
 		this.videos = videos;
 		this.categories = categories;
+		this.news = news;
 		this.commmentService = commmentService;
 	}
 
@@ -93,6 +96,7 @@ public class VideoControllerUser {
 		model.addAttribute("account", (Account) request.getSession().getAttribute("account"));
 		model.addAttribute("categories", categories);
 		model.addAttribute("videos", videos);
+		model.addAttribute("news", news);
 		return model;
 	}
 

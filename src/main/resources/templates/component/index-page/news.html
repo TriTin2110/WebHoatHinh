@@ -13,29 +13,13 @@
 					<a href="#">See all</a>
 				</p>
 			</div>
-			<div class="content">
-				<p class="date">12.04.09</p>
-				<h4 class="header-news">Disney's A Christmas Carol</h4>
-				<p>&quot;Disney's A Christmas Carol,&quot; a multi-sensory
-					thrill ride re-envisioned by Academy Award&reg;-winning filmmaker
-					Robert Zemeckis, captures...</p>
-				<a href="#">Read more</a>
-			</div>
-			<div class="content">
-				<p class="date">11.04.09</p>
-				<h4 class="header-news">Where the Wild Things Are</h4>
-				<p>Innovative director Spike Jonze collaborates with celebrated
-					author Maurice Sendak to bring one of the most beloved books of all
-					time to the big screen in &quot;Where the Wild Things Are,&quot;...</p>
-				<a href="#">Read more</a>
-			</div>
-			<div class="content">
-				<p class="date">10.04.09</p>
-				<h4 class="header-news">The Box</h4>
-				<p>Norma and Arthur Lewis are a suburban couple with a young
-					child who receive an anonymous gift bearing fatal and irrevocable
-					consequences.</p>
-				<a href="#">Read more</a>
+			<div th:each="news: ${news}">
+				<div class="content">
+					<p class="date" th:text="${news.dateUploaded}"></p>
+					<h4 class="header-news" th:text="${news.id}">Disney's A Christmas Carol</h4>
+					<p th:text="${news.convertToString}" style="overflow: hidden; text-overflow: ellipsis;white-space: nowrap;"></p>
+					<a th:href="@{/movie-news/{id} (id=${news.id})}">Read more</a>
+				</div>
 			</div>
 		</div>
 		<div id="coming">

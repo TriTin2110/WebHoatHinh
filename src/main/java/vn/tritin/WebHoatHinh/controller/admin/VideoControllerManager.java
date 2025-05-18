@@ -15,8 +15,8 @@ import vn.tritin.WebHoatHinh.service.VideoService;
 import vn.tritin.WebHoatHinh.util.video.AttributeAddition;
 
 @RestController
-@RequestMapping("/video/admin")
-public class VideoController {
+@RequestMapping("/admin/video")
+public class VideoControllerManager {
 	private VideoService service;
 	private AttributeAddition addition;
 
@@ -27,12 +27,12 @@ public class VideoController {
 	private String pathAvatar;
 
 	@Autowired
-	public VideoController(VideoService service, AttributeAddition addition) {
+	public VideoControllerManager(VideoService service, AttributeAddition addition) {
 		this.service = service;
 		this.addition = addition;
 	}
 
-	@PostMapping("/saving")
+	@PostMapping("")
 	public void postVideo(@ModelAttribute("video") VideoCreator videoCreator,
 			@RequestParam("video") MultipartFile videoFile, @RequestParam("avatar") MultipartFile avatarFile) {
 		Video video = service.findById(videoCreator.getId());
