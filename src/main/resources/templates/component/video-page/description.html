@@ -9,13 +9,13 @@
                         <div class="col-sm-7">
                                 <table class="description-table">
                                         <tr>
-                                                <td rowspan="6"><img alt="Không có ảnh" th:src="@{/img/video-avatar/{image}(image=${video.avatar})}"></td>
+                                                <td rowspan="6"><img style="width: 200px" alt="Không có ảnh" th:src="@{/img/video-avatar/{image}(image=${video.banner})}"></td>
                                         </tr>
                                         <tr>
                                                 <td colspan="2" style="color: white;" th:text="${video.id}">Tên</td>
                                         </tr>
                                         <tr>
-                                                <td>Ngôn ngữ: </td>
+                                                <td>Ngôn ngữ:</td>
                                                 <td th:text="${video.language}">Tên Ngôn ngữ</td>
                                         </tr>
                                         <tr>
@@ -28,12 +28,19 @@
                                         </tr>
                                         <tr>
                                                 <td>Thể loại: </td>
-                                                <td th:each="category : ${categories}">
-                                                	<span th:text="${category.name}"></span>
+                                                <td >
+                                                <span th:each="category, iter : ${categories}">
+                                                	<span th:if="${iter.index < iter.size-1}">
+                                                		<span th:text="${category.name} + ','"></span>
+                                                	</span>
+                                                	<span th:unless="${iter.index == iter.size - 1}" >
+                                                		<span th:text="${category.name}"></span>
+                                                	</span>
+                                                </span>
                                                 </td>
                                         </tr>
                                         <tr>
-                                                <td>mô tả</td>
+                                                <td th:text="${video.description}">mô tả</td>
                                         </tr>
                                 </table>
                         </div>

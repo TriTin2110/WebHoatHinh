@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style type="text/css">
+	table{
+		margin: 0px auto;
+	}
+	th, td{
+		padding: 10px;
+	}
+</style>
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<th>No.</th>
+			<th>Name</th>
+			<th>Date uploaded</th>
+			<th>Author Name</th>
+		</tr>
+		<tr th:each="news, iStat: ${news}">
+			<td th:text="${iStat.index + 1}"></td>
+			<td th:text="${news.id}"></td>
+			<td th:text="${news.dateUploaded}"></td>
+			<td th:text=${news.authorName}></td>
+		</tr>
+	</table>
+</body>
+</html>

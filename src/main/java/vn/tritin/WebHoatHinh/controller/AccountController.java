@@ -62,7 +62,7 @@ public class AccountController {
 	}
 
 	/*-
-	 * Create new User then save to the DB
+	 * Insert user to DB
 	 * */
 	@PostMapping("/create-user")
 	public String checkingRegisterUser(@Valid @ModelAttribute("ru") RegisterUser ru, BindingResult result,

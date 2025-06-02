@@ -23,8 +23,7 @@
 
 <body>
 	<div id="shell">
-		<div
-			th:replace="~{component/index-page/header.html :: header}"></div>
+		<div th:replace="~{component/index-page/header.html :: header}"></div>
 
 		<div id="main">
 			<div>
@@ -40,7 +39,7 @@
 		</div>
 		<div
 			th:replace="~{component/video-page/description.html :: description(${video}, ${categories})}"></div>
-		<div>
+		<div th:if="${account?.user != null}" style="margin-top: 20px">
 			<div th:insert="~{component/video-page/comment.html :: comment(${account},${comments})}"></div>
 			
 		</div>

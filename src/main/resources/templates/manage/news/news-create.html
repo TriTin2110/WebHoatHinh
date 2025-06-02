@@ -24,20 +24,20 @@
   <div class="container">
     <h1 class="text-center mb-5">Tạo bài viết mới</h1>
 
-    <form id="postForm" method="post" action="/admin/news/save" enctype="multipart/form-data" th:object="${creator}">
+    <form id="postForm" th:method="post" th:action="@{/admin/news}" enctype="multipart/form-data" th:object="${creator}">
       <div class="mb-3">
         <label for="title" class="form-label">Tiêu đề bài viết</label>
-        <input type="text" class="form-control" id="title" th:field="*{id}" placeholder="Nhập tiêu đề...">
+        <input type="text" class="form-control" id="title" th:field="*{id}" placeholder="Nhập tiêu đề..." required>
       </div>
 
       <div class="mb-3">
         <label for="author" class="form-label">Tác giả</label>
-        <input type="text" class="form-control" id="author" th:field="*{authorName}" placeholder="Tên tác giả...">
+        <input type="text" class="form-control" id="author" th:field="*{authorName}" placeholder="Tên tác giả..." required>
       </div>
 
       <div class="mb-3">
         <label for="banner" class="form-label">Chọn ảnh banner</label>
-        <input type="file" class="form-control" id="banner" name="banner" accept="image/*">
+        <input type="file" class="form-control" id="banner" name="banner" accept="image/*" required>
       </div>
 
       <!-- Tag input -->

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import vn.tritin.WebHoatHinh.entity.Category;
 import vn.tritin.WebHoatHinh.entity.News;
@@ -12,12 +13,11 @@ import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.service.CategoryService;
 import vn.tritin.WebHoatHinh.service.NewsService;
 import vn.tritin.WebHoatHinh.service.VideoService;
-import vn.tritin.WebHoatHinh.util.StringHandler;
 
 //This Setup class will load all videos, categories from the DB when the application begin
 
 @Configuration
-public class Setup {
+public class Setup implements WebMvcConfigurer {
 	private VideoService videoService;
 	private CategoryService categoryService;
 	private NewsService newsService;
@@ -45,12 +45,7 @@ public class Setup {
 
 	@Bean
 	public List<News> getAllNews() {
-		StringHandler stringHandler = new StringHandler();
 		List<News> news = newsService.findAll();
-		news = news.stream().map(o -> {
-			o.setDescription(stringHandler.decrypt(o.getDescription()));
-			return o;
-		}).toList();
 		return news;
 	}
 }

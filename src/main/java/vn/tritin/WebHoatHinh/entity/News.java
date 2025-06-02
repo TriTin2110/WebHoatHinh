@@ -48,8 +48,8 @@ public class News extends Content {
 
 	@Override
 	public String toString() {
-		return "News [authorName=" + authorName + ", tags=" + tags + ", getId()=" + getId() + ", getDescription()="
-				+ convertToString() + ", getDateUploaded()=" + getDateUploaded() + ", getBanner()=" + getBanner() + "]";
+		return "News [authorName=" + authorName + ", getId()=" + getId() + ", getDescription()=" + convertToString()
+				+ ", getDateUploaded()=" + getDateUploaded() + ", getBanner()=" + getBanner() + "]";
 	}
 
 }

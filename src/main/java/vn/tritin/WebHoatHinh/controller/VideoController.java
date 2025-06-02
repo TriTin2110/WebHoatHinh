@@ -18,29 +18,30 @@ import vn.tritin.WebHoatHinh.entity.News;
 import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.entity.VideoDetail;
 import vn.tritin.WebHoatHinh.service.CommentService;
+import vn.tritin.WebHoatHinh.service.NewsService;
 import vn.tritin.WebHoatHinh.service.VideoService;
 
 @Controller
 public class VideoController {
-	private List<Video> videos;
 	private List<Category> categories;
-	private List<News> news;
 	private VideoService videoService;
 	private CommentService commmentService;
+	private NewsService newsService;
 
 	@Autowired
-	public VideoController(VideoService videoService, List<Video> videos, List<Category> categories,
-			List<News> news, CommentService commmentService) {
+	public VideoController(VideoService videoService, List<Category> categories, CommentService commmentService,
+			NewsService newsService) {
 		this.videoService = videoService;
-		this.videos = videos;
 		this.categories = categories;
-		this.news = news;
 		this.commmentService = commmentService;
+		this.newsService = newsService;
 	}
 
 	// Redirect user to the Video page (index page if the video requested not found)
 	@GetMapping("/view/{videoId}")
 	public String getVideo(@PathVariable String videoId, Model model, HttpServletRequest request) {
+		List<Video> videos = this.videoService.findAll();
+		Account account = (Account) request.getSession().getAttribute("account");
 		for (Video video : videos) {
 			if (video.getId().equals(videoId)) {
 				video.setViewer(video.getViewer() + 1);
@@ -48,11 +49,14 @@ public class VideoController {
 
 				// Get all comment of video
 				VideoDetail videoDetail = video.getVideoDetail();
-				List<Comment> comments = this.commmentService.selectByVideoDetail(videoDetail);
-
 				model.addAttribute("video", video);
 				model.addAttribute("videoDetail", videoDetail);
-				model.addAttribute("comments", comments);
+
+				if (account != null) {
+					List<Comment> comments = this.commmentService.selectByVideoDetail(videoDetail);
+					model.addAttribute("comments", comments);
+					model.addAttribute("account", account);
+				}
 				return "video";
 			}
 		}
@@ -61,6 +65,7 @@ public class VideoController {
 
 	@GetMapping("/")
 	public String showHomePage(Model model, HttpServletRequest request) {
+		List<Video> videos = this.videoService.findAll();
 		model = setupBasicModel(model, request, videos);
 		return "index";
 	}
@@ -68,7 +73,9 @@ public class VideoController {
 	@GetMapping("/searching-video")
 	public String findVideoByName(@RequestParam("content-searched") String name, Model model,
 			HttpServletRequest request) {
+		List<Video> videos = this.videoService.findAll();
 		List<Video> foundVideos = videoService.getVideoByName(videos, name);
+
 		model = setupBasicModel(model, request, foundVideos);
 		return "index";
 	}
@@ -77,6 +84,7 @@ public class VideoController {
 	public String filterVideoByCategory(@RequestParam("category") String categoryName, Model model,
 			HttpServletRequest request) {
 		List<Video> filtedVideos = new LinkedList<Video>();
+		List<Video> videos = this.videoService.findAll();
 
 		out: for (Video video : videos) {
 			List<Category> categories = video.getCategories();
@@ -93,10 +101,14 @@ public class VideoController {
 
 	// Any API will also have 1 basic model
 	private Model setupBasicModel(Model model, HttpServletRequest request, List<Video> videos) {
-		model.addAttribute("account", (Account) request.getSession().getAttribute("account"));
+		List<News> news = this.newsService.findAll();
+
+		Account account = (Account) request.getSession().getAttribute("account");
+
 		model.addAttribute("categories", categories);
 		model.addAttribute("videos", videos);
 		model.addAttribute("news", news);
+		model.addAttribute("account", account);
 		return model;
 	}
 

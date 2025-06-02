@@ -19,7 +19,7 @@
 					<a th:href="@{/movie-news/{id} (id=${news.id})}" style="text-decoration: none;"><h4 th:text="${news.id}" class="header-news"></h4></a>
 					<img  th:src="@{/img/news-banner/{banner} (banner=${news.banner})}">
 					<p id="small-text">
-						<div th:utext="${news.description}" style="overflow: hidden; text-overflow: ellipsis;white-space: nowrap; display:flex"></div>
+						<div th:utext="${news.description}" style="max-height: 20px; overflow: hidden; text-overflow: ellipsis;white-space: nowrap; display:flex"></div>
 					</p>
 				</div>
 			</div>

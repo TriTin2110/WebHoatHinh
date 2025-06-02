@@ -76,7 +76,7 @@ public class CommentSocket extends TextWebSocketHandler {
 			e.printStackTrace();
 		}
 		Comment comment = createComment(session, commentDTO);
-		return comSer.save(comment);
+		return comSer.save(comment); // Save comment to DB
 	}
 
 	private Comment createComment(WebSocketSession session, CommentDTO commentDTO) {
@@ -116,19 +116,19 @@ public class CommentSocket extends TextWebSocketHandler {
 		log.info("User đã vào!");
 	}
 
-	private void sendMessageForAllUser(WebSocketSession session, Comment comment) {
-		Account account = (Account) session.getAttributes().get("account");
+	private void sendMessageForAllUser(WebSocketSession userCommented, Comment comment) {
+		Account account = (Account) userCommented.getAttributes().get("account");
 		String html = "<div class = \"comment\">" + "<img src=\"/img/user-avatar/" + account.getUser().getAvatar()
 				+ "\" alt=\"Không có ảnh\">" + "<div>" + "<div class=\"comment-content\">" + comment.getContent()
 				+ "</div>" + "<div class=\"comment-actions\">" + "		<span>Thích</span>"
 				+ "     <span>Phản hồi</span>" + "     <span>1 phút trước</span>" + "</div>" + "</div>" + "</div>";
 		synchronized (sessions) {
+			// Get all user at the same movie
 			List<WebSocketSession> webSocketSessions = sessions.get(comment.getVideoDetail().getId());
-			for (WebSocketSession webSocketSession : webSocketSessions) {
-				if (webSocketSession.isOpen() && webSocketSession != session) {
-
+			for (WebSocketSession userInList : webSocketSessions) {
+				if (userInList.isOpen() && userInList != userCommented) {
 					try {
-						webSocketSession.sendMessage(new TextMessage(html));
+						userInList.sendMessage(new TextMessage(html));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
