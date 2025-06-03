@@ -26,13 +26,12 @@ import vn.tritin.WebHoatHinh.entity.VideoDetail;
 import vn.tritin.WebHoatHinh.model.CommentDTO;
 import vn.tritin.WebHoatHinh.service.AccountService;
 import vn.tritin.WebHoatHinh.service.CommentService;
+import vn.tritin.WebHoatHinh.service.VideoService;
 
 @Component
 public class CommentSocket extends TextWebSocketHandler {
 	private final ObjectMapper om = new ObjectMapper();
 	private final Logger log = Logger.getLogger(CommentSocket.class.getName());
-	@Autowired
-	private List<Video> videos;
 
 	// We need a Map for storing VideoDetailId and users current watching it
 	private static Map<String, List<WebSocketSession>> sessions = new HashMap<String, List<WebSocketSession>>();
@@ -40,6 +39,8 @@ public class CommentSocket extends TextWebSocketHandler {
 	private AccountService accSer;
 	@Autowired
 	private CommentService comSer;
+	@Autowired
+	private VideoService videoSer;
 
 	public CommentSocket() {
 		super();
@@ -80,6 +81,8 @@ public class CommentSocket extends TextWebSocketHandler {
 	}
 
 	private Comment createComment(WebSocketSession session, CommentDTO commentDTO) {
+		List<Video> videos = videoSer.findAll();
+
 		Account account = (Account) session.getAttributes().get("account"); // Get the account storing in the session
 		if (account == null) {// If in current session user doesn't make any comment then we will select that
 								// user

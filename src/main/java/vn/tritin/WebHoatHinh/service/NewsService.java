@@ -20,4 +20,6 @@ public interface NewsService {
 	public void setTagSer(TagService tagSer);
 
 	public void setFileSer(FileService fileSer);
+
+	public List<News> updateListNews();
 }

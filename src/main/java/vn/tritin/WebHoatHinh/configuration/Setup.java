@@ -9,7 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import vn.tritin.WebHoatHinh.entity.Category;
 import vn.tritin.WebHoatHinh.entity.News;
-import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.service.CategoryService;
 import vn.tritin.WebHoatHinh.service.NewsService;
 import vn.tritin.WebHoatHinh.service.VideoService;
@@ -33,10 +32,10 @@ public class Setup implements WebMvcConfigurer {
 	 * When the application running it will load all videos from db
 	 * Then save to cache
 	 * */
-	@Bean
-	public List<Video> getAllVideo() {
-		return videoService.findAll();
-	}
+//	@Bean
+//	public List<Video> getAllVideo() {
+//		return videoService.findAll();
+//	}
 
 	@Bean
 	public List<Category> getAllCategory() {

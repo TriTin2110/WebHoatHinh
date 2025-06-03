@@ -28,6 +28,7 @@
       <div class="mb-3">
         <label for="title" class="form-label">Tiêu đề bài viết</label>
         <input type="text" class="form-control" id="title" th:field="*{id}" placeholder="Nhập tiêu đề..." required>
+        <p class="text-danger" id="tittle-warning" style="display: none; font-weight: bold;">Tiêu đề chỉ được chứa chữ cái và số!</p>
       </div>
 
       <div class="mb-3">
@@ -122,21 +123,24 @@
   // Submit form
   let form = document.getElementById('postForm')
   form.addEventListener('submit', function(e){
-    e.preventDefault();
-    const banner = document.getElementById('banner').files[0]?.name || ''
-   	const content = quill.root.innerHTML
-   	let description = document.getElementById('description')
-   	console.log(content)
-   	description.innerHTML=content
-   	form.submit()
-   	//const postData = {
-   	//title: document.getElementById('title').value,
-      //author: document.getElementById('author').value,
-      //tags: tags,
-      //content: 
-   	//};
-   	//console.log('Dữ liệu bài viết:', postData);
-    //alert('Đăng bài thành công! (xem console)');
+	  e.preventDefault();
+	const tittle = document.getElementById("title").value
+	const reg = /[^\p{L}\p{N}\s]/gu //\p{L}: language unicode,\p{N}: number unicode,u: unicode identify
+	let tittleWarning = document.getElementById("tittle-warning")
+	tittleWarning.style.display = "none"
+		console.log(tittle)
+	if(reg.test(tittle))
+	{
+		alert("Đã có lỗi!!")
+		tittleWarning.style.display = "block"
+	}
+	else{
+	    const banner = document.getElementById('banner').files[0]?.name || ''
+	   	const content = quill.root.innerHTML
+	   	let description = document.getElementById('description')
+	   	description.innerHTML=content
+	   	form.submit()
+	}
   });
   </script>
 </body>

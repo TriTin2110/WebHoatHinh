@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import vn.tritin.WebHoatHinh.entity.News;
-import vn.tritin.WebHoatHinh.exceptions.FileNotFoundException;
+import vn.tritin.WebHoatHinh.exceptions.exceptions.FileNotFoundException;
+import vn.tritin.WebHoatHinh.exceptions.exceptions.NewsExistsException;
 import vn.tritin.WebHoatHinh.model.NewsCreator;
 import vn.tritin.WebHoatHinh.service.NewsService;
 import vn.tritin.WebHoatHinh.service.TagService;
@@ -53,14 +53,21 @@ public class NewsControllerManager {
 	public String insert(@ModelAttribute("news") NewsCreator newsCreator, @RequestParam("banner") MultipartFile file) {
 		if (file.isEmpty())
 			throw new FileNotFoundException();
-		else
-			newsSer.save(newsCreator, file);
+		else {
+			News news = newsSer.save(newsCreator, file);
+			if (news == null) {
+				throw new NewsExistsException();
+			}
+			newsSer.updateListNews();
+		}
 		return "redirect:/admin/news";
 	}
 
-	@DeleteMapping("/{id}")
-	public void delete(@PathVariable("id") String id) {
+	@GetMapping("/delete/{id}")
+	public String delete(@PathVariable("id") String id) {
 		newsSer.remove(id);
+		newsSer.updateListNews();
+		return "redirect:/admin/news";
 	}
 
 }

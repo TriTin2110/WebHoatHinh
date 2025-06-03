@@ -1,50 +1,39 @@
-const quill = new Quill('#editor', { theme:'snow', modules:{ toolbar:'#toolbar' } });
-    const tagInput = document.getElementById('tagInput');
-    const tagList = document.getElementById('tagList');
-    const tags = [];
+const deleteModal = document.getElementById('delete-modal')
+	var modal = new bootstrap.Modal(deleteModal)
+		function search()
+		{
+			var input = document.getElementById("search-input").value
+			input = input.toUpperCase() //Uppercase for conveniencely compare 
+			var table = document.getElementById("news-table")
+			var tbody = table.children[1]
+			var tr = tbody.getElementsByTagName("tr")
+			for(let i = 0; i < tr.length; i++)
+			{
+				var name = tr[i].getElementsByTagName("td")[1].innerText
+				if(name.toUpperCase().indexOf(input) > -1)
+				{
+					tr[i].style.display = ""
+				}
+				else
+					tr[i].style.display = "none"
+			}
+			
+		}
 
-    // Add tag on Enter
-    tagInput.addEventListener('keydown', e => {
-      if(e.key === 'Enter'){
-        e.preventDefault();
-        const val = tagInput.value.trim();
-        if(val && !tags.includes(val)){
-          tags.push(val);
-          renderTags();
-        }
-        tagInput.value='';
-      }
-    });
+		function showConfirmDelete(name)
+		{
+			
+			
+				var message = deleteModal.querySelector("p")
+			    message.textContent = `Bạn có chắc là muốn xóa ${name} không?`
+			    let btnDelete = document.getElementById("btn-delete")
+			    btnDelete.href="/admin/news/delete/"+name
+				modal.show()
+		}
 
-    function renderTags(){
-      tagList.innerHTML='';
-      tags.forEach((tag, idx)=>{
-        const span = document.createElement('span');
-        span.className='tag-badge';
-        span.innerHTML = `${tag} <i class="fas fa-times" data-idx="${idx}"></i>`;
-        tagList.appendChild(span);
-      });
-    }
-
-    // remove tag
-    tagList.addEventListener('click', e=>{
-      if(e.target.matches('i')){
-        const idx = e.target.dataset.idx;
-        tags.splice(idx,1);
-        renderTags();
-      }
-    });
-
-    // Submit form
-    document.getElementById('postForm').addEventListener('submit', function(e){
-      e.preventDefault();
-      const banner = document.getElementById('banner').files[0]?.name || ''
-      const postData = {
-        title: document.getElementById('title').value,
-        author: document.getElementById('author').value,
-        tags: tags,
-        content: quill.root.innerHTML
-      };
-      console.log('Dữ liệu bài viết:', postData);
-      alert('Đăng bài thành công! (xem console)');
-    });
+		function hideDeleteNews()
+		{
+			let btnDelete = document.getElementById("btn-delete")
+			btnDelete.onclick = function() {}
+			modal.hide()
+		}

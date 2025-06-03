@@ -40,17 +40,31 @@ public class NewsServiceImpl implements NewsService {
 	}
 
 	@Override
+	@Transactional
 	public News save(NewsCreator newsCreator, MultipartFile file) {
 		// TODO Auto-generated method stub
-		News news = prepareData(newsCreator, file);
-		news = dao.save(news);
-		updateListNews();
-		return news;
+		if (isNewsExists(newsCreator.getId()))
+			return null;
+		else {
+			News news = prepareData(newsCreator, file);
+			news = dao.save(news);
+			return news;
+		}
 	}
 
-	@CachePut("news")
-	private List<News> updateListNews() {
-		return dao.findAll();
+	private boolean isNewsExists(String id) {
+		return findById(id) != null;
+	}
+
+	@CachePut(value = "news")
+	public List<News> updateListNews() {
+		StringHandler stringHandler = new StringHandler();
+		List<News> news = dao.findAll();
+		news = news.stream().map(o -> {
+			o.setDescription(stringHandler.decrypt(o.getDescription()));
+			return o;
+		}).toList();
+		return news;
 	}
 
 	@Override
@@ -61,7 +75,7 @@ public class NewsServiceImpl implements NewsService {
 	}
 
 	@Override
-	@Cacheable("news")
+	@Cacheable(value = "news")
 	public List<News> findAll() {
 		// TODO Auto-generated method stub
 		StringHandler stringHandler = new StringHandler();
@@ -99,11 +113,16 @@ public class NewsServiceImpl implements NewsService {
 	 * */
 	private News prepareData(NewsCreator newsCreator, @RequestParam("banner") MultipartFile file) {
 		// Deflater Description
+		Date date = new Date(System.currentTimeMillis());
 		String id = newsCreator.getId();
 		id = id.replace('/', '-');
+
+		// Description Handling
 		String description = newsCreator.getDescription();
 		StringHandler stringHandler = new StringHandler();
 		String output = stringHandler.encrypt(description);
+
+		// Banner handling
 		String banner = null;
 		try {
 			banner = fileSer.saveImage(bannerPath, file);
@@ -112,7 +131,7 @@ public class NewsServiceImpl implements NewsService {
 			e.printStackTrace();
 		}
 
-		Date date = new Date(System.currentTimeMillis());
+		// Tag handling
 		String[] tagsSplitted = newsCreator.getTags().split(",");
 		List<Tag> tags = new LinkedList<Tag>();
 		Tag tempTag;

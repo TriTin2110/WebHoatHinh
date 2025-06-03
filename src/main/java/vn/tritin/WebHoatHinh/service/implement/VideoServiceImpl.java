@@ -82,10 +82,10 @@ public class VideoServiceImpl implements VideoService {
 		String[] nameSplits = name.split(" ");
 		List<Video> foundVideos = new ArrayList<Video>();
 		String videoName = null;
-		for (Video video : foundVideos) {
+		for (Video video : videos) {
 			videoName = video.getId().toLowerCase();
 			for (String nameSplit : nameSplits) {
-				if (videoName.contains(nameSplit.toLowerCase())) {
+				if (videoName.indexOf(nameSplit.toLowerCase()) > -1) {
 					foundVideos.add(video);
 					continue;
 				}
