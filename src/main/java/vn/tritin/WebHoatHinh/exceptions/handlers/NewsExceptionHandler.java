@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import vn.tritin.WebHoatHinh.entity.News;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.NewsExistsException;
+import vn.tritin.WebHoatHinh.exceptions.exceptions.NewsNotExistsException;
 import vn.tritin.WebHoatHinh.service.NewsService;
 
 @ControllerAdvice
@@ -26,5 +27,10 @@ public class NewsExceptionHandler {
 		model.addAttribute("error", ex.getMessage());
 		model.addAttribute("news", news);
 		return "manage/news/news-list";
+	}
+
+	@ExceptionHandler(exception = { NewsNotExistsException.class })
+	public String handlingNewsNotExistsException() {
+		return "/exceptions/news/news-not-found";
 	}
 }

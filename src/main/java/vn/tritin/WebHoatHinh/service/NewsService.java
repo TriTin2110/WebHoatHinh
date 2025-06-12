@@ -9,7 +9,7 @@ import vn.tritin.WebHoatHinh.model.NewsCreator;
 import vn.tritin.WebHoatHinh.service.util.FileService;
 
 public interface NewsService {
-	public News save(NewsCreator newsCreator, MultipartFile file);
+	public News save(News news);
 
 	public News findById(String id);
 
@@ -22,4 +22,8 @@ public interface NewsService {
 	public void setFileSer(FileService fileSer);
 
 	public List<News> updateListNews();
+
+	public News prepareData(NewsCreator newsCreator, MultipartFile file);
+
+	public News update(News news);
 }

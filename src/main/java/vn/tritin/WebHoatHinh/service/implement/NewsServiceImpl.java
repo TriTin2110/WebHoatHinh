@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.transaction.Transactional;
@@ -41,19 +40,10 @@ public class NewsServiceImpl implements NewsService {
 
 	@Override
 	@Transactional
-	public News save(NewsCreator newsCreator, MultipartFile file) {
+	public News save(News news) {
 		// TODO Auto-generated method stub
-		if (isNewsExists(newsCreator.getId()))
-			return null;
-		else {
-			News news = prepareData(newsCreator, file);
-			news = dao.save(news);
-			return news;
-		}
-	}
-
-	private boolean isNewsExists(String id) {
-		return findById(id) != null;
+		news = dao.save(news);
+		return news;
 	}
 
 	@CachePut(value = "news")
@@ -111,11 +101,10 @@ public class NewsServiceImpl implements NewsService {
 	 * After that I will save news to db
 	 *  
 	 * */
-	private News prepareData(NewsCreator newsCreator, @RequestParam("banner") MultipartFile file) {
+	public News prepareData(NewsCreator newsCreator, MultipartFile file) {
 		// Deflater Description
 		Date date = new Date(System.currentTimeMillis());
 		String id = newsCreator.getId();
-		id = id.replace('/', '-');
 
 		// Description Handling
 		String description = newsCreator.getDescription();
@@ -156,6 +145,13 @@ public class NewsServiceImpl implements NewsService {
 
 	public void setFileSer(FileService fileSer) {
 		this.fileSer = fileSer;
+	}
+
+	@Override
+	@Transactional
+	public News update(News news) {
+		// TODO Auto-generated method stub
+		return dao.saveAndFlush(news);
 	}
 
 }

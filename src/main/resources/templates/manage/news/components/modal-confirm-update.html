@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.com">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<!-- Update modal -->
+	<div class="modal" id="update-modal" tabindex="-1" th:fragment="update-modal">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Cập nhật News</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close" onclick="hideUploadNews()"></button>
+				</div>
+				<div class="modal-body">
+						<p>
+							<span>Tiêu đề: <b id="tittle"></b></span>
+						</p>
+						<p>
+							<span>Ngày đăng: <b id="date-uploaded"></b></span>
+						</p>
+						<p>
+							<span>Tác giả: <b id="author-name"></b></span>
+						</p>
+					</div>
+				<div class="modal-footer">
+					<a class="btn btn-success" id="btn-update" href="#">Xác nhận Cập Nhật!</a>
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal" onclick="hideDeleteNews()">Đóng</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

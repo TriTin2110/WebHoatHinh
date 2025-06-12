@@ -12,19 +12,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import vn.tritin.WebHoatHinh.entity.Account;
 import vn.tritin.WebHoatHinh.entity.News;
+import vn.tritin.WebHoatHinh.exceptions.exceptions.NewsNotExistsException;
+import vn.tritin.WebHoatHinh.service.NewsService;
 
 @Controller
 @RequestMapping("/movie-news")
 public class NewsController {
 	private List<News> newsList;
+	private NewsService service;
 
 	@Autowired
-	public NewsController(List<News> newsList) {
-		this.newsList = newsList;
+	public NewsController(NewsService service) {
+		this.service = service;
 	}
 
 	@GetMapping("/{id}")
 	public String findNewsById(@PathVariable("id") String id, Model model, HttpServletRequest request) {
+		this.newsList = service.findAll();
 		Account account = (Account) request.getSession().getAttribute("account");
 		News news = null;
 		String newsItemId = null;
@@ -35,6 +39,8 @@ public class NewsController {
 				break;
 			}
 		}
+		if (news == null)
+			throw new NewsNotExistsException();
 
 		model.addAttribute("account", account);
 		model.addAttribute("news", news);

@@ -1,5 +1,10 @@
 const deleteModal = document.getElementById('delete-modal')
-	var modal = new bootstrap.Modal(deleteModal)
+const updateModal = document.getElementById('update-modal')
+
+var modalDelete = new bootstrap.Modal(deleteModal)
+var modalUpdate = new bootstrap.Modal(updateModal)
+
+
 		function search()
 		{
 			var input = document.getElementById("search-input").value
@@ -25,15 +30,30 @@ const deleteModal = document.getElementById('delete-modal')
 			
 			
 				var message = deleteModal.querySelector("p")
-			    message.textContent = `Bạn có chắc là muốn xóa ${name} không?`
+			    message.innerHTML = `Bạn có chắc là muốn xóa <b>${name}</b> không?`
 			    let btnDelete = document.getElementById("btn-delete")
 			    btnDelete.href="/admin/news/delete/"+name
-				modal.show()
+				modalDelete.show()
+		}
+		
+		function showConfirmUpload(name, dateUpload, authorName)
+		{
+			var mess = updateModal.querySelectorAll("b")
+			var updateButton = updateModal.querySelector("a")
+			var content = [name, dateUpload, authorName]
+			
+			for(let i = 0; i < mess.length; i++)
+			{
+				mess[i].innerHTML = "<strong>"+content[i]+"</strong>"
+			}
+			updateButton.href = "/admin/news/update/"+name
+			modalUpdate.show()
+			
 		}
 
 		function hideDeleteNews()
 		{
 			let btnDelete = document.getElementById("btn-delete")
 			btnDelete.onclick = function() {}
-			modal.hide()
+			modalDelete.hide()
 		}

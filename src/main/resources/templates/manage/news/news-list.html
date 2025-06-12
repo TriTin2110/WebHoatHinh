@@ -31,7 +31,7 @@
 					<td th:text="${news.id}"></td>
 					<td th:text="${news.dateUploaded}"></td>
 					<td th:text=${news.authorName}></td>
-					<td><a class="btn btn-success" href="#">Cập nhật</a>
+					<td><button class="btn btn-success" th:attr="onclick=|showConfirmUpload('${news.id}', '${news.dateUploaded}', '${news.authorName}')|">Cập nhật</button>
 						<button th:attr="onclick=|showConfirmDelete('${news.id}')|"
 							data-bs-toggle="modal" data-bs-target="#delete-modal"
 							class="btn btn-danger">Xóa</button></td>
@@ -41,26 +41,8 @@
 	</div>
 
 
-	<!-- Delete modal -->
-	<div class="modal" id="delete-modal" tabindex="-1">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h5 class="modal-title">Xóa News</h5>
-					<button type="button" class="btn-close" data-bs-dismiss="modal"
-						aria-label="Close" onclick="hideDeleteNews()"></button>
-				</div>
-				<div class="modal-body">
-					<p>Bạn có chắc là muốn xóa không?</p>
-				</div>
-				<div class="modal-footer">
-					<a class="btn btn-danger" id="btn-delete">Xác nhận xóa</a>
-					<button type="button" class="btn btn-secondary"
-						data-bs-dismiss="modal" onclick="hideDeleteNews()">Đóng</button>
-				</div>
-			</div>
-		</div>
-	</div>
+	<div th:replace="~{/manage/news/components/modal-confirm-update.html :: update-modal}"></div>
+	<div th:replace="~{/manage/news/components/modal-confirm-delete.html :: delete-modal}"></div>
 	<script src="/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/js/news-manage.js"></script>
 	<script type="text/javascript" th:inline="javascript">

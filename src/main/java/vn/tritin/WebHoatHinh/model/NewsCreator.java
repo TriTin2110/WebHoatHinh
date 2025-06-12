@@ -19,6 +19,13 @@ public class NewsCreator {
 	public NewsCreator() {
 	}
 
+	public NewsCreator(String id, String description, String authorName, String tags) {
+		this.id = id;
+		this.description = description;
+		this.authorName = authorName;
+		this.tags = tags;
+	}
+
 	public NewsCreator(String id, String description, Date dateUploaded, String authorName, String tags) {
 		this.id = id;
 		this.description = description;
