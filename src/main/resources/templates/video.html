@@ -31,17 +31,18 @@
 				<video id="video-show"
 					th:src="@{/video/{path}(path=${videoDetail?.path})}" controls></video>
 			</div>
-			<div th:each="videos, videoSta: ${video}"
-				th:if="${videoSta.size > 4}">
-				<div
-					th:replace="~{component/video-page/slider.html :: slider(${videos})}"></div>
-			</div>
 		</div>
 		<div
 			th:replace="~{component/video-page/description.html :: description(${video}, ${categories})}"></div>
 		<div th:if="${account?.user != null}" style="margin-top: 20px">
 			<div th:insert="~{component/video-page/comment.html :: comment(${account},${comments})}"></div>
-			
+		</div>
+		<div>
+		<h3 style="color: white; display: flex; align-items: center; justify-content: space-between; padding: 20px 0px 10px 0px;">
+			<span>Có thể bạn sẽ thích!</span>
+			<hr style="display: inline-block; border: 3px solid white; width: 73%;">
+		</h3>
+			<div th:replace="~{component/video-page/slider.html :: slider(${videos})}"></div>
 		</div>
 		<div th:replace="~{component/index-page/footer.html :: footer}"></div>
 	</div>

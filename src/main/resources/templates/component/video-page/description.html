@@ -9,34 +9,30 @@
                         <div class="col-sm-7">
                                 <table class="description-table">
                                         <tr>
-                                                <td rowspan="6"><img style="width: 200px" alt="Không có ảnh" th:src="@{/img/video-avatar/{image}(image=${video.banner})}"></td>
+                                                <td rowspan="6"><div style="padding: 0px 10px 0px 10px;"><img style="width: 200px" alt="Không có ảnh" th:src="@{/img/video-avatar/{image}(image=${video.banner})}"></div></td>
                                         </tr>
                                         <tr>
-                                                <td colspan="2" style="color: white;" th:text="${video.id}">Tên</td>
+                                                <td style="color: white;" th:text="${video.id}">Tên</td>
                                         </tr>
                                         <tr>
-                                                <td>Ngôn ngữ:</td>
-                                                <td th:text="${video.language}">Tên Ngôn ngữ</td>
+                                                <td><div>Ngôn ngữ: <strong><span th:text="${video.language}">Tên Ngôn ngữ</span></strong> </div></td>
+                                                
                                         </tr>
                                         <tr>
-                                                <td>Tình trạng: </td>
-                                                <td th:text="${video.status}">Tên Ngôn ngữ</td>
+                                                <td><div>Tình trạng: <span th:text="${video.status}">Tên Ngôn ngữ</span></div></td>
                                         </tr>
                                         <tr>
-                                                <td>Lượt xem: </td>
-                                                <td th:text="${video.viewer}">Tên Ngôn ngữ</td>
+                                                <td><div>Lượt xem: <span th:text="${video.viewer}">Tên Ngôn ngữ</span></div> </td>
                                         </tr>
                                         <tr>
-                                                <td>Thể loại: </td>
-                                                <td >
-                                                <span th:each="category, iter : ${categories}">
-                                                	<span th:if="${iter.index < iter.size-1}">
-                                                		<span th:text="${category.name} + ','"></span>
-                                                	</span>
-                                                	<span th:unless="${iter.index == iter.size - 1}" >
-                                                		<span th:text="${category.name}"></span>
-                                                	</span>
-                                                </span>
+                                                <td>
+                                                	<div>
+                                                		Thể loại:
+                                                		<span th:each="category, iter : ${categories}">
+                                                				<span th:if="${iter.index == (iter.size-1)}" th:text="${category.name}"></span>
+		                                                		<span th:unless="${iter.index == (iter.size-1)}" th:text="${category.name} + ','"></span>
+		                                                </span>
+                                                	</div>
                                                 </td>
                                         </tr>
                                         <tr>

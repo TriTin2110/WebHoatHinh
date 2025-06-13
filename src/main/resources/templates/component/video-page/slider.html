@@ -8,32 +8,19 @@
 	<div id="carouselExample" class="carousel slide"
 		th:fragment="slider(videos)">
 		<div class="carousel-inner">
-
-			<div class="carousel-item active">
+			<div class="carousel-item" th:each="groupVideos, sta: ${videos}" th:classappend="${sta.index == 0}? 'active'">
 				<div class="card-group">
-					<a class="card video-content" th:each="v, sta : ${videos}"
-						th:if="${sta.count} <= 4" th:href="@{${v.id}}">
-						<img
-							class="video-avatar card-img-top"
-							th:src="'img/video-avatar/'+${v.avatar}" alt="..."> <span
-							class="card-body" style="color: white;"> <span
-								class="card-text" th:text="${v.name}">...</span>
-						</span>
-					</a>
-				</div>
-			</div>
-
-			<div class="carousel-item">
-				<div class="card-group">
-					<a class="card video-content"
-						th:each="v, iter : ${videos}"
-						th:if="${iter.count} > 4 and ${iter.count} <= 8" th:href="@{${v.id}}">
-						<img class="video-avatar card-img-top"
-							th:src="'img/video-avatar/'+${v.avatar}" alt="..."> <span
-							class="card-body" style="color: white;"> <span
-								class="card-text" th:text="${v.name}">...</span>
-						</span>
-					</a>
+					<div th:each="v : ${groupVideos}" style="width: 25%;">
+							<a class="card video-content" 
+								th:href="@{${v.id}}" style="background-color: black;">
+								<img
+									class="video-avatar card-img-top"
+									th:src="@{/img/video-avatar/{avatar} (avatar = ${v.videoTag.avatar})}" alt="..."> <span
+									class="card-body" style="color: white;"> <span
+										class="card-text" th:text="${v.id}">...</span>
+								</span>
+							</a>
+					</div>
 				</div>
 			</div>
 		</div>

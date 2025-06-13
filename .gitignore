@@ -31,3 +31,8 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Project ###
+/src/main/resources/static/img/*
+src/main/resources/static/video/*
+src/main/resources/application.properties

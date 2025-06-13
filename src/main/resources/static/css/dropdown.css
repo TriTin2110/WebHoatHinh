@@ -16,8 +16,10 @@
 {
 	display: none;
 	position: absolute;
+	width: 100px;
 }
 .item
 {
 	display: block;
+	text-align: center;
 }

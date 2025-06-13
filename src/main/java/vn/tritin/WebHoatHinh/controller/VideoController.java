@@ -17,22 +17,23 @@ import vn.tritin.WebHoatHinh.entity.Comment;
 import vn.tritin.WebHoatHinh.entity.News;
 import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.entity.VideoDetail;
+import vn.tritin.WebHoatHinh.service.CategoryService;
 import vn.tritin.WebHoatHinh.service.CommentService;
 import vn.tritin.WebHoatHinh.service.NewsService;
 import vn.tritin.WebHoatHinh.service.VideoService;
 
 @Controller
 public class VideoController {
-	private List<Category> categories;
 	private VideoService videoService;
 	private CommentService commmentService;
 	private NewsService newsService;
+	private CategoryService categoryService;
 
 	@Autowired
-	public VideoController(VideoService videoService, List<Category> categories, CommentService commmentService,
+	public VideoController(VideoService videoService, CategoryService categoryService, CommentService commmentService,
 			NewsService newsService) {
 		this.videoService = videoService;
-		this.categories = categories;
+		this.categoryService = categoryService;
 		this.commmentService = commmentService;
 		this.newsService = newsService;
 	}
@@ -47,16 +48,21 @@ public class VideoController {
 				video.setViewer(video.getViewer() + 1);
 				model = setupBasicModel(model, request, videos);
 
-				// Get all comment of video
 				VideoDetail videoDetail = video.getVideoDetail();
-				model.addAttribute("video", video);
-				model.addAttribute("videoDetail", videoDetail);
+				List<List<Video>> groupVideos = videoService.getGroupVideo(videos);
+				List<Category> categories = video.getCategories();
 
+				model.addAttribute("categories", categories);
+				model.addAttribute("videos", groupVideos);
 				if (account != null) {
+					// Get all comment of video
 					List<Comment> comments = this.commmentService.selectByVideoDetail(videoDetail);
 					model.addAttribute("comments", comments);
 					model.addAttribute("account", account);
 				}
+
+				model.addAttribute("video", video);
+				model.addAttribute("videoDetail", videoDetail);
 				return "video";
 			}
 		}
@@ -102,7 +108,7 @@ public class VideoController {
 	// Any API will also have 1 basic model
 	private Model setupBasicModel(Model model, HttpServletRequest request, List<Video> videos) {
 		List<News> news = this.newsService.findAll();
-
+		List<Category> categories = this.categoryService.findAll();
 		Account account = (Account) request.getSession().getAttribute("account");
 
 		model.addAttribute("categories", categories);

@@ -18,4 +18,7 @@ public interface VideoService {
 	public List<Video> updateCache();
 
 	public List<Video> getVideoByName(List<Video> videos, String name);
+
+	public List<List<Video>> getGroupVideo(List<Video> videos);
+
 }

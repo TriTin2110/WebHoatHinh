@@ -18,7 +18,7 @@
 				th:if="${sta.size > 0}">
 				<div class="movie-image">
 					<a th:href="@{/view/{id}(id=${video.id})}"><img
-						th:src="@{'img/video-avatar/'+${video.banner}}" style="border-radius: 18px;" alt="" /></a>
+						th:src="@{'img/video-avatar/'+${video.banner}}" style="border-radius: 18px;" loading="lazy" alt="" /></a>
 				</div>
 				<div>
 					<a th:href="@{/view/{id}(id = ${video.id})}" class="name"

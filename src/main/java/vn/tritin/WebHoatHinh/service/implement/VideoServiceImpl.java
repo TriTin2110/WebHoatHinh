@@ -20,6 +20,9 @@ import vn.tritin.WebHoatHinh.service.VideoService;
 
 @Service
 public class VideoServiceImpl implements VideoService {
+	private final int SLIDER_LENGTH = 8;
+	private final int NUMBER_VIDEO_IN_ONE_SLIDE = 4;
+
 	private DAOVideo dao;
 
 	@Autowired
@@ -92,6 +95,18 @@ public class VideoServiceImpl implements VideoService {
 			}
 		}
 		return foundVideos;
+	}
+
+	@Override
+	public List<List<Video>> getGroupVideo(List<Video> videos) {
+		// TODO Auto-generated method stub
+		List<List<Video>> groupVideos = new ArrayList<List<Video>>();
+		for (int i = 0; i < SLIDER_LENGTH; i += NUMBER_VIDEO_IN_ONE_SLIDE) { // Chia danh sách video thành từng
+																				// nhóm 4 phần tử dùng để
+			// tạo slider
+			groupVideos.add(videos.subList(i, i + NUMBER_VIDEO_IN_ONE_SLIDE));
+		}
+		return groupVideos;
 	}
 
 }

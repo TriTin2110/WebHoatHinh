@@ -12,8 +12,10 @@
 			<li>
 				<div id="drop-down">
 					<a href="#" id="drop-button">Thể loại</a>
-					<div id="drop-box" th:each = "category: ${categories}">
+					<div id="drop-box">
+					<div th:each = "category: ${categories}">
 						<a class="item" th:href="@{/filter-category?category={name} (name=${category.name})}" th:text="${category.name}"></a>
+						</div>
 					</div>
 				</div>
 			</li>
