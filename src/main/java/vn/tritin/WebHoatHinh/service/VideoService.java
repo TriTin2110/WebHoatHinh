@@ -19,6 +19,6 @@ public interface VideoService {
 
 	public List<Video> getVideoByName(List<Video> videos, String name);
 
-	public List<List<Video>> getGroupVideo(List<Video> videos);
+	public List<List<Video>> getGroupVideo(List<Video> videos, int totalVideo, int numberVideoPerLine);
 
 }

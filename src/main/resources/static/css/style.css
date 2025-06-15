@@ -246,7 +246,7 @@ h1#logo a {
 .box .movie {
 	width:152px;
 	float:left;
-	margin: 0px 5.5px;
+	margin: 0px 10px 0px 10px;
 }
 .movie-image {
 	float:left;

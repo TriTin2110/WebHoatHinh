@@ -87,4 +87,11 @@ public class VideoCreator {
 		this.studio = studio;
 	}
 
+	@Override
+	public String toString() {
+		return "VideoCreator [id=" + id + ", pathAvatar=" + pathAvatar + ", pathVideo=" + pathVideo + ", director="
+				+ director + ", language=" + language + ", country=" + country + ", categories=" + categories
+				+ ", studio=" + studio + "]";
+	}
+
 }

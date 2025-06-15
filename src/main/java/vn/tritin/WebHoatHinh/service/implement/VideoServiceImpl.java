@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,9 +21,6 @@ import vn.tritin.WebHoatHinh.service.VideoService;
 
 @Service
 public class VideoServiceImpl implements VideoService {
-	private final int SLIDER_LENGTH = 8;
-	private final int NUMBER_VIDEO_IN_ONE_SLIDE = 4;
-
 	private DAOVideo dao;
 
 	@Autowired
@@ -65,12 +63,20 @@ public class VideoServiceImpl implements VideoService {
 	@Override
 	@Cacheable("videos")
 	public List<Video> findAll() {
-		return dao.findAll();
+		List<Video> videos = dao.findAll();
+		videos.sort((o1, o2) -> {
+			return o2.getDateUploaded().compareTo(o1.getDateUploaded());
+		});
+		return videos;
 	}
 
 	@CachePut("videos")
 	public List<Video> updateCache() {
-		return dao.findAll();
+		List<Video> videos = dao.findAll();
+		videos.sort((o1, o2) -> {
+			return o2.getDateUploaded().compareTo(o1.getDateUploaded());
+		});
+		return videos;
 	}
 
 	/*-
@@ -98,13 +104,15 @@ public class VideoServiceImpl implements VideoService {
 	}
 
 	@Override
-	public List<List<Video>> getGroupVideo(List<Video> videos) {
+	public List<List<Video>> getGroupVideo(List<Video> videos, int totalVideo, int numberVideoPerLine) {
 		// TODO Auto-generated method stub
-		List<List<Video>> groupVideos = new ArrayList<List<Video>>();
-		for (int i = 0; i < SLIDER_LENGTH; i += NUMBER_VIDEO_IN_ONE_SLIDE) { // Chia danh sách video thành từng
-																				// nhóm 4 phần tử dùng để
-			// tạo slider
-			groupVideos.add(videos.subList(i, i + NUMBER_VIDEO_IN_ONE_SLIDE));
+		List<List<Video>> groupVideos = new LinkedList<List<Video>>();
+		int count = 0;
+		for (int i = 0; i < totalVideo; i += count) { // Chia danh sách video thành từng
+			// nhóm 4 phần tử
+			count = (totalVideo > i + numberVideoPerLine) ? numberVideoPerLine : (totalVideo - i);
+			groupVideos.add(videos.subList(i, i + count));
+
 		}
 		return groupVideos;
 	}

@@ -24,6 +24,11 @@ import vn.tritin.WebHoatHinh.service.VideoService;
 
 @Controller
 public class VideoController {
+	private final int AMOUNT_NEWS_ON_PAGE = 2;
+	private final int AMOUNT_VIDEO_PER_LINE = 5;
+	private final int SLIDER_LENGTH = 8;
+	private final int NUMBER_VIDEO_IN_ONE_SLIDE = 4;
+
 	private VideoService videoService;
 	private CommentService commmentService;
 	private NewsService newsService;
@@ -46,23 +51,26 @@ public class VideoController {
 		for (Video video : videos) {
 			if (video.getId().equals(videoId)) {
 				video.setViewer(video.getViewer() + 1);
-				model = setupBasicModel(model, request, videos);
 
 				VideoDetail videoDetail = video.getVideoDetail();
-				List<List<Video>> groupVideos = videoService.getGroupVideo(videos);
+				List<List<Video>> groupVideos = videoService.getGroupVideo(videos, SLIDER_LENGTH,
+						NUMBER_VIDEO_IN_ONE_SLIDE); // Suggestion videos
 				List<Category> categories = video.getCategories();
 
-				model.addAttribute("categories", categories);
-				model.addAttribute("videos", groupVideos);
 				if (account != null) {
-					// Get all comment of video
+					// Get comment on video (apply when user authenticate)
 					List<Comment> comments = this.commmentService.selectByVideoDetail(videoDetail);
+					List<News> news = newsService.getNewestNews(AMOUNT_NEWS_ON_PAGE);
+
 					model.addAttribute("comments", comments);
 					model.addAttribute("account", account);
+					model.addAttribute("news", news);
 				}
 
 				model.addAttribute("video", video);
 				model.addAttribute("videoDetail", videoDetail);
+				model.addAttribute("categories", categories);
+				model.addAttribute("videos", groupVideos);
 				return "video";
 			}
 		}
@@ -72,7 +80,9 @@ public class VideoController {
 	@GetMapping("/")
 	public String showHomePage(Model model, HttpServletRequest request) {
 		List<Video> videos = this.videoService.findAll();
+		List<List<Video>> groupVideos = this.videoService.getGroupVideo(videos, videos.size(), AMOUNT_VIDEO_PER_LINE);
 		model = setupBasicModel(model, request, videos);
+		model.addAttribute("videos", groupVideos);
 		return "index";
 	}
 
@@ -81,8 +91,10 @@ public class VideoController {
 			HttpServletRequest request) {
 		List<Video> videos = this.videoService.findAll();
 		List<Video> foundVideos = videoService.getVideoByName(videos, name);
-
+		List<List<Video>> groupFoundVideos = videoService.getGroupVideo(foundVideos, foundVideos.size(),
+				AMOUNT_VIDEO_PER_LINE);
 		model = setupBasicModel(model, request, foundVideos);
+		model.addAttribute("videos", groupFoundVideos);
 		return "index";
 	}
 
@@ -101,7 +113,10 @@ public class VideoController {
 				}
 			}
 		}
-		model = setupBasicModel(model, request, filtedVideos);
+		List<List<Video>> groupFoundVideos = videoService.getGroupVideo(filtedVideos, filtedVideos.size(),
+				AMOUNT_VIDEO_PER_LINE);
+		model = setupBasicModel(model, request, videos);
+		model.addAttribute("videos", groupFoundVideos);
 		return "index";
 	}
 

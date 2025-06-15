@@ -138,7 +138,8 @@ public class Video extends Content {
 
 	@Override
 	public String toString() {
-		return "Video [categories=" + categories + ", studio=" + studio + ", country=" + country + "]";
+		return "Video [id =" + getId() + "categories=" + categories + ", studio=" + studio + ", country=" + country
+				+ "]";
 	}
 
 }

@@ -1,5 +1,6 @@
 package vn.tritin.WebHoatHinh.util.video;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +42,7 @@ public class AttributeAddition {
 		video.setBanner(avatarPath);
 		video.setDirector(videoCreator.getDirector());
 		video.setLanguage(videoCreator.getLanguage());
+		video.setDateUploaded(new Date(System.currentTimeMillis()));
 
 		video = createOtherEntity(videoCreator, video);
 

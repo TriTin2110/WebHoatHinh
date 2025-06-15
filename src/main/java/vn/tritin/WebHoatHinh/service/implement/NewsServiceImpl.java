@@ -26,6 +26,8 @@ import vn.tritin.WebHoatHinh.util.StringHandler;
 
 @Service
 public class NewsServiceImpl implements NewsService {
+	private final int MINIMUM_NEWS_AMOUNT = 0;
+
 	@Value("${path.news-banner}")
 	private String bannerPath;
 
@@ -152,6 +154,14 @@ public class NewsServiceImpl implements NewsService {
 	public News update(News news) {
 		// TODO Auto-generated method stub
 		return dao.saveAndFlush(news);
+	}
+
+	@Override
+	public List<News> getNewestNews(int amount) {
+		// TODO Auto-generated method stub
+		List<News> news = findAll();
+		news.subList(MINIMUM_NEWS_AMOUNT, amount);
+		return news;
 	}
 
 }

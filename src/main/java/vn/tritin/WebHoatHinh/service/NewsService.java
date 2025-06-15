@@ -26,4 +26,6 @@ public interface NewsService {
 	public News prepareData(NewsCreator newsCreator, MultipartFile file);
 
 	public News update(News news);
+
+	public List<News> getNewestNews(int amount);
 }
