@@ -22,8 +22,11 @@
 		<div id="main">
 
 			<div th:replace="~{component/index-page/content.html :: content}"></div>
-
-			<div th:replace="~{component/index-page/news.html :: news}"></div>
+			<div style="color: white;">
+				<hr />
+				<h2>Tin tức</h2>
+			</div>
+			<div th:replace="~{component/news-page/news-list.html :: news-list}"></div>
 
 		</div>
 

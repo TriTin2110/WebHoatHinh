@@ -326,7 +326,6 @@ h1#logo a {
 }
 #news {
 	width:460px;
-	float:left;
 }
 #news .head {
 	width:460px;
@@ -367,8 +366,8 @@ h1#logo a {
 	padding-bottom:28px;
 }
 .content .date {
-	font-size:10px;
 	color:#fff;
+	font-style: italic;
 }
 .content img {
 	float:left;

@@ -21,6 +21,7 @@ import vn.tritin.WebHoatHinh.service.VideoService;
 
 @Service
 public class VideoServiceImpl implements VideoService {
+	private final int MINIMUM_AMOUNT = 0;
 	private DAOVideo dao;
 
 	@Autowired
@@ -115,6 +116,10 @@ public class VideoServiceImpl implements VideoService {
 
 		}
 		return groupVideos;
+	}
+
+	public List<Video> getVideosByAmount(List<Video> videos, int amount) {
+		return videos.subList(MINIMUM_AMOUNT, amount);
 	}
 
 }

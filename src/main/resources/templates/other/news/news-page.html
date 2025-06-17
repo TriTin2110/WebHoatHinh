@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>News Page</title>
+<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+<link rel="stylesheet" href="/css/style.css" type="text/css" media="all" />
+<style type="text/css">
+	div{
+		color: white;
+	}
+	h2{
+		color: white;
+		font-size: 28px;
+		font-weight: bold;
+	}
+</style>
+</head>
+<body>
+	<div id="shell">
+		<div th:replace="~{/component/index-page/header.html :: header}"></div>
+	
+		<div class="row">
+			<div class="col-md-8">
+				<h2>Danh sách tin tức</h2>
+				<hr style="border: 1px solid white;">
+				<div style="margin-top: 20px;" th:insert="~{/component/news-page/news-list.html :: news-list}">
+				</div>
+			</div>
+			<div class="col-md-4">
+				<h2>Phim mới</h2>
+				<div style="margin-top: 20px; display: flex; justify-content: center; font-size: 18px;">
+					<div th:replace="~{/component/news-page/news-list-video.html :: news-list-video}">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

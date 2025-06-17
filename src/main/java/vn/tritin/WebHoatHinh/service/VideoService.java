@@ -21,4 +21,6 @@ public interface VideoService {
 
 	public List<List<Video>> getGroupVideo(List<Video> videos, int totalVideo, int numberVideoPerLine);
 
+	public List<Video> getVideosByAmount(List<Video> videos, int amount);
+
 }

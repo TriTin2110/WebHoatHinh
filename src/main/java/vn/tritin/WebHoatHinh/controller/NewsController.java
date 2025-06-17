@@ -12,23 +12,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import vn.tritin.WebHoatHinh.entity.Account;
 import vn.tritin.WebHoatHinh.entity.News;
+import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.NewsNotExistsException;
 import vn.tritin.WebHoatHinh.service.NewsService;
+import vn.tritin.WebHoatHinh.service.VideoService;
 
 @Controller
 @RequestMapping("/movie-news")
 public class NewsController {
-	private List<News> newsList;
 	private NewsService service;
+	private VideoService videoSer;
 
 	@Autowired
-	public NewsController(NewsService service) {
+	public NewsController(NewsService service, VideoService videoSer) {
 		this.service = service;
+		this.videoSer = videoSer;
 	}
 
 	@GetMapping("/{id}")
 	public String findNewsById(@PathVariable("id") String id, Model model, HttpServletRequest request) {
-		this.newsList = service.findAll();
+		List<News> newsList = service.findAll();
 		Account account = (Account) request.getSession().getAttribute("account");
 		News news = null;
 		String newsItemId = null;
@@ -45,5 +48,15 @@ public class NewsController {
 		model.addAttribute("account", account);
 		model.addAttribute("news", news);
 		return "news";
+	}
+
+	@GetMapping("/show-news")
+	public String showNewsList(Model model) {
+		List<News> newsList = service.findAll();
+		List<Video> videos = videoSer.findAll();
+		List<Video> videoList = videoSer.getVideosByAmount(videos, 4);
+		model.addAttribute("news", newsList);
+		model.addAttribute("videos", videoList);
+		return "other/news/news-page";
 	}
 }

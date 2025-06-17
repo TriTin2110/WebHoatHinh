@@ -16,7 +16,7 @@
 
 			<div th:each="v, sta : ${videos}"
 				th:if="${sta.size > 0}">
-				<div class="row" style="display: flex; justify-content: center;">
+				<div style="display: flex; justify-content: space-around;">
 					<div class="movie" th:each="video : ${v}">
 						<div class="movie-image">
 							<a th:href="@{/view/{id}(id=${video.id})}"><img
