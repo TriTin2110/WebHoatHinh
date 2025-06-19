@@ -58,7 +58,7 @@ public class NewsControllerManager {
 			throw new FileNotFoundException();
 		else {
 			News news = newsSer.findById(newsCreator.getId());
-			if (previousId.isEmpty()) { // Insert signal
+			if (previousId.isEmpty()) { // If there previousId is undefined the application will insert news into db
 				news = newsSer.prepareData(newsCreator, file);
 				news = newsSer.save(news);
 			} else {
@@ -66,11 +66,11 @@ public class NewsControllerManager {
 				if (previousNews == null)
 					throw new NewsNotExistsException();
 				if (previousNews != null
-						&& news == null) { /*- When news's previous Id different from news's id inputed by user*/
+						&& news == null) { /*- When news's previous Id different from news's id inputed by user. That mean the user want to delete that previous news and insert the newest news*/
 					newsSer.remove(previousId);
 				}
 				news = newsSer.prepareData(newsCreator, file);
-				newsSer.update(news);
+				newsSer.update(news); // saveAndFlush news
 			}
 
 			newsSer.updateListNews();

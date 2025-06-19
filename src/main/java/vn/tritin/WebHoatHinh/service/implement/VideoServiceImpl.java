@@ -122,4 +122,16 @@ public class VideoServiceImpl implements VideoService {
 		return videos.subList(MINIMUM_AMOUNT, amount);
 	}
 
+	@Override
+	@Transactional
+	public void delete(String id) {
+		// TODO Auto-generated method stub
+		dao.deleteById(id);
+	}
+
+	@Override
+	public boolean isExists(String id) {
+		return dao.existsById(id);
+	}
+
 }

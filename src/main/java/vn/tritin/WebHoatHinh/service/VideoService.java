@@ -23,4 +23,7 @@ public interface VideoService {
 
 	public List<Video> getVideosByAmount(List<Video> videos, int amount);
 
+	public void delete(String id);
+
+	public boolean isExists(String id);
 }

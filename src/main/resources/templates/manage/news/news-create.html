@@ -192,6 +192,8 @@ body {
     if(e.target.matches('i')){
       const idx = e.target.dataset.idx;
       tags.splice(idx,1);
+      let tag = document.getElementById("tags")
+      tag.value = tags
       renderTags();
     }
   });
@@ -201,6 +203,7 @@ body {
   form.addEventListener('submit', function(e){
 	  e.preventDefault();
 	const tittle = document.getElementById("title").value
+	//Doesn't allow speacial character on tittle
 	const reg = /[^\p{L}\p{N}\s]/gu //\p{L}: language unicode,\p{N}: number unicode,u: unicode identify
 	let tittleWarning = document.getElementById("tittle-warning")
 	tittleWarning.style.display = "none"

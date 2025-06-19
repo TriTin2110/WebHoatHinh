@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Đăng bài viết mới</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"
+	rel="stylesheet">
+<!-- Quill CSS -->
+<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css"
+	rel="stylesheet">
+<style>
+body {
+	background-color: #111;
+	color: white;
+	font-family: 'Segoe UI', sans-serif;
+	padding: 40px 0;
+}
+
+.container {
+	max-width: 800px;
+}
+
+.form-label {
+	font-weight: bold;
+}
+
+.btn-submit {
+	background-color: orange;
+	border: none;
+}
+
+.btn-submit:hover {
+	background-color: darkorange;
+}
+
+#editor {
+	height: 300px;
+	background: #fff;
+	color: #000;
+}
+/* tag styles */
+.tag-badge {
+	background: dodgerblue;
+	color: #fff;
+	border-radius: 20px;
+	padding: 4px 10px;
+	margin: 2px;
+	display: inline-flex;
+	align-items: center;
+}
+
+.tag-badge i {
+	cursor: pointer;
+	margin-left: 6px;
+}
+</style>
+</head>
+<body>
+	<div class="container">
+		<h1 class="text-center mb-5">Tạo/Cập nhật Video!</h1>
+		<form id="postForm" th:method="post" th:action="@{/admin/video}"
+			enctype="multipart/form-data" th:object="${creator}">
+			
+			<div class="mb-3" th:if="*{id != null}" style="text-align: center;">
+				<span th:text="'Cập nhật: ' + *{id}"></span>
+			</div>
+			<div class="mb-3" th:unless="*{id != null}">
+				<label for="title" class="form-label">Tiêu đề Video</label> <input
+					type="text" class="form-control" id="title" th:field="*{id}"
+					placeholder="Nhập tiêu đề..."
+					required>
+				<p class="text-danger" id="tittle-warning"
+					style="display: none; font-weight: bold;">Tiêu đề chỉ được chứa
+					chữ cái và số!</p>
+			</div>
+
+			<!-- Categories input -->
+			<div class="mb-3">
+				<input type="hidden" th:field="*{categories}" id="categories">
+				<label class="form-label">Thể loại</label>
+				<div class="input-group mb-2">
+					<input type="text" id="categoriesInput" class="form-control"
+						placeholder="Nhập thể loại và nhấn Enter">
+				</div>
+				<div id="categoriesList"></div>
+			</div>
+
+			<div class="mb-3">
+				<label for="director" class="form-label">Đạo diễn</label> <input
+					type="text" class="form-control" id="director"
+					th:field="*{director}"
+					th:value="*{director != null ? director : ''}"
+					placeholder="Tên đạo diễn..." required>
+			</div>
+
+			<!-- Country input -->
+			<div class="mb-3">
+				<input type="hidden" th:field="*{country}" id="country"> <label
+					class="form-label">Quốc gia</label>
+				<div class="input-group mb-2">
+					<input type="text" id="countryInput" class="form-control"
+						placeholder="Nhập quốc gia và nhấn Enter">
+				</div>
+				<div id="countryList"></div>
+			</div>
+
+			<div class="mb-3">
+				<label for="studio" class="form-label">Studio</label> <input
+					type="text" class="form-control" id="studio" th:field="*{studio}"
+					th:value="*{studio != null ? studio : ''}" placeholder="Studio..."
+					required>
+			</div>
+
+			<div class="mb-3">
+				<label for="language" class="form-label">Ngôn ngữ</label> <input
+					type="text" class="form-control" id="language"
+					th:field="*{language}"
+					th:value="*{language != null ? language : ''}"
+					placeholder="Ngôn ngữ..." required>
+			</div>
+
+			<div class="mb-3">
+				<label for="banner" class="form-label">Chọn ảnh banner</label> <input
+					type="file" class="form-control" id="avatar" name="avatar"
+					accept="image/*" required>
+			</div>
+
+			<div class="mb-3">
+				<label for="banner" class="form-label">Chọn ảnh video</label> <input
+					type="file" class="form-control" id="video" name="video"
+					accept="video/*" required>
+			</div>
+
+			<div class="text-center">
+				<button type="submit" onclick="return checkingData()"
+					class="btn btn-submit px-4 py-2 text-white">Đăng Video</button>
+			</div>
+		</form>
+	</div>
+
+
+	<script th:inline="javascript">
+  const categoriesInput = document.getElementById('categoriesInput'); //The input for category
+  const categoriesList = document.getElementById('categoriesList');
+  const countryInput = document.getElementById('countryInput'); //Which will show when user hit enter
+  const countryList = document.getElementById('countryList');
+  
+  var country = /*[[${creator.country}]]*/ null
+  var categories = /*[[${creator.country}]]*/ null //Checking if there is any data before
+	  if(categories === null)
+		  categories = []
+	  if(country === null)
+		  country = []
+
+	window.addEventListener("DOMContentLoaded",  async () => {
+		await checking(categories, categoriesList)
+		await checking(country, countryList)
+	})
+	
+	async function checking(values, list)
+  	{
+		  if(values.length > 0)
+			{
+				var splitted = await values.split(",")
+				values = []
+				for(let i = 0; i < splitted.length; i++)
+				{
+					if(splitted[i].trim() != '')
+						addTag(splitted[i], values, list)
+				}
+			}
+	}
+
+  addEvent(categoriesInput, categories, categoriesList, "categories")
+	addEvent(countryInput, country, countryList, "country")
+	
+
+  function addEvent(input, values, list, id) //Handling event when inputed  
+  {
+	  // Add tag on Enter
+	  input.addEventListener('keydown', e => {
+	    if(e.key === 'Enter'){
+	      e.preventDefault();
+	      const val = input.value.trim();
+	      values = addTag(val, values, list)
+	      input.value='';
+	      let tag = document.getElementById(id)
+		  tag.value = values
+	    }
+	  });
+  }
+ 
+  function addTag(val, values, list)
+  {
+	  
+	  if(val && !values.includes(val)){
+		  values.push(val);
+	        renderTags(values, list);
+	      return values
+	  }
+  }
+  
+  function renderTags(values, list){
+	  list.innerHTML='';
+	  values.forEach((tag, idx)=>{
+      const span = document.createElement('span');
+      span.className='tag-badge';
+      span.innerHTML = `${tag} <i class="fas fa-times" data-idx="${idx}"></i>`;
+      list.appendChild(span);
+    });
+  }
+
+  //remove tag
+  countryList.addEventListener('click', e=>{
+    if(e.target.matches('i')){
+      const idx = e.target.dataset.idx;
+      country.splice(idx,1); //remove country from country values
+      let countryInput = document.getElementById("country")
+      countryInput.value = country
+      renderTags(country, countryList);
+    }
+  });
+  categoriesList.addEventListener('click', e=>{
+	    if(e.target.matches('i')){
+	      const idx = e.target.dataset.idx;
+	      categories.splice(idx,1);
+	      let categoriesInput = document.getElementById("categories")
+	      categoriesInput.value = categories
+	      renderTags(categories, categoriesList);
+	    }
+	  });
+  
+
+  function checkingData() //Checking categories and country when submit
+  {
+	  let categories = document.getElementById("categories")
+	  let country = document.getElementById("country")
+	  if(categories.value == '' || country.value == '')
+	  {
+		  if(categories.value == '')
+			  alert("Bạn cần nhập dữ liệu cho 'Thể loại'")
+		  if(country.value == '')
+			  alert("Bạn cần nhập dữ liệu cho 'Quốc Gia''")
+		  return false
+	  }
+	  return true
+  }
+
+</script>
+</body>
+</html>
+
