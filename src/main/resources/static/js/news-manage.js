@@ -51,9 +51,3 @@ var modalUpdate = new bootstrap.Modal(updateModal)
 			
 		}
 
-		function hideDeleteNews()
-		{
-			let btnDelete = document.getElementById("btn-delete")
-			btnDelete.onclick = function() {}
-			modalDelete.hide()
-		}

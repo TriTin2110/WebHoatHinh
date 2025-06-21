@@ -132,7 +132,7 @@ public class TestAdding {
 	@Test
 	public void addingMultiVideo() {
 		for (Video video : videos) {
-			videoService.save(video);
+			videoService.saveAndFlush(video);
 		}
 		assert true;
 	}

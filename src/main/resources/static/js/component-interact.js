@@ -15,7 +15,20 @@ function showConfirmDelete(name, url) {
 
 function hideDeleteFrame() {
 	let btnDelete = document.getElementById("btn-delete")
-	btnDelete.onclick = () => { 
+	btnDelete.onclick = () => {
 		modalDelete.hide()
 	}
+}
+
+function hideUpdateFrame() {
+		modalUpdate.hide()
+}
+
+function showConfirmUpdate(name, url) {
+	var message = updateModal.querySelector("p")
+	message.innerHTML = `Bạn có chắc là muốn cập nhật <b>${name}</b> không?`
+	let btnUpdate = document.getElementById("btn-update")
+	btnUpdate.href = url + name
+	console.log(url + name)
+	modalUpdate.show()
 }

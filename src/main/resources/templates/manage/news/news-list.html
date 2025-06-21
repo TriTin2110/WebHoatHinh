@@ -32,7 +32,7 @@
 					<td th:text="${news.dateUploaded}"></td>
 					<td th:text=${news.authorName}></td>
 					<td><button class="btn btn-success" th:attr="onclick=|showConfirmUpload('${news.id}', '${news.dateUploaded}', '${news.authorName}')|">Cập nhật</button>
-						<button th:attr="onclick=|showConfirmDelete('${news.id}')|"
+						<button th:attr="onclick=|showConfirmDelete('${news.id}', '/admin/news/delete/')|"
 							data-bs-toggle="modal" data-bs-target="#delete-modal"
 							class="btn btn-danger">Xóa</button></td>
 				</tr>
@@ -45,6 +45,7 @@
 	<div th:replace="~{/manage/news/components/modal-confirm-delete.html :: delete-modal}"></div>
 	<script src="/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="/js/news-manage.js"></script>
+	<script type="text/javascript" src="/js/component-interact.js"></script>
 	<script type="text/javascript" th:inline="javascript">
 		let error = /*[[${error}]]*/ ""
 		if(error.length > 0)

@@ -9,10 +9,11 @@ import vn.tritin.WebHoatHinh.entity.Video;
 public interface VideoService {
 	public Video findById(String id);
 
-	public void save(Video video);
+	public void saveAndFlush(Video video);
 
 	public List<Video> findAll();
 
+	// Return file's name
 	public String saveFile(String path, MultipartFile file) throws Exception;
 
 	public List<Video> updateCache();
@@ -26,4 +27,6 @@ public interface VideoService {
 	public void delete(String id);
 
 	public boolean isExists(String id);
+
+	public boolean isFileExists(String path, String fileName);
 }

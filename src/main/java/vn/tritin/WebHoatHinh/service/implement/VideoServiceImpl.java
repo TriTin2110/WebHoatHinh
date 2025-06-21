@@ -39,7 +39,7 @@ public class VideoServiceImpl implements VideoService {
 
 	@Override
 	@Transactional
-	public void save(Video video) {
+	public void saveAndFlush(Video video) {
 		// TODO Auto-generated method stub
 		dao.saveAndFlush(video);
 	}
@@ -132,6 +132,15 @@ public class VideoServiceImpl implements VideoService {
 	@Override
 	public boolean isExists(String id) {
 		return dao.existsById(id);
+	}
+
+	@Override
+	public boolean isFileExists(String path, String fileName) {
+		// TODO Auto-generated method stub
+		File file = new File(path);
+		if (file.exists())
+			return true;
+		return false;
 	}
 
 }
