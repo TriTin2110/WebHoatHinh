@@ -33,7 +33,7 @@
 			</div>
 		</div>
 		<div th:replace="~{component/video-page/description.html :: description(${video}, ${categories})}"></div>
-		<div style="color: white; padding: 15px 0px 15px 0px;">Mô tả</div>
+		<div style="color: white; padding: 15px 0px 15px 0px;" id="" th:utext="${video.description}"></div>
 		<div th:if="${account?.user != null}" class="row">
 			<div class="col-md-6" th:insert="~{component/video-page/comment.html :: comment(${account},${comments})}"></div>
 			<div class="col-md-6" th:insert="~{component/index-page/news.html :: news}"></div>

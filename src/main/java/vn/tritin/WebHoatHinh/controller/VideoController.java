@@ -28,6 +28,7 @@ public class VideoController {
 	private final int AMOUNT_VIDEO_PER_LINE = 5;
 	private final int SLIDER_LENGTH = 8;
 	private final int NUMBER_VIDEO_IN_ONE_SLIDE = 4;
+	private final int NUMBER_VIDEO_ON_PAGE = 10;
 
 	private VideoService videoService;
 	private CommentService commmentService;
@@ -66,7 +67,6 @@ public class VideoController {
 					model.addAttribute("account", account);
 					model.addAttribute("news", news);
 				}
-
 				model.addAttribute("video", video);
 				model.addAttribute("videoDetail", videoDetail);
 				model.addAttribute("categories", categories);
@@ -77,12 +77,24 @@ public class VideoController {
 		return "index";
 	}
 
-	@GetMapping("/")
-	public String showHomePage(Model model, HttpServletRequest request) {
+	@GetMapping("/{page-number}")
+	public String showHomePage(Model model, HttpServletRequest request, @PathVariable("page-number") int num) {
+		List<Integer> pageNumbers = new LinkedList<Integer>();
 		List<Video> videos = this.videoService.findAll();
+		int count = 1;
+		for (int i = 0; (i + 10) < videos.size(); i += 10) {
+			pageNumbers.add(count);
+			count++;
+		}
+		pageNumbers.add(count);
+		int start = (num - 1) * NUMBER_VIDEO_ON_PAGE;
+		int end = (num * NUMBER_VIDEO_ON_PAGE < videos.size()) ? (num * NUMBER_VIDEO_ON_PAGE) : videos.size();
+		videos = videos.subList(start, end);
 		List<List<Video>> groupVideos = this.videoService.getGroupVideo(videos, videos.size(), AMOUNT_VIDEO_PER_LINE);
 		model = setupBasicModel(model, request, videos);
 		model.addAttribute("videos", groupVideos);
+		model.addAttribute("pageNumber", pageNumbers);
+		model.addAttribute("currentPage", num);
 		return "index";
 	}
 

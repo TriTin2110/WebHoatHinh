@@ -1,29 +1,6 @@
-const deleteModal = document.getElementById('delete-modal')
-const updateModal = document.getElementById('update-modal')
-
 var modalDelete = new bootstrap.Modal(deleteModal)
 var modalUpdate = new bootstrap.Modal(updateModal)
 
-
-		function search()
-		{
-			var input = document.getElementById("search-input").value
-			input = input.toUpperCase() //Uppercase for conveniencely compare 
-			var table = document.getElementById("news-table")
-			var tbody = table.children[1]
-			var tr = tbody.getElementsByTagName("tr")
-			for(let i = 0; i < tr.length; i++)
-			{
-				var name = tr[i].getElementsByTagName("td")[1].innerText
-				if(name.toUpperCase().indexOf(input) > -1)
-				{
-					tr[i].style.display = ""
-				}
-				else
-					tr[i].style.display = "none"
-			}
-			
-		}
 
 		function showConfirmDelete(name)
 		{

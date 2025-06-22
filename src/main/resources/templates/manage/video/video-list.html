@@ -7,7 +7,7 @@
 </head>
 <body>
 	<div class="container">
-		<table class="table table-hover">
+		<table class="table table-hover" id="video-table">
 			<thead class="table-dark">
 				<tr>
 					<th style="width: 60px;">No.</th>
@@ -20,7 +20,7 @@
 					<th style="width: 240px;">Tùy chọn</th>
 				</tr>
 				<tr>
-					<td colspan="8"><input style="width: 100%" onkeyup="search()"
+					<td colspan="8"><input style="width: 100%" onkeyup="search('video-table')"
 						class="form-control" id="search-input"
 						placeholder="Search By Name" type="text" /></td>
 				</tr>

@@ -18,6 +18,7 @@ import jakarta.transaction.Transactional;
 import vn.tritin.WebHoatHinh.dao.DAOVideo;
 import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.service.VideoService;
+import vn.tritin.WebHoatHinh.util.StringHandler;
 
 @Service
 public class VideoServiceImpl implements VideoService {
@@ -65,19 +66,23 @@ public class VideoServiceImpl implements VideoService {
 	@Cacheable("videos")
 	public List<Video> findAll() {
 		List<Video> videos = dao.findAll();
-		videos.sort((o1, o2) -> {
-			return o2.getDateUploaded().compareTo(o1.getDateUploaded());
-		});
-		return videos;
+		StringHandler handler = new StringHandler();
+		return videos.stream().map(o -> {
+			if (o.getDescription() != null)
+				o.setDescription(handler.decrypt(o.getDescription()));
+			return o;
+		}).toList();
 	}
 
 	@CachePut("videos")
 	public List<Video> updateCache() {
 		List<Video> videos = dao.findAll();
-		videos.sort((o1, o2) -> {
-			return o2.getDateUploaded().compareTo(o1.getDateUploaded());
-		});
-		return videos;
+		StringHandler handler = new StringHandler();
+		return videos.stream().map(o -> {
+			if (o.getDescription() != null)
+				o.setDescription(handler.decrypt(o.getDescription()));
+			return o;
+		}).toList();
 	}
 
 	/*-
@@ -109,8 +114,8 @@ public class VideoServiceImpl implements VideoService {
 		// TODO Auto-generated method stub
 		List<List<Video>> groupVideos = new LinkedList<List<Video>>();
 		int count = 0;
-		for (int i = 0; i < totalVideo; i += count) { // Chia danh sách video thành từng
-			// nhóm 4 phần tử
+		for (int i = 0; i < totalVideo; i += count) { // Seperator videos into small group each group will has {count}
+														// element
 			count = (totalVideo > i + numberVideoPerLine) ? numberVideoPerLine : (totalVideo - i);
 			groupVideos.add(videos.subList(i, i + count));
 
@@ -137,7 +142,7 @@ public class VideoServiceImpl implements VideoService {
 	@Override
 	public boolean isFileExists(String path, String fileName) {
 		// TODO Auto-generated method stub
-		File file = new File(path);
+		File file = new File(path + fileName);
 		if (file.exists())
 			return true;
 		return false;

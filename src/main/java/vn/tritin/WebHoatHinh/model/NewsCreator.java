@@ -15,15 +15,17 @@ public class NewsCreator {
 	@NotBlank(message = "Không được để trống tên tác giả")
 	private String authorName;
 	private String tags;
+	private String banner;
 
 	public NewsCreator() {
 	}
 
-	public NewsCreator(String id, String description, String authorName, String tags) {
+	public NewsCreator(String id, String description, String authorName, String tags, String banner) {
 		this.id = id;
 		this.description = description;
 		this.authorName = authorName;
 		this.tags = tags;
+		this.banner = banner;
 	}
 
 	public NewsCreator(String id, String description, Date dateUploaded, String authorName, String tags) {
@@ -72,6 +74,14 @@ public class NewsCreator {
 
 	public void setTags(String tags) {
 		this.tags = tags;
+	}
+
+	public String getBanner() {
+		return banner;
+	}
+
+	public void setBanner(String banner) {
+		this.banner = banner;
 	}
 
 	@Override

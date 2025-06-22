@@ -42,9 +42,9 @@ public class NewsServiceImpl implements NewsService {
 
 	@Override
 	@Transactional
-	public News save(News news) {
+	public News saveAndFlush(News news) {
 		// TODO Auto-generated method stub
-		news = dao.save(news);
+		news = dao.saveAndFlush(news);
 		return news;
 	}
 
@@ -104,7 +104,6 @@ public class NewsServiceImpl implements NewsService {
 	 *  
 	 * */
 	public News prepareData(NewsCreator newsCreator, MultipartFile file) {
-		// Deflater Description
 		Date date = new Date(System.currentTimeMillis());
 		String id = newsCreator.getId();
 
@@ -114,9 +113,10 @@ public class NewsServiceImpl implements NewsService {
 		String output = stringHandler.encrypt(description);
 
 		// Banner handling
-		String banner = null;
+		String banner = newsCreator.getBanner();
 		try {
-			banner = fileSer.saveImage(bannerPath, file);
+			if (banner == null || !banner.equals(file.getOriginalFilename()))
+				banner = fileSer.saveImage(bannerPath, file);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -128,8 +128,6 @@ public class NewsServiceImpl implements NewsService {
 		Tag tempTag;
 		News news = new News(id, output, date, newsCreator.getAuthorName(), banner);
 		for (String tag : tagsSplitted) {
-			if (tag.isBlank())
-				continue;
 			tempTag = tagSer.findById(tag);
 			if (tempTag == null)
 				tempTag = new Tag(tag, date, Arrays.asList(news));

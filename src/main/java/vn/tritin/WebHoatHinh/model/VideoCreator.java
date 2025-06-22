@@ -8,12 +8,13 @@ public class VideoCreator {
 	@Size(min = 7, message = "Độ dài tối thiểu là 6 ký tự!")
 	private String id;
 
-	private String pathAvatar, pathVideo, director, language, country, categories, studio;
+	private String pathAvatar, pathVideo, director, language, country, categories, studio, description;
 
 	public VideoCreator() {
 	}
 
-	public VideoCreator(String id, String director, String language, String country, String categories, String studio) {
+	public VideoCreator(String id, String director, String language, String country, String categories, String studio,
+			String description) {
 		super();
 		this.id = id;
 		this.director = director;
@@ -85,6 +86,14 @@ public class VideoCreator {
 
 	public void setStudio(String studio) {
 		this.studio = studio;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	@Override

@@ -34,8 +34,8 @@ public class FileServiceImpl implements FileService {
 
 	/*-
 	 * Here we will save the image file with those extensions (.png, .jpg, .jpeg)
-	 * File name will contain <The random number> + _ + <Current Time>
-	 * Then we will create the file from The MultipartFile and save it at static/img/user-avatar
+	 * File name will contain <Current Time>
+	 * Then we will create the file from The MultipartFile and save it
 	 * if there is any error we will return null then the controller will stop update other information
 	 * */
 	public String saveImage(String imagePath, MultipartFile imageFile) {
@@ -60,6 +60,7 @@ public class FileServiceImpl implements FileService {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}
 
 		return fileName;

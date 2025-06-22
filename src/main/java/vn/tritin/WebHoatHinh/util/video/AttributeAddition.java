@@ -14,6 +14,7 @@ import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.entity.VideoDetail;
 import vn.tritin.WebHoatHinh.entity.VideoTag;
 import vn.tritin.WebHoatHinh.model.VideoCreator;
+import vn.tritin.WebHoatHinh.util.StringHandler;
 import vn.tritin.WebHoatHinh.util.category.CategoryInteraction;
 import vn.tritin.WebHoatHinh.util.country.CountryInteraction;
 import vn.tritin.WebHoatHinh.util.studio.StudioInteraction;
@@ -34,7 +35,6 @@ public class AttributeAddition {
 
 	public Video createAttribute(VideoCreator videoCreator) {
 		Video video = new Video();
-
 		String videoPath = videoCreator.getPathVideo();
 		String avatarPath = videoCreator.getPathAvatar();
 
@@ -43,7 +43,8 @@ public class AttributeAddition {
 		video.setDirector(videoCreator.getDirector());
 		video.setLanguage(videoCreator.getLanguage());
 		video.setDateUploaded(new Date(System.currentTimeMillis()));
-
+		StringHandler stringHanler = new StringHandler();
+		video.setDescription(stringHanler.encrypt(videoCreator.getDescription()));
 		video = createOtherEntity(videoCreator, video);
 
 		video.setVideoDetail(createVideoDetail(videoPath, video));

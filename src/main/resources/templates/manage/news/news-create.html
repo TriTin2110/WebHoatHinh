@@ -66,7 +66,7 @@ body {
 
 		<form id="postForm" th:method="post" th:action="@{/admin/news}"
 			enctype="multipart/form-data" th:object="${creator}">
-			<input type="hidden" name="present-id" th:value="${presentId}"> 
+			<!-- <input type="hidden" name="present-id" th:value="${presentId}"> --> 
 			<div class="mb-3">
 				<label for="title" class="form-label">Tiêu đề bài viết</label> <input
 					type="text" class="form-control" id="title" th:field="*{id}"
@@ -83,12 +83,6 @@ body {
 					th:field="*{authorName}"
 					th:value="*{authorName != null ? authorName : ''}"
 					placeholder="Tên tác giả..." required>
-			</div>
-
-			<div class="mb-3">
-				<label for="banner" class="form-label">Chọn ảnh banner</label> <input
-					type="file" class="form-control" id="banner" name="banner"
-					accept="image/*" required>
 			</div>
 
 			<!-- Tag input -->
@@ -120,22 +114,32 @@ body {
 				<textarea style="display: none;" th:field="*{description}"
 					id="description"></textarea>
 			</div>
-
-			<div class="text-center">
-				<button type="submit" class="btn btn-submit px-4 py-2 text-white">Đăng
+			<input type="hidden" th:field="*{banner}"> 
+		</form>
+		<div class="mb-3">
+				<label for="image" class="form-label">Chọn ảnh banner</label> <input
+					type="file" class="form-control" id="image" name="image"
+					accept="image/*" required>
+				<div style="text-align: center; margin-top: 10px;">
+					<img src="" width="100" id="preview-image">
+				</div>
+		</div>
+			
+		<div class="text-center">
+				<button type="button" onclick="submit()" class="btn btn-submit px-4 py-2 text-white">Đăng
 					bài</button>
 			</div>
-		</form>
 	</div>
 
 	<!-- Quill JS -->
 	<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
-
+	<script type="text/javascript" src="/js/create-update.js"></script>
 	<script th:inline="javascript">
   let content = /*[[${creator.description}]]*/ ''
-  const quill = new Quill('#editor', { theme:'snow', modules:{ toolbar:'#toolbar' } });
   const tagInput = document.getElementById('tagInput');
   const tagList = document.getElementById('tagList');
+  let url = '/admin/news'
+  let currentImage
   var tags = /*[[${creator.tags}]]*/ null
 	  if(tags === null)
 		  tags = []
@@ -143,7 +147,7 @@ body {
 	window.addEventListener("DOMContentLoaded",  async () => {
 		if(content != null)
 			await quill.clipboard.dangerouslyPasteHTML(content)
-		if(tags != null)
+		if(tags != null && tags.includes(','))
 		{
 			var tagSplit = await tags.split(",")
 			tags = []
@@ -154,17 +158,16 @@ body {
 			}
 		}
 		})
-		
-	
+	addImage()
+	loadOldImage()
   // Add tag on Enter
   tagInput.addEventListener('keydown', e => {
     if(e.key === 'Enter'){
       e.preventDefault();
       const val = tagInput.value.trim();
-      addTag(val)
-      tagInput.value='';
       let tag = document.getElementById("tags")
-	  tag.value+=val+","
+      tag.value = addTag(val)
+      tagInput.value='';
     }
   });
 
@@ -175,6 +178,7 @@ body {
 	        tags.push(val);
 	        renderTags();
 	  }
+	  return tags;
   }
   
   function renderTags(){
@@ -198,29 +202,60 @@ body {
     }
   });
 
-  // Submit form
-  let form = document.getElementById('postForm')
-  form.addEventListener('submit', function(e){
-	  e.preventDefault();
-	const tittle = document.getElementById("title").value
-	//Doesn't allow speacial character on tittle
-	const reg = /[^\p{L}\p{N}\s]/gu //\p{L}: language unicode,\p{N}: number unicode,u: unicode identify
-	let tittleWarning = document.getElementById("tittle-warning")
-	tittleWarning.style.display = "none"
-		console.log(tittle)
-	if(reg.test(tittle))
+  function addImage()
+  {
+	  let image = document.getElementById("image")
+	  image.addEventListener("change", function(){
+		currentImage = this.files[0]
+		previewImage()
+	})
+  }
+
+  function previewImage()
+  {
+	let previewImage = document.getElementById("preview-image")
+	let url = URL.createObjectURL(currentImage)
+	previewImage.src = url
+}
+
+  function loadOldImage()
+  {
+	let image = /*[[${creator.banner}]]*/ ''
+		if(image != '' && image != null)
+			{
+				fetch("/img/news-banner/"+image).then(data => data.blob()).then(blob =>{
+					currentImage = new File([blob], image, {type: blob.type})
+					previewImage()
+				})
+				url = "/admin/news/update"
+			}
+	}
+
+	function submit()
 	{
-		alert("Đã có lỗi!!")
-		tittleWarning.style.display = "block"
+		const tittle = document.getElementById("title").value
+		//Doesn't allow speacial character on tittle
+		const reg = /[^\p{L}\p{N}\s]/gu //\p{L}: language unicode,\p{N}: number unicode,u: unicode identify
+		let tittleWarning = document.getElementById("tittle-warning")
+		tittleWarning.style.display = "none"
+		if(reg.test(tittle))
+		{
+			alert("Tựa đề không được phép chứa kí tự đặc biệt!!")
+			tittleWarning.style.display = "block"
+		}
+		else{
+			setContent()
+			let form = document.getElementById("postForm")
+			let formData = new FormData(form)
+			formData.append("image", currentImage)
+			fetch(url, {
+				method: "POST",
+				body: formData
+			}).then(res =>{
+				window.location.replace("/admin/news")
+				})
+		}
 	}
-	else{
-	    const banner = document.getElementById('banner').files[0]?.name || ''
-	   	const content = quill.root.innerHTML
-	   	let description = document.getElementById('description')
-	   	description.innerHTML=content
-	   	form.submit()
-	}
-  });
   </script>
 </body>
 </html>

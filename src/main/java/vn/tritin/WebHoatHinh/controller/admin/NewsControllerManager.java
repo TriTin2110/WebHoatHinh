@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import vn.tritin.WebHoatHinh.entity.News;
 import vn.tritin.WebHoatHinh.entity.Tag;
-import vn.tritin.WebHoatHinh.exceptions.exceptions.FileNotFoundException;
+import vn.tritin.WebHoatHinh.exceptions.exceptions.NewsExistsException;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.NewsNotExistsException;
 import vn.tritin.WebHoatHinh.model.NewsCreator;
 import vn.tritin.WebHoatHinh.service.NewsService;
@@ -52,30 +52,14 @@ public class NewsControllerManager {
 	}
 
 	@PostMapping("")
-	public String saveAndUpdate(@ModelAttribute("news") NewsCreator newsCreator,
-			@RequestParam("banner") MultipartFile file, @RequestParam("present-id") String previousId) {
-		if (file.isEmpty())
-			throw new FileNotFoundException();
+	public void saveAndUpdate(@ModelAttribute("creator") NewsCreator newsCreator,
+			@RequestParam("image") MultipartFile file) {
+		News news = newsSer.findById(newsCreator.getId());
+		if (news != null)
+			throw new NewsExistsException();
 		else {
-			News news = newsSer.findById(newsCreator.getId());
-			if (previousId.isEmpty()) { // If there previousId is undefined the application will insert news into db
-				news = newsSer.prepareData(newsCreator, file);
-				news = newsSer.save(news);
-			} else {
-				News previousNews = newsSer.findById(previousId);
-				if (previousNews == null)
-					throw new NewsNotExistsException();
-				if (previousNews != null
-						&& news == null) { /*- When news's previous Id different from news's id inputed by user. That mean the user want to delete that previous news and insert the newest news*/
-					newsSer.remove(previousId);
-				}
-				news = newsSer.prepareData(newsCreator, file);
-				newsSer.update(news); // saveAndFlush news
-			}
-
-			newsSer.updateListNews();
+			saveAndFlushNews(newsCreator, file, news);
 		}
-		return "redirect:/admin/news";
 	}
 
 	@GetMapping("/delete/{id}")
@@ -98,11 +82,26 @@ public class NewsControllerManager {
 			tags.append(tag.getId());
 			tags.append(",");
 		}
-
-		NewsCreator creator = new NewsCreator(news.getId(), description, news.getAuthorName(), tags.toString());
+		String bannerPath = news.getBanner();
+		NewsCreator creator = new NewsCreator(news.getId(), description, news.getAuthorName(), tags.toString(),
+				bannerPath);
 		model.addAttribute("creator", creator);
-		model.addAttribute("presentId", creator.getId()); // Each time showing update form we will attach previous
-															// news's id for checking when updating
 		return "manage/news/news-create";
+	}
+
+	@PostMapping("/update")
+	public void update(@ModelAttribute("creator") NewsCreator newsCreator, @RequestParam("image") MultipartFile file) {
+		News news = newsSer.findById(newsCreator.getId());
+		if (news == null)
+			throw new NewsNotExistsException();
+		else {
+			saveAndFlushNews(newsCreator, file, news);
+		}
+	}
+
+	public void saveAndFlushNews(NewsCreator newsCreator, MultipartFile file, News news) {
+		news = newsSer.prepareData(newsCreator, file);
+		newsSer.saveAndFlush(news);
+		newsSer.updateListNews();
 	}
 }

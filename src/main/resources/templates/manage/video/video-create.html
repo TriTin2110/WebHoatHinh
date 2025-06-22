@@ -67,8 +67,8 @@ body {
 			enctype="multipart/form-data" th:object="${creator}">
 
 			<div class="mb-3" th:if="*{id != null}" style="text-align: center;">
-				<span th:text="'Cập nhật: ' + *{id}"></span>
-				<input type="hidden" th:field="*{id}">
+				<span th:text="'Cập nhật: ' + *{id}"></span> <input type="hidden"
+					th:field="*{id}">
 			</div>
 			<div class="mb-3" th:unless="*{id != null}">
 				<label for="title" class="form-label">Tiêu đề Video</label> <input
@@ -120,39 +120,57 @@ body {
 					th:value="*{language != null ? language : ''}"
 					placeholder="Ngôn ngữ..." required>
 			</div>
+
+			<div class="mb-3">
+				<label class="form-label">Nội dung bài viết</label>
+				<div id="toolbar" class="mb-2">
+					<span class="ql-formats"> <select class="ql-header"></select>
+						<button class="ql-bold"></button>
+						<button class="ql-italic"></button>
+						<button class="ql-underline"></button>
+					</span> <span class="ql-formats">
+						<button class="ql-list" value="ordered"></button>
+						<button class="ql-list" value="bullet"></button>
+						<button class="ql-link"></button>
+						<button class="ql-image"></button>
+					</span>
+				</div>
+				<div id="editor"></div>
+				<textarea style="display: none;" th:field="*{description}"
+					id="description"></textarea>
+			</div>
 		</form>
-			<div class="mb-3">
-				<label for="banner" class="form-label">Chọn ảnh banner</label> <input
-					type="file" class="form-control" id="avatar"
-					accept="image/*" required>
-				<div 
-					style="text-align: center; margin-top: 10px;">
-					<img width="100" id="img-preview">
-				</div>
+		<div class="mb-3">
+			<label for="banner" class="form-label">Chọn ảnh banner</label> <input
+				type="file" class="form-control" id="avatar" accept="image/*"
+				required>
+			<div style="text-align: center; margin-top: 10px;">
+				<img width="100" id="img-preview">
 			</div>
+		</div>
 
-			<div class="mb-3">
-				<label for="video" class="form-label">Chọn ảnh video</label> <input
-					type="file" class="form-control" id="video" 
-					accept="video/*" required>
-				<div
-					style="text-align: center; margin-top: 10px;">
-					<video width="300" id="video-preview"
-						controls="controls"></video>
-				</div>
+		<div class="mb-3">
+			<label for="video" class="form-label">Chọn ảnh video</label> <input
+				type="file" class="form-control" id="video" accept="video/*"
+				required>
+			<div style="text-align: center; margin-top: 10px;">
+				<video width="300" id="video-preview" controls="controls"></video>
 			</div>
+		</div>
 
-			<div class="text-center">
-				<button type="button"
-					class="btn btn-submit px-4 py-2 text-white" onclick="submit()">Đăng Video</button>
-			</div>
-		
+		<div class="text-center">
+			<button type="button" class="btn btn-submit px-4 py-2 text-white"
+				onclick="submit()">Đăng Video</button>
+		</div>
+
 	</div>
-
-
+	<!-- Quill JS -->
+	<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+	<script type="text/javascript" src="/js/create-update.js"></script>
 	<script th:inline="javascript">
   const categoriesInput = document.getElementById('categoriesInput'); //The input for category
   const categoriesList = document.getElementById('categoriesList');
+  let content = /*[[${creator.description}]]*/ ''
   let currentVideo
 	  let currentImage
 	let urlAction = "/admin/video"
@@ -160,6 +178,8 @@ body {
 	  if(categories === null)
 		  categories = []
 	window.addEventListener("DOMContentLoaded",  async () => {
+		if(content != null && content != '')
+			await quill.clipboard.dangerouslyPasteHTML(content)
 		if(categories.length > 0)
 		{	
 			let temp = categories.split(",")
@@ -250,6 +270,7 @@ body {
   {
 	  if(checkingData())
 		  {
+		  setContent()
 		  let form = document.getElementById("postForm")
 		  let formData = new FormData(form)  
 		  formData.append("video", currentVideo, currentVideo.name)
@@ -291,7 +312,7 @@ body {
 	}
   
 //=======
-	async function checking(values, list)
+async function checking(values, list)
   	{
 				var splitted = await values.split(",")
 				values = []

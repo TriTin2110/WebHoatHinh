@@ -19,8 +19,9 @@
 				<div style="display: flex; justify-content: space-around;">
 					<div class="movie" th:each="video : ${v}">
 						<div class="movie-image">
-							<a th:href="@{/view/{id}(id=${video.id})}"><img
-								th:src="@{'img/video-avatar/'+${video.banner}}" style="border-radius: 18px;" alt="" /></a>
+							<a th:href="@{/view/{id}(id=${video.id})}">
+								<img
+									th:src="@{'img/video-avatar/'+${video.banner}}" style="border-radius: 18px;" alt="" /></a>
 						</div>
 						<div style="width: 152px;">
 							<a th:href="@{/view/{id}(id = ${video.id})}" class="name"
@@ -36,7 +37,17 @@
 					</div>
 				</div>
 			</div>
-
+			
+			<div style="text-align: center;"> 
+				<span th:each="pages : ${pageNumber}">
+					<span th:if="${pages == currentPage}" style="color: red; font-weight: bold;" th:text="${pages}"></span>
+					<span th:unless="${pages == currentPage}">
+					<a style="color: white; text-decoration: none;" th:href="@{/{page} (page = ${pages})}" th:text="${pages}">
+					</a>
+					</span>
+					
+				</span>
+			</div>
 			<div class="cl">&nbsp;</div>
 		</div>
 	</div>

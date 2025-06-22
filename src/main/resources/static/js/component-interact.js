@@ -32,3 +32,23 @@ function showConfirmUpdate(name, url) {
 	console.log(url + name)
 	modalUpdate.show()
 }
+
+function search(tableId)
+		{
+			var input = document.getElementById("search-input").value
+			input = input.toUpperCase() //Uppercase for conveniencely compare
+			var table = document.getElementById(tableId)
+			var tbody = table.children[1]
+			var tr = tbody.getElementsByTagName("tr")
+			for(let i = 0; i < tr.length; i++)
+			{
+				var name = tr[i].getElementsByTagName("td")[1].innerText
+				if(name.toUpperCase().indexOf(input) > -1)
+				{
+					tr[i].style.display = ""
+				}
+				else
+					tr[i].style.display = "none"
+			}
+			
+		}
