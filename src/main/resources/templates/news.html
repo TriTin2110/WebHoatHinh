@@ -11,8 +11,7 @@
 <link rel="stylesheet" href="/css/dropdown.css" type="text/css"
 	media="all" />
 </head>
-<body>
-
+<body style="background-color: black;" th:attr="data-current-page=${currentPage}">
 	<div class="container" id="overlay">
 		<div th:replace="~{component/index-page/header.html :: header}"></div>
 		<div style="margin-top: 20px;">
@@ -36,6 +35,7 @@
 		</div>
 	</div>
 
+<script type="text/javascript" src="/js/drop-down.js"></script>
 	<script type="text/javascript" th:inline="javascript">
   	let description = /*[[${news.description}]]*/ ''
 	let content = document.getElementById("content")

@@ -47,6 +47,7 @@ public class NewsController {
 
 		model.addAttribute("account", account);
 		model.addAttribute("news", news);
+		model.addAttribute("currentPage", "news");
 		return "news";
 	}
 
@@ -57,6 +58,7 @@ public class NewsController {
 		List<Video> videoList = videoSer.getVideosByAmount(videos, 4);
 		model.addAttribute("news", newsList);
 		model.addAttribute("videos", videoList);
+		model.addAttribute("currentPage", "news");
 		return "other/news/news-page";
 	}
 }

@@ -3,6 +3,18 @@ let videoContents = document.querySelectorAll(".video-content")
 let username = document.getElementById("user-full-name").value
 let avatar = document.getElementById("user-avatar").value
 
+let currentPage = /*[[$currentPage]]*/''
+	if(currentPage == 'news')
+	{
+		let link = document.getElementById("news-link")
+		link.style.color="red"
+	}
+	else if(currentPage = 'home')
+	{
+		let link = document.getElementById("home-link")
+		link.style.color="red"
+	}
+
 for (let video of videoContents) {
         if (video instanceof HTMLElement) {
                 video.addEventListener('mouseenter', function (e) {

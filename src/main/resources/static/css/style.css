@@ -164,9 +164,6 @@ h1#logo a {
 	color: #fff;
 	transition: color 700ms;
 }
-#navigation ul li a.active, #navigation ul li a:hover {
-	color:#d91d2a;
-}
 #sub-navigation {
 	display:block;
 	clear:right;

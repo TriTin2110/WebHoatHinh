@@ -115,7 +115,7 @@ public class CommentSocket extends TextWebSocketHandler {
 		List<WebSocketSession> list = sessions.get(videoDetailId);
 		list.add(session);
 		sessions.replace(videoDetailId, list); // Update list user by videoDetailId
-		session.getAttributes().put("videoDetailId", videoDetailId); // Save video status on user
+		session.getAttributes().put("videoDetailId", videoDetailId); // Save video id for user
 		log.info("User đã vào!");
 	}
 

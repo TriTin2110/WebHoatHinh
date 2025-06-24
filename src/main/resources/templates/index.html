@@ -14,7 +14,7 @@
 <script type="text/javascript" src="js/jquery-func.js"></script>
 <script type="text/javascript" src="js/bootstrap.min.js"></script>
 </head>
-<body onload="checkingLogin()">
+<body onload="checkingLogin()" style="background-color: black;" th:attr="data-current-page=${currentPage}">
 	<!-- START PAGE SOURCE -->
 	<div id="shell">
 		<div th:replace="~{component/index-page/header.html :: header}"></div>
@@ -33,6 +33,7 @@
 		<div th:replace="~{component/index-page/footer.html :: footer}"></div>
 	</div>
 	<!-- END PAGE SOURCE -->
+	<script type="text/javascript" src="/js/drop-down.js"></script>
 	<script th:inline="javascript">
 window.addEventListener("beforeunload", () =>{
 	let data = JSON.stringify({username: username})

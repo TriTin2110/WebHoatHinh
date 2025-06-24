@@ -42,7 +42,7 @@
 				<span th:each="pages : ${pageNumber}">
 					<span th:if="${pages == currentPage}" style="color: red; font-weight: bold;" th:text="${pages}"></span>
 					<span th:unless="${pages == currentPage}">
-					<a style="color: white; text-decoration: none;" th:href="@{/{page} (page = ${pages})}" th:text="${pages}">
+					<a style="color: white; text-decoration: none;" th:href="@{?page={page} (page = ${pages})}" th:text="${pages}">
 					</a>
 					</span>
 					

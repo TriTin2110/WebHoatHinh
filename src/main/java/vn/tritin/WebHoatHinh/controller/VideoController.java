@@ -77,8 +77,9 @@ public class VideoController {
 		return "index";
 	}
 
-	@GetMapping("/{page-number}")
-	public String showHomePage(Model model, HttpServletRequest request, @PathVariable("page-number") int num) {
+	@GetMapping("")
+	public String showHomePage(Model model, HttpServletRequest request,
+			@RequestParam(defaultValue = "1", name = "page") int num) {
 		List<Integer> pageNumbers = new LinkedList<Integer>();
 		List<Video> videos = this.videoService.findAll();
 		int count = 1;
@@ -142,6 +143,7 @@ public class VideoController {
 		model.addAttribute("videos", videos);
 		model.addAttribute("news", news);
 		model.addAttribute("account", account);
+		model.addAttribute("currentPage", "home");
 		return model;
 	}
 

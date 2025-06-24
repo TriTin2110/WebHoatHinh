@@ -2,6 +2,7 @@ package vn.tritin.WebHoatHinh.entity;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,6 +13,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import vn.tritin.WebHoatHinh.service.util.Encoder;
 
@@ -29,6 +31,9 @@ public class Account implements UserDetails {
 	private Role role;
 	@OneToOne(mappedBy = "account", cascade = { CascadeType.MERGE })
 	private User user;
+
+	@OneToMany(mappedBy = "account")
+	private List<Message> messages;
 
 	public Account() {
 	}
@@ -89,6 +94,14 @@ public class Account implements UserDetails {
 
 	public String showUser() {
 		return "Account [user=" + user + "]";
+	}
+
+	public List<Message> getMessages() {
+		return messages;
+	}
+
+	public void setMessages(List<Message> messages) {
+		this.messages = messages;
 	}
 
 	@Override

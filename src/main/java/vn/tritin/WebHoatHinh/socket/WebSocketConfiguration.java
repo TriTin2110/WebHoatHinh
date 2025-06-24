@@ -14,10 +14,16 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		// TODO Auto-generated method stub
 		registry.addHandler(getCommentSocket(), "/comment"); // Websocket url for comment
+		registry.addHandler(getChatRoomSocket(), "/message");
 	}
 
 	@Bean
 	public CommentSocket getCommentSocket() {
 		return new CommentSocket();
+	}
+
+	@Bean
+	public ChatRoomSocket getChatRoomSocket() {
+		return new ChatRoomSocket();
 	}
 }

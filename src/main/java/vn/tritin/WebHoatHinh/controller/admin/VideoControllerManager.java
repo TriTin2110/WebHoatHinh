@@ -97,6 +97,7 @@ public class VideoControllerManager {
 	 * */
 	private boolean saveVideo(VideoCreator videoCreator, MultipartFile videoFile, MultipartFile avatarFile,
 			Video video) {
+		System.out.println(videoCreator.getDescription());
 		String storingVideoPath = videoFile.getOriginalFilename();
 		String storingAvatarPath = avatarFile.getOriginalFilename();
 		File file = new File("./logs.txt");
@@ -153,6 +154,7 @@ public class VideoControllerManager {
 			creator.setPathVideo(video.getVideoDetail().getPath());
 			creator.setCategories(categories);
 			creator.setCountry(video.getCountry().getName());
+			creator.setDescription(video.getDescription());
 			model.addAttribute("creator", creator);
 			return "/manage/video/video-create";
 		}
