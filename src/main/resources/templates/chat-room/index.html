@@ -68,38 +68,22 @@
 	<div class="container">
 		<div class="row" id="main">
 			<div class="col-md-4" style="background-color: orange; overflow-y: auto; max-height: 100vh;">
-				<div class="row room-card">
-					<div class="col-md-2" style="background-color: red">
-						Avatar
-					</div>
-					<div class="col-md-9" style="background-color: blue">
-						<div class="room-name">Name room</div>
-						<div class="room-recently-message">Recently message</div>
-					</div>
-				</div>
-				<div class="row room-card">
-					<div class="col-md-2" style="background-color: red">
-						Avatar
-					</div>
-					<div class="col-md-9" style="background-color: blue">
-						<div class="room-name">Name room</div>
-						<div class="room-recently-message">Recently message</div>
-					</div>
-				</div>
-				<div class="row room-card">
-					<div class="col-md-2" style="background-color: red">
-						Avatar
-					</div>
-					<div class="col-md-9" style="background-color: blue">
-						<div class="room-name">Name room</div>
-						<div class="room-recently-message">Recently message</div>
+				<div th:each="room : ${chatRooms}">
+					<div class="row room-card" th:attr="onclick=|changeRoom('${room.id}')|">
+						<div class="col-md-2" style="background-color: red">
+							Avatar
+						</div>
+						<div class="col-md-9" style="background-color: blue">
+							<div class="room-name" th:text="${room.id}">Name room</div>
+							<div class="room-recently-message">Recently message</div>
+						</div>
 					</div>
 				</div>
 			</div>
 			
 			<div class="col-md-8" style="background-color: green;">
 				<div id="message-header">
-					<div>Chat room name</div>
+					<div id="message-header-name">Chat room name</div>
 				</div>
 				<div id="message-content">
 					<div id="messages"></div>
@@ -114,23 +98,62 @@
 		</div>
 	</div>
 </body>
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
+	let userId = /*[[${userId}]]*/''
+		let inputMessage = document.getElementById("message-input")
+		let inputButton = document.getElementById("button-input")
+		let messagePanel = document.getElementById("messages") 
 	let websocket = new WebSocket("ws://localhost:8080/message")
+	let chatRoomId 
 	websocket.onopen = () =>{
 		console.log("Đã kết nối")
 	}
-	let inputMessage = document.getElementById("message-input")
-	let inputButton = document.getElementById("button-input")
-	let messagePanel = document.getElementById("messages") 
+
+	websocket.onmessage = (mess) => {
+		let message = mess.data
+			let div = document.createElement("div")
+			if(message.includes(":"))
+			{
+				message = atob(message.split(":")[1]);
+				div.className = "other-user-message message"
+			}
+			else{
+				message = atob(message)
+				div.className = "user-message message"
+			}
+			// spread operator ([...message]) biến một chuỗi thành mảng
+			let bytes = new Uint8Array([...message].map(char => char.charCodeAt(0)))
+			message = new TextDecoder("UTF-8").decode(bytes)
+			div.innerText = message 
+			messagePanel.append(div)
+	}
+
+	websocket.onclose = () =>{
+		console.log("Bạn đã thoát ra khỏi chat room!")
+	}
+
+	inputMessage.addEventListener('keydown',(e) => {
+		if(e.code === 'Enter')
+		{
+			sendMessage()
+		}
+	})
+	
+	function changeRoom(id)
+	{
+		chatRoomId = id
+		let messageObject = {userId: userId, message: null, chatRoomId: id, dateSent: Date.now(), changeRoom: true}
+		websocket.send(JSON.stringify(messageObject))
+		messagePanel.innerHTML = ''
+		let roomName = document.getElementById("message-header-name")
+		roomName.innerText = chatRoomId
+	}
+	
 	function sendMessage()
 	{
 		let message = inputMessage.value
-		let div = document.createElement("div")
-		div.className = "user-message message"
-		div.innerText = message
-		messagePanel.append(div)
 		inputMessage.value = ''
-		let messageObject = {userId: "tin", message: message, chatRoomId: "123", dateSent: Date.now(), changeRoom: true}
+		let messageObject = {userId: userId, message: message, chatRoomId: chatRoomId, dateSent: Date.now(), changeRoom: false}
 		websocket.send(JSON.stringify(messageObject))
 	}
 

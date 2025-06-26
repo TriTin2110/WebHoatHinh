@@ -25,6 +25,7 @@ public class Content {
 
 	public Content(String id) {
 		this.id = id;
+		this.dateUploaded = new Date(System.currentTimeMillis());
 	}
 
 	public Content(String id, String banner) {

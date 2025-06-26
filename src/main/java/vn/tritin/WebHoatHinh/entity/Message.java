@@ -2,7 +2,6 @@ package vn.tritin.WebHoatHinh.entity;
 
 import java.sql.Date;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -19,7 +18,7 @@ public class Message {
 	@JoinColumn(name = "user")
 	private Account account;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "chatRoom")
 	private ChatRoom chatRoom;
 
