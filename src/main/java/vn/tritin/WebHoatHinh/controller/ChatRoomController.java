@@ -21,6 +21,9 @@ public class ChatRoomController {
 	@GetMapping("/chat-room")
 	public String accessChatRoomPage(@RequestParam("username") String userId, Model model) {
 		List<ChatRoom> chatRooms = chatRoomService.selectAll();
+		chatRooms.sort((o1, o2) -> {
+			return Long.compare(o2.getDateUploaded().getTime(), o1.getDateUploaded().getTime());
+		});
 		model.addAttribute("userId", userId);
 		model.addAttribute("chatRooms", chatRooms);
 		return "chat-room/index";

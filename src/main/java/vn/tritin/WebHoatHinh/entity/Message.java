@@ -5,6 +5,7 @@ import java.sql.Date;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -12,6 +13,8 @@ public class Message {
 	@Id
 	private String id;
 	private Date sentDate;
+
+	@Lob
 	private String message;
 
 	@ManyToOne

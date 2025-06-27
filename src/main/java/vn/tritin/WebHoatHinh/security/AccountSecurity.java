@@ -27,7 +27,7 @@ public class AccountSecurity {
 					.requestMatchers(HttpMethod.GET, "/chat-room").authenticated().anyRequest().permitAll())
 					.formLogin(login -> login.loginPage("/account/sign-in").loginProcessingUrl("/authenticateTheUser")
 							.successForwardUrl("/account/generate-user-session").permitAll());
-			return http.build();
+			return http.csrf(csrf -> csrf.disable()).build();
 		} catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();

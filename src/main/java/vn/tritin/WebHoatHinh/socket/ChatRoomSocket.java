@@ -1,6 +1,5 @@
 package vn.tritin.WebHoatHinh.socket;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +10,6 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
-import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -25,7 +23,9 @@ import vn.tritin.WebHoatHinh.entity.Message;
 import vn.tritin.WebHoatHinh.model.MessageDTO;
 import vn.tritin.WebHoatHinh.service.AccountService;
 import vn.tritin.WebHoatHinh.service.ChatRoomService;
-import vn.tritin.WebHoatHinh.thread.ChatRoomThread;
+import vn.tritin.WebHoatHinh.thread.SendAllMessageForUserThread;
+import vn.tritin.WebHoatHinh.thread.SendMessageChatRoomThread;
+import vn.tritin.WebHoatHinh.thread.UpdateChatRoomThread;
 import vn.tritin.WebHoatHinh.util.StringHandler;
 
 @Component
@@ -38,7 +38,10 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 
 	private static Map<Account, ChatRoom> accountOnChatRoom = new HashMap<Account, ChatRoom>();
 	private static Map<String, ChatRoom> chatRoomAvailable = new HashMap<String, ChatRoom>();
-	private static Map<ChatRoom, List<WebSocketSession>> accountsOnChatRoom = new HashMap<ChatRoom, List<WebSocketSession>>();
+	private static List<WebSocketSession> allUsers = new ArrayList<WebSocketSession>();
+
+	private final int NUMBER_USER_SEND = 10;
+
 	private StringHandler stringHandler;
 
 	public ChatRoomSocket() {
@@ -75,9 +78,12 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 			ChatRoom previousChatRoom = accountOnChatRoom.replace(account, chatRoomRequired);
 			if (previousChatRoom == null) {
 				accountOnChatRoom.put(account, chatRoomRequired);
-			} else {
-				removeAccountFromPreviousChatRoom(account, previousChatRoom);
 			}
+			if (session.getAttributes().replace("currentRoom", chatRoomRequired.getId()) == null)
+				session.getAttributes().put("currentRoom", chatRoomRequired.getId());
+//			else {
+//				removeAccountFromPreviousChatRoom(account, previousChatRoom);
+//			}
 			addUserToRoom(chatRoomRequired, session);
 			sendAllMessageFromChatRoomToUser(chatRoomRequired, session);
 		} else {
@@ -87,16 +93,19 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 			// lần lượt gửi message cho từng user trong danh sách
 			// update current chatRoom vào DB
 			ChatRoom currentUserChatRoom = accountOnChatRoom.get(account);
-			List<WebSocketSession> accountsInChatRoom = accountsOnChatRoom.get(currentUserChatRoom);
-			userMessage = sendMessage(userMessage, accountsInChatRoom, account);
+			userMessage = sendMessage(userMessage, account, currentUserChatRoom.getId());
+			currentUserChatRoom.setRecentlyMessage(userMessage);
 			Message messageEntity = createMessageEntity(userMessage, currentUserChatRoom, account);
 			currentUserChatRoom.getMessages().add(messageEntity);
-			System.out.println(
-					"Room: " + currentUserChatRoom.getId() + " size: " + currentUserChatRoom.getMessages().size());
-			ChatRoomThread thread = new ChatRoomThread(chatRoomService, currentUserChatRoom);
-			thread.start();
-			chatRoomService.updateList();
+
+			updateChatRoom(currentUserChatRoom);
 		}
+	}
+
+	private void updateChatRoom(ChatRoom currentUserChatRoom) {
+		// TODO Auto-generated method stub
+		UpdateChatRoomThread thread = new UpdateChatRoomThread(chatRoomService, currentUserChatRoom);
+		thread.start();
 	}
 
 	private Message createMessageEntity(String userMessage, ChatRoom chatRoomRequired, Account account) {
@@ -111,13 +120,12 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 
 	private void addUserToRoom(ChatRoom chatRoomRequired, WebSocketSession user) {
 		// TODO Auto-generated method stub
-		List<WebSocketSession> users = accountsOnChatRoom.get(chatRoomRequired);
-		if (users == null) {
-			users = new ArrayList<WebSocketSession>();
-			accountsOnChatRoom.put(chatRoomRequired, users);
+//		users.add(user);
+//		accountsOnChatRoom.replace(chatRoomRequired, users);
+
+		if (!allUsers.contains(user)) {
+			allUsers.add(user);
 		}
-		users.add(user);
-		accountsOnChatRoom.replace(chatRoomRequired, users);
 	}
 
 	// Ở đây chúng ta sẽ lấy toàn bộ messages có trong chat room
@@ -125,24 +133,13 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 	// Lưu ý khi đã có tin nhắn trước đó thì tin nhắn này đã được mã hóa
 	// nên không cần phải mã hóa lại
 	private void sendAllMessageFromChatRoomToUser(ChatRoom chatRoom, WebSocketSession user) {
-		List<Message> messages = chatRoom.getMessages();
+		List<Message> messages = new ArrayList<Message>();
+		messages.addAll(chatRoom.getMessages());
 		Account account = (Account) user.getAttributes().get("account");
 		String userId = account.getUsername();
-		try {
-			String otherUserId = null;
-			for (Message message : messages) {
-				otherUserId = message.getAccount().getUsername();
-				if (userId.equals(otherUserId)) {
-					user.sendMessage(new TextMessage(message.getMessage()));
-				} else {
-					user.sendMessage(new TextMessage(otherUserId + ":" + message.getMessage()));
-				}
-
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		SendAllMessageForUserThread thread = new SendAllMessageForUserThread(messages, userId, user);
+		thread.start();
+		user.getAttributes().put("sendAllMessageThread", thread);
 	}
 
 	// Để gửi message cho các user trong chat room hiện tại
@@ -150,39 +147,30 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 	// lưu message vào csdl (Thread)
 	// ta sẽ duyệt từng user có trong chat room
 	// và gửi tin nhắn đến những user có id != id của user thực hiện yêu cầu
-	private String sendMessage(String message, List<WebSocketSession> accountsInChatRoom, Account account) {
+	private String sendMessage(String message, Account account, String chatRoomId) {
 		// TODO Auto-generated method stub
 		String userId = account.getUsername();
 		Account otherAccount = null;
 		message = stringHandler.base64Encode(message);
-		try {
-			for (WebSocketSession user : accountsInChatRoom) {
-				otherAccount = (Account) user.getAttributes().get("account");
-				if (userId.equals(otherAccount.getUsername())) {
-					user.sendMessage(new TextMessage(message));
-				} else {
-					user.sendMessage(new TextMessage(userId + ":" + message));
-				}
+
+		// num : 12
+		int count = 0;
+		int temp = 0;
+		while (true) {
+			temp = count + NUMBER_USER_SEND;
+			if (temp > allUsers.size()) {
+				SendMessageChatRoomThread thread = new SendMessageChatRoomThread(
+						allUsers.subList(count, allUsers.size()), chatRoomId, otherAccount, userId, message);
+				thread.start();
+				break;
+			} else {
+				SendMessageChatRoomThread thread = new SendMessageChatRoomThread(allUsers.subList(count, temp),
+						chatRoomId, otherAccount, userId, message);
+				thread.start();
+				count += NUMBER_USER_SEND;
 			}
-		} catch (IOException e) {
-			// TODO: handle exception
-			e.printStackTrace();
 		}
 		return message;
-	}
-
-	private void removeAccountFromPreviousChatRoom(Account account, ChatRoom previousChatRoom) {
-		// TODO Auto-generated method stub
-		List<WebSocketSession> accountsOnPreviousChatRoom = accountsOnChatRoom.get(previousChatRoom);
-		Account accountInList = null;
-		for (WebSocketSession accountOnPreviousChatRoom : accountsOnPreviousChatRoom) {
-			accountInList = (Account) accountOnPreviousChatRoom.getAttributes().get("account");
-			if (account.getUsername().equals(accountInList.getUsername())) {
-				accountsOnPreviousChatRoom.remove(accountOnPreviousChatRoom);
-				break;
-			}
-		}
-		accountsOnChatRoom.replace(previousChatRoom, accountsOnPreviousChatRoom);
 	}
 
 	// Để có thể lấy được chat room ra thì ta cần có chatroomId
@@ -240,8 +228,7 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 		// TODO Auto-generated method stub
 		Account account = (Account) session.getAttributes().get("account");
 		if (account != null) {
-			ChatRoom previousChatRoom = accountOnChatRoom.get(account);
-			removeAccountFromPreviousChatRoom(account, previousChatRoom);
+			allUsers.remove(session);
 			accountOnChatRoom.remove(account);
 			Logger.getLogger(this.getClass().getName())
 					.info("User " + account.getUsername() + " đã thoát ra chat room!");

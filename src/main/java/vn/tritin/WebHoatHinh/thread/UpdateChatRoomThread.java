@@ -3,11 +3,11 @@ package vn.tritin.WebHoatHinh.thread;
 import vn.tritin.WebHoatHinh.entity.ChatRoom;
 import vn.tritin.WebHoatHinh.service.ChatRoomService;
 
-public class ChatRoomThread extends Thread {
+public class UpdateChatRoomThread extends Thread {
 	private ChatRoomService chatRoomService;
 	private ChatRoom chatRoom;
 
-	public ChatRoomThread(ChatRoomService chatRoomService, ChatRoom chatRoom) {
+	public UpdateChatRoomThread(ChatRoomService chatRoomService, ChatRoom chatRoom) {
 		this.chatRoomService = chatRoomService;
 		this.chatRoom = chatRoom;
 	}

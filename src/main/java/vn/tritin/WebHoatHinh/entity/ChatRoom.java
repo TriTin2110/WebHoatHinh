@@ -34,19 +34,11 @@ public class ChatRoom extends Content {
 		this.messages = messages;
 	}
 
-	public ChatRoom(int numberParticipant, String recentlyMessage, List<Message> messages) {
-		super();
-		this.numberParticipant = numberParticipant;
-		this.recentlyMessage = recentlyMessage;
-		this.messages = messages;
-	}
-
-	public ChatRoom(String id, String description, Date dateUploaded, String banner, int numberParticipant,
-			String recentlyMessage, List<Message> messages) {
+	public ChatRoom(String id, String description, String banner, Date dateUploaded) {
 		super(id, description, dateUploaded, banner);
-		this.numberParticipant = numberParticipant;
-		this.recentlyMessage = recentlyMessage;
-		this.messages = messages;
+		this.numberParticipant = 0;
+		this.recentlyMessage = null;
+		this.messages = new ArrayList<Message>();
 	}
 
 	public int getNumberParticipant() {
