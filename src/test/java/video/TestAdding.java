@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -20,8 +21,11 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import vn.tritin.WebHoatHinh.entity.Video;
+import vn.tritin.WebHoatHinh.model.VectorStoreDTO;
 import vn.tritin.WebHoatHinh.model.VideoCreator;
+import vn.tritin.WebHoatHinh.service.VectorStoreService;
 import vn.tritin.WebHoatHinh.service.VideoService;
+import vn.tritin.WebHoatHinh.util.StringHandler;
 import vn.tritin.WebHoatHinh.util.video.AttributeAddition;
 
 @SpringBootTest(classes = vn.tritin.WebHoatHinh.WebHoatHinhApplication.class) // Khởi tạo toàn bộ Spring
@@ -44,7 +48,8 @@ public class TestAdding {
 	private List<Video> videos;
 	@Autowired
 	private AttributeAddition attribute;
-
+	@Autowired
+	private VectorStoreService vectorStoreService;
 	@Value("${path.video}")
 	private String pathVideo;
 
@@ -78,6 +83,10 @@ public class TestAdding {
 				"Tiếng Anh", "Tiếng Anh, Tiếng Pháp", "Tiếng Anh", "Tiếng Pháp", "Tiếng Đức", "Tiếng Ý",
 				"Tiếng Tây Ban Nha", "Tiếng Nga", "Tiếng Bồ Đào Nha", "Tiếng Tây Ban Nha", "Tiếng Hindi, Tiếng Anh",
 				"Tiếng Ả Rập", "Tiếng Anh, Tiếng Zulu", "Tiếng Anh, Tiếng Trung" };
+		String[] director = { "Steven Spielberg", "Christopher Nolan", "Martin Scorsese", "Quentin Tarantino",
+				"James Cameron", "Ridley Scott", "Francis Ford Coppola", "Alfred Hitchcock", "Stanley Kubrick",
+				"Peter Jackson", "David Fincher", "George Lucas", "Clint Eastwood", "Guillermo del Toro",
+				"Wes Anderson", "Sofia Coppola", "Ang Lee", "Denis Villeneuve", "Hayao Miyazaki", "Spike Lee" };
 		Random random = new Random();
 		for (int i = 0; i < LIMIT; i++) {
 			VideoCreator creator = new VideoCreator();
@@ -86,6 +95,8 @@ public class TestAdding {
 			creator.setCountry(countryList[random.nextInt(20)]);
 			creator.setStudio(studioList[random.nextInt(10)]);
 			creator.setCategories(categoryList[random.nextInt(10)] + "," + categoryList[random.nextInt(10)]);
+			creator.setDirector(director[random.nextInt(20)]);
+			creator.setDescription("This is demo");
 			creators.add(creator);
 		}
 		try {
@@ -131,8 +142,15 @@ public class TestAdding {
 
 	@Test
 	public void addingMultiVideo() {
+		VectorStoreDTO vectorStoreDTO = null;
+		StringHandler stringHandler = new StringHandler();
 		for (Video video : videos) {
 			videoService.saveAndFlush(video);
+			vectorStoreDTO = new VectorStoreDTO(video.getId(),
+					video.getCategories().stream().map(o -> o.getName()).collect(Collectors.joining(",")),
+					video.getDirector(), video.getLanguage(), stringHandler.decrypt(video.getDescription()),
+					video.getViewer());
+			vectorStoreService.insertData(vectorStoreDTO);
 		}
 		assert true;
 	}

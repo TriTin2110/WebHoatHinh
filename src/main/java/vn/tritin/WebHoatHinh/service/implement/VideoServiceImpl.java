@@ -148,4 +148,18 @@ public class VideoServiceImpl implements VideoService {
 		return false;
 	}
 
+	@Override
+	public List<Video> findVideosByListId(List<String> ids) {
+		// TODO Auto-generated method stub
+		List<Video> videos = findAll();
+		List<Video> results = new ArrayList<Video>();
+		for (Video video : videos) {
+			if (ids.contains(video.getId())) {
+				results.add(video);
+			}
+
+		}
+		return results;
+	}
+
 }

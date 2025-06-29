@@ -29,4 +29,6 @@ public interface VideoService {
 	public boolean isExists(String id);
 
 	public boolean isFileExists(String path, String fileName);
+
+	public List<Video> findVideosByListId(List<String> ids);
 }

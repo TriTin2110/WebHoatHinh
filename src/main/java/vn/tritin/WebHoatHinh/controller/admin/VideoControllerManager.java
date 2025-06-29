@@ -1,8 +1,6 @@
 package vn.tritin.WebHoatHinh.controller.admin;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -97,18 +95,8 @@ public class VideoControllerManager {
 	 * */
 	private boolean saveVideo(VideoCreator videoCreator, MultipartFile videoFile, MultipartFile avatarFile,
 			Video video) {
-		System.out.println(videoCreator.getDescription());
 		String storingVideoPath = videoFile.getOriginalFilename();
 		String storingAvatarPath = avatarFile.getOriginalFilename();
-		File file = new File("./logs.txt");
-		String result = service.isFileExists(pathVideo + File.separator, videoFile.getOriginalFilename()) + "";
-		try {
-			Files.write(file.toPath(), result.getBytes());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
 		try {
 			if (!service.isFileExists(pathVideo + File.separator, videoFile.getOriginalFilename()))
 				storingVideoPath = service.saveFile(pathVideo, videoFile);
