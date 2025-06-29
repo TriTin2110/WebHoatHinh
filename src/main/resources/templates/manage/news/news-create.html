@@ -66,10 +66,14 @@ body {
 
 		<form id="postForm" th:method="post" th:action="@{/admin/news}"
 			enctype="multipart/form-data" th:object="${creator}">
-			<!-- <input type="hidden" name="present-id" th:value="${presentId}"> --> 
-			<div class="mb-3">
+			 
+			<div class="mb-3" th:if="*{id != null}">
+				<input type="hidden" id="tittle" th:field="*{id}">
+				<h4 style="text-align: center;" th:text="*{id}"></h4>
+			</div> 
+			<div class="mb-3" th:if="*{id == null}">
 				<label for="title" class="form-label">Tiêu đề bài viết</label> <input
-					type="text" class="form-control" id="title" th:field="*{id}"
+					type="text" class="form-control" id="tittle" th:field="*{id}"
 					placeholder="Nhập tiêu đề..." th:value="*{id != null ? id : ''}"
 					required>
 				<p class="text-danger" id="tittle-warning"
@@ -133,7 +137,6 @@ body {
 
 	<!-- Quill JS -->
 	<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
-	<script type="text/javascript" src="/js/create-update.js"></script>
 	<script src="/js/news-create.js"></script>
 </body>
 </html>

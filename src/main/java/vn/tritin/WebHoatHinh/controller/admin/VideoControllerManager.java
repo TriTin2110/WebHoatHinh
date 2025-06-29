@@ -23,6 +23,7 @@ import vn.tritin.WebHoatHinh.exceptions.exceptions.VideoNotFoundException;
 import vn.tritin.WebHoatHinh.model.VideoCreator;
 import vn.tritin.WebHoatHinh.service.VideoService;
 import vn.tritin.WebHoatHinh.util.video.AttributeAddition;
+import vn.tritin.WebHoatHinh.util.video.VideoDuration;
 
 @Controller
 @RequestMapping("/admin/video")
@@ -99,6 +100,7 @@ public class VideoControllerManager {
 	 * */
 	private boolean saveVideo(VideoCreator videoCreator, MultipartFile videoFile, MultipartFile avatarFile,
 			Video video) {
+
 		String storingVideoPath = videoFile.getOriginalFilename();
 		String storingAvatarPath = avatarFile.getOriginalFilename();
 		try {
@@ -117,6 +119,9 @@ public class VideoControllerManager {
 		videoCreator.setPathAvatar(storingAvatarPath);
 
 		video = addition.createAttribute(videoCreator);
+		// Get video duration
+		String duration = VideoDuration.getDuration(new File(pathVideo + File.separator + storingVideoPath));
+		video.setDuration(duration);
 		video.setVideoAnalyst(new VideoAnalyst(video.getId(), video));
 		service.saveAndFlush(video);
 		service.updateCache();
@@ -152,5 +157,4 @@ public class VideoControllerManager {
 			return "/manage/video/video-create";
 		}
 	}
-
 }

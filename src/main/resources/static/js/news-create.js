@@ -91,7 +91,6 @@ function setContent(){
   function loadOldImage()
   {
 	let image = document.body.dataset.banner
-	console.log(image)
 		if(image != '' && image != null)
 			{
 				fetch("/img/news-banner/"+image).then(data => data.blob()).then(blob =>{
@@ -104,11 +103,15 @@ function setContent(){
 
 	function submit()
 	{
-		const tittle = document.getElementById("title").value
+		const tittle = document.getElementById("tittle").value
 		//Doesn't allow speacial character on tittle
 		const reg = /[^\p{L}\p{N}\s]/gu //\p{L}: language unicode,\p{N}: number unicode,u: unicode identify
 		let tittleWarning = document.getElementById("tittle-warning")
-		tittleWarning.style.display = "none"
+		
+		if(tittleWarning != null)
+		{
+			tittleWarning.style.display = "none"
+		}
 		if(reg.test(tittle))
 		{
 			alert("Tựa đề không được phép chứa kí tự đặc biệt!!")

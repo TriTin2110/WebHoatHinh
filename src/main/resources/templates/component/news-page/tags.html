@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:fragment="tags">
+		<div style="color: white;" class="mb-3">
+			<i class='fas fa-tags'  style="font-size:14px">Tags: </i>
+			<span th:each="t, sta : ${tags}">
+				<span th:if="${sta.index < (sta.size-1)}" th:text="${t.id +', '}"></span>
+				<span th:if="${sta.index == (sta.size-1)}" th:text="${t.id +'.'}"></span> 
+			</span>
+		</div>
+	</div>
+</body>
+</html>

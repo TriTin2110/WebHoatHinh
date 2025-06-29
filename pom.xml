@@ -32,10 +32,18 @@
 		<spring-ai.version>1.0.0</spring-ai.version>
 	</properties>
 	<dependencies>
-		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
+		<!-- https://mvnrepository.com/artifact/org.sejda.imageio/webp-imageio (chuyển ảnh jpg -> webp) -->
+	<dependency>
+	    <groupId>org.sejda.imageio</groupId>
+	    <artifactId>webp-imageio</artifactId>
+	    <version>0.1.6</version>
+	</dependency>
+		<!-- https://mvnrepository.com/artifact/org.jcodec/jcodec (Get video
+		duration)-->
 		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
+			<groupId>org.jcodec</groupId>
+			<artifactId>jcodec</artifactId>
+			<version>0.2.5</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.ai</groupId>
@@ -141,7 +149,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
 	<build>
 		<plugins>
 			<plugin>

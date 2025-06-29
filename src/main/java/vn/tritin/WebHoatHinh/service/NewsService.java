@@ -28,4 +28,6 @@ public interface NewsService {
 	public News update(News news);
 
 	public List<News> getNewestNews(int amount);
+
+	public News getNewsAndTags(String id);
 }

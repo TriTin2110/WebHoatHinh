@@ -20,6 +20,7 @@ import jakarta.transaction.Transactional;
 import vn.tritin.WebHoatHinh.dao.DAOVideo;
 import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.service.VideoService;
+import vn.tritin.WebHoatHinh.util.ImageHandler;
 import vn.tritin.WebHoatHinh.util.StringHandler;
 
 @Service
@@ -37,7 +38,6 @@ public class VideoServiceImpl implements VideoService {
 	}
 
 	@Override
-	@Cacheable("video_id")
 	public Video findById(String id) {
 		// TODO Auto-generated method stub
 		Optional<Video> opt = dao.findById(id);
@@ -55,17 +55,25 @@ public class VideoServiceImpl implements VideoService {
 	public String saveFile(String path, MultipartFile file) throws Exception {
 		// TODO Auto-generated method stub
 		String resultPath = file.getOriginalFilename();
-		String fileName = System.currentTimeMillis()
-				+ resultPath.substring(resultPath.lastIndexOf("."), resultPath.length());
-
-		String storingPath = path + File.separator + fileName;
+		String extension = resultPath.substring(resultPath.lastIndexOf("."), resultPath.length());
+		StringBuilder fileName = new StringBuilder(String.valueOf(System.currentTimeMillis()));
+		StringBuilder storingPath = new StringBuilder(path + File.separator);
 
 		File pathDir = new File(path);
 		if (!pathDir.exists())
 			pathDir.mkdirs();
+		if (extension.equals(".jpg") || extension.equals(".jpeg") || extension.equals(".png")) {
+			extension = ".webp";
+			fileName.append(extension);
+			storingPath.append(fileName);
+			ImageHandler.saveAsWebp(file.getInputStream(), storingPath.toString());
+		} else {
+			fileName.append(extension);
+			storingPath.append(fileName);
+			Files.copy(file.getInputStream(), Path.of(storingPath.toString()));
+		}
 
-		Files.copy(file.getInputStream(), Path.of(storingPath));
-		return fileName;
+		return fileName.toString();
 	}
 
 	@Override

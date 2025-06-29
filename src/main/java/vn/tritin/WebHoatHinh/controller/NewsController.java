@@ -12,41 +12,40 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import vn.tritin.WebHoatHinh.entity.Account;
 import vn.tritin.WebHoatHinh.entity.News;
+import vn.tritin.WebHoatHinh.entity.Tag;
 import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.NewsNotExistsException;
 import vn.tritin.WebHoatHinh.service.NewsService;
+import vn.tritin.WebHoatHinh.service.TagService;
 import vn.tritin.WebHoatHinh.service.VideoService;
+import vn.tritin.WebHoatHinh.util.StringHandler;
 
 @Controller
 @RequestMapping("/movie-news")
 public class NewsController {
 	private NewsService service;
 	private VideoService videoSer;
+	private TagService tagSer;
 
 	@Autowired
-	public NewsController(NewsService service, VideoService videoSer) {
+	public NewsController(NewsService service, VideoService videoSer, TagService tagSer) {
 		this.service = service;
 		this.videoSer = videoSer;
+		this.tagSer = tagSer;
 	}
 
 	@GetMapping("/{id}")
 	public String findNewsById(@PathVariable("id") String id, Model model, HttpServletRequest request) {
-		List<News> newsList = service.findAll();
 		Account account = (Account) request.getSession().getAttribute("account");
-		News news = null;
-		String newsItemId = null;
-		for (News newsItem : newsList) {
-			newsItemId = newsItem.getId();
-			if (id.equals(newsItemId)) {
-				news = newsItem;
-				break;
-			}
-		}
+		News news = service.getNewsAndTags(id);
 		if (news == null)
 			throw new NewsNotExistsException();
-
+		StringHandler stringHandler = new StringHandler();
+		news.setDescription(stringHandler.decrypt(news.getDescription()));
+		List<Tag> tags = news.getTags();
 		model.addAttribute("account", account);
 		model.addAttribute("news", news);
+		model.addAttribute("tags", tags);
 		model.addAttribute("currentPage", "news");
 		return "news";
 	}

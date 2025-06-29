@@ -7,5 +7,4 @@ import vn.tritin.WebHoatHinh.entity.News;
 
 @RepositoryRestResource
 public interface DAONews extends JpaRepository<News, String> {
-
 }

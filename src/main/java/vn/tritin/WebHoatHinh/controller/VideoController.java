@@ -102,7 +102,16 @@ public class VideoController {
 		int end = (num * NUMBER_VIDEO_ON_PAGE < videos.size()) ? (num * NUMBER_VIDEO_ON_PAGE) : videos.size();
 		videos = videos.subList(start, end);
 		List<List<Video>> groupVideos = this.videoService.getGroupVideo(videos, videos.size(), AMOUNT_VIDEO_PER_LINE);
-		model = setupBasicModel(model, request, videos);
+//		model = setupBasicModel(model, request, videos);
+		List<News> news = this.newsService.findAll();
+		List<Category> categories = this.categoryService.findAll();
+		Account account = (Account) request.getSession().getAttribute("account");
+
+		model.addAttribute("categories", categories);
+		model.addAttribute("videos", videos);
+		model.addAttribute("news", news);
+		model.addAttribute("account", account);
+		model.addAttribute("currentPage", "home");
 		model.addAttribute("videos", groupVideos);
 		model.addAttribute("pageNumber", pageNumbers);
 		model.addAttribute("currentPage", num);

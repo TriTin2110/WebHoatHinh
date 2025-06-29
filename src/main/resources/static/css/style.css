@@ -198,6 +198,7 @@ h1#logo a {
 	padding: 0px;
 	float: right;
 	width: 400px;
+	display: flex;
 }
 #search label {
 	float:left;

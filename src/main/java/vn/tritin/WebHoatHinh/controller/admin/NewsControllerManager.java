@@ -3,6 +3,7 @@ package vn.tritin.WebHoatHinh.controller.admin;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +53,7 @@ public class NewsControllerManager {
 	}
 
 	@PostMapping("")
-	public void saveAndUpdate(@ModelAttribute("creator") NewsCreator newsCreator,
+	public ResponseEntity<String> saveAndUpdate(@ModelAttribute("creator") NewsCreator newsCreator,
 			@RequestParam("image") MultipartFile file) {
 		News news = newsSer.findById(newsCreator.getId());
 		if (news != null)
@@ -60,6 +61,7 @@ public class NewsControllerManager {
 		else {
 			saveAndFlushNews(newsCreator, file, news);
 		}
+		return ResponseEntity.status(200).build();
 	}
 
 	@GetMapping("/delete/{id}")
@@ -90,13 +92,15 @@ public class NewsControllerManager {
 	}
 
 	@PostMapping("/update")
-	public void update(@ModelAttribute("creator") NewsCreator newsCreator, @RequestParam("image") MultipartFile file) {
+	public ResponseEntity<String> update(@ModelAttribute("creator") NewsCreator newsCreator,
+			@RequestParam("image") MultipartFile file) {
 		News news = newsSer.findById(newsCreator.getId());
 		if (news == null)
 			throw new NewsNotExistsException();
 		else {
 			saveAndFlushNews(newsCreator, file, news);
 		}
+		return ResponseEntity.status(200).build();
 	}
 
 	public void saveAndFlushNews(NewsCreator newsCreator, MultipartFile file, News news) {

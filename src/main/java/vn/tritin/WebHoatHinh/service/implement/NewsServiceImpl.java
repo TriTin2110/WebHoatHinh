@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
@@ -64,6 +65,18 @@ public class NewsServiceImpl implements NewsService {
 		// TODO Auto-generated method stub
 		Optional<News> opt = dao.findById(id);
 		return (opt.isEmpty()) ? null : opt.get();
+	}
+
+	public News getNewsAndTags(String id) {
+		Optional<News> opt = dao.findById(id);
+		if (opt.isEmpty())
+			return null;
+		else {
+			News news = opt.get();
+			Hibernate.initialize(news.getTags()); // Because the fetch of List<Tag> is lazy so we will take it in this
+													// session
+			return news;
+		}
 	}
 
 	@Override
