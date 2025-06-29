@@ -2,6 +2,20 @@ let videoDetailId = document.getElementById("video-detail-id").innerText + ''
 let videoContents = document.querySelectorAll(".video-content")
 let username = document.getElementById("user-full-name").value
 let avatar = document.getElementById("user-avatar").value
+let userId = document.body.dataset.userId
+let videoId = document.body.dataset.videoId
+let timeBegin = Date.now()
+
+window.addEventListener('beforeunload', function(){
+	//with navigator.sendBeacon the request still excute even user leave page not like fetch
+	let formData = new FormData()
+	
+	formData.append("videoId", videoId)
+	formData.append("userId", userId)
+	formData.append("timeBegin", timeBegin)
+	formData.append("timeEnd", Date.now())
+	navigator.sendBeacon('/exit', formData)
+})
 
 let currentPage = /*[[$currentPage]]*/''
 	if(currentPage == 'news')

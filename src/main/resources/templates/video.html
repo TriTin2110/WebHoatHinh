@@ -21,7 +21,7 @@
 
 </head>
 
-<body>
+<body th:attr="data-time-begin=${timeBegin}, data-user-id=${account.username}, data-video-id=${video.id}">
 	<div id="shell">
 		<div th:replace="~{component/index-page/header.html :: header}"></div>
 
@@ -36,7 +36,6 @@
 		<div style="color: white; padding: 15px 0px 15px 0px;" id="" th:utext="${video.description}"></div>
 		<div th:if="${account?.user != null}" class="row">
 			<div class="col-md-6" th:insert="~{component/video-page/comment.html :: comment(${account},${comments})}"></div>
-			<div class="col-md-6" th:insert="~{component/index-page/news.html :: news}"></div>
 		</div>
 		<div>
 			<h3 style="color: white; display: flex; align-items: center; justify-content: space-between; padding: 20px 0px 10px 0px;">
@@ -49,6 +48,4 @@
 	</div>
 </body>
 <script type="text/javascript" th:inline="javascript" th:src="@{/js/video.js}"></script>
-
-
 </html>

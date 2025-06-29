@@ -1,6 +1,7 @@
 package vn.tritin.WebHoatHinh.service.implement;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,10 @@ import vn.tritin.WebHoatHinh.util.StringHandler;
 public class VideoServiceImpl implements VideoService {
 	private final int MINIMUM_AMOUNT = 0;
 	private DAOVideo dao;
+	@Value("${path.avatar}")
+	private String pathImage;
+	@Value("${path.video}")
+	private String pathVideo;
 
 	@Autowired
 	public VideoServiceImpl(DAOVideo dao) {
@@ -129,9 +135,19 @@ public class VideoServiceImpl implements VideoService {
 
 	@Override
 	@Transactional
-	public void delete(String id) {
+	public void delete(Video video) {
 		// TODO Auto-generated method stub
-		dao.deleteById(id);
+		File imageFile = new File(pathImage + File.separator + video.getBanner());
+		File videoFile = new File(pathVideo + File.separator + video.getVideoDetail().getPath());
+		try {
+			Files.deleteIfExists(imageFile.toPath());
+			Files.deleteIfExists(videoFile.toPath());
+			dao.delete(video);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	@Override

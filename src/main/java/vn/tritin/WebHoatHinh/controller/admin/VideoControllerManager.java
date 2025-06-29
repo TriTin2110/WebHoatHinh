@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import vn.tritin.WebHoatHinh.entity.Video;
+import vn.tritin.WebHoatHinh.entity.VideoAnalyst;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.VideoAlreadyExistsException;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.VideoNotFoundException;
 import vn.tritin.WebHoatHinh.model.VideoCreator;
@@ -70,11 +71,14 @@ public class VideoControllerManager {
 
 	@GetMapping("/delete/{id}")
 	public String deleteVideo(@PathVariable("id") String id) {
-		if (service.isExists(id)) {
-			service.delete(id);
-			service.updateCache();
-		} else
+		Video video = service.findById(id);
+		if (video == null) {
 			throw new VideoNotFoundException();
+		} else {
+			service.delete(video);
+			service.updateCache();
+		}
+
 		return "redirect:/admin/video";
 	}
 
@@ -113,6 +117,7 @@ public class VideoControllerManager {
 		videoCreator.setPathAvatar(storingAvatarPath);
 
 		video = addition.createAttribute(videoCreator);
+		video.setVideoAnalyst(new VideoAnalyst(video.getId(), video));
 		service.saveAndFlush(video);
 		service.updateCache();
 		return true;

@@ -2,24 +2,31 @@ package vn.tritin.WebHoatHinh.controller;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.servlet.http.HttpServletRequest;
 import vn.tritin.WebHoatHinh.entity.Account;
 import vn.tritin.WebHoatHinh.entity.Category;
 import vn.tritin.WebHoatHinh.entity.Comment;
 import vn.tritin.WebHoatHinh.entity.News;
 import vn.tritin.WebHoatHinh.entity.Video;
+import vn.tritin.WebHoatHinh.entity.VideoAnalyst;
 import vn.tritin.WebHoatHinh.entity.VideoDetail;
+import vn.tritin.WebHoatHinh.model.VideoAnalystDTO;
 import vn.tritin.WebHoatHinh.service.CategoryService;
 import vn.tritin.WebHoatHinh.service.CommentService;
 import vn.tritin.WebHoatHinh.service.NewsService;
+import vn.tritin.WebHoatHinh.service.VideoAnalystService;
 import vn.tritin.WebHoatHinh.service.VideoService;
 
 @Controller
@@ -34,14 +41,16 @@ public class VideoController {
 	private CommentService commmentService;
 	private NewsService newsService;
 	private CategoryService categoryService;
+	private VideoAnalystService videoAnalystService;
 
 	@Autowired
 	public VideoController(VideoService videoService, CategoryService categoryService, CommentService commmentService,
-			NewsService newsService) {
+			NewsService newsService, VideoAnalystService videoAnalystService) {
 		this.videoService = videoService;
 		this.categoryService = categoryService;
 		this.commmentService = commmentService;
 		this.newsService = newsService;
+		this.videoAnalystService = videoAnalystService;
 	}
 
 	// Redirect user to the Video page (index page if the video requested not found)
@@ -66,6 +75,7 @@ public class VideoController {
 					model.addAttribute("comments", comments);
 					model.addAttribute("account", account);
 					model.addAttribute("news", news);
+
 				}
 				model.addAttribute("video", video);
 				model.addAttribute("videoDetail", videoDetail);
@@ -145,6 +155,27 @@ public class VideoController {
 		model.addAttribute("account", account);
 		model.addAttribute("currentPage", "home");
 		return model;
+	}
+
+	@PostMapping("/exit")
+	public ResponseEntity<String> exitEventHandling(@RequestBody VideoAnalystDTO analystDTO) {
+		VideoAnalyst videoAnalyst = videoAnalystService.selectById(analystDTO.getVideoId());
+		Map<String, Long> totalTimePerUserWatch = videoAnalyst.getTotalTimePerUserWatch();
+		String key = analystDTO.getUserId();
+		long value = 0;
+		if (totalTimePerUserWatch.get(key) == null) {
+			value = analystDTO.getTimeEnd() - analystDTO.getTimeBegin();
+			totalTimePerUserWatch.put(key, value);
+		} else { // If user already watch this video we will summary time
+			value = totalTimePerUserWatch.get(key);
+			value += analystDTO.getTimeEnd() - analystDTO.getTimeBegin();
+			totalTimePerUserWatch.replace(key, value);
+		}
+		videoAnalyst.setTotalTimePerUserWatch(totalTimePerUserWatch);
+		videoAnalyst.setTotalTimeWatch(videoAnalyst.getTotalTimeWatch() + value);
+		videoAnalyst.setTotalView(videoAnalyst.getTotalView() + 1);
+		videoAnalystService.update(videoAnalyst);
+		return ResponseEntity.status(200).build();
 	}
 
 }

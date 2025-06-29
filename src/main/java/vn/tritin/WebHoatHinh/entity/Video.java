@@ -34,6 +34,9 @@ public class Video extends Content {
 	@JoinColumn(name = "country_id")
 	private Country country;
 
+	@OneToOne(mappedBy = "video", cascade = CascadeType.ALL)
+	private VideoAnalyst videoAnalyst;
+
 	public Video() {
 	}
 
@@ -134,6 +137,14 @@ public class Video extends Content {
 
 	public void setCountry(Country country) {
 		this.country = country;
+	}
+
+	public VideoAnalyst getVideoAnalyst() {
+		return videoAnalyst;
+	}
+
+	public void setVideoAnalyst(VideoAnalyst videoAnalyst) {
+		this.videoAnalyst = videoAnalyst;
 	}
 
 	@Override

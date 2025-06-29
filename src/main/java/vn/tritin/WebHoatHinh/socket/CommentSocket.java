@@ -26,7 +26,9 @@ import vn.tritin.WebHoatHinh.entity.VideoDetail;
 import vn.tritin.WebHoatHinh.model.CommentDTO;
 import vn.tritin.WebHoatHinh.service.AccountService;
 import vn.tritin.WebHoatHinh.service.CommentService;
+import vn.tritin.WebHoatHinh.service.VideoAnalystService;
 import vn.tritin.WebHoatHinh.service.VideoService;
+import vn.tritin.WebHoatHinh.thread.UpdateVideoAnalyst;
 
 @Component
 public class CommentSocket extends TextWebSocketHandler {
@@ -41,6 +43,8 @@ public class CommentSocket extends TextWebSocketHandler {
 	private CommentService comSer;
 	@Autowired
 	private VideoService videoSer;
+	@Autowired
+	private VideoAnalystService analystService;
 
 	public CommentSocket() {
 		super();
@@ -70,13 +74,17 @@ public class CommentSocket extends TextWebSocketHandler {
 
 	private Comment saveComment(WebSocketSession session, WebSocketMessage<?> message) {
 		CommentDTO commentDTO = null;
+		String videoId = null;
 		try {
 			commentDTO = om.readValue(message.getPayload().toString(), CommentDTO.class);
+			videoId = commentDTO.getVideoDetailId();
 		} catch (JsonProcessingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Comment comment = createComment(session, commentDTO);
+		UpdateVideoAnalyst updateAnalyst = new UpdateVideoAnalyst(videoId, analystService);
+		updateAnalyst.start();
 		return comSer.save(comment); // Save comment to DB
 	}
 

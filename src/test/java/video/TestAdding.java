@@ -1,5 +1,7 @@
 package video;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -21,6 +23,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import vn.tritin.WebHoatHinh.entity.Video;
+import vn.tritin.WebHoatHinh.entity.VideoAnalyst;
 import vn.tritin.WebHoatHinh.model.VectorStoreDTO;
 import vn.tritin.WebHoatHinh.model.VideoCreator;
 import vn.tritin.WebHoatHinh.service.VectorStoreService;
@@ -31,7 +34,8 @@ import vn.tritin.WebHoatHinh.util.video.AttributeAddition;
 @SpringBootTest(classes = vn.tritin.WebHoatHinh.WebHoatHinhApplication.class) // Khởi tạo toàn bộ Spring
 																				// ApplicationContext giống như khi ứng
 																				// dụng thực sự chạy.
-//@Transactional // Spring sẽ mở một transaction cho mỗi test case, và rollback lại sau khi test xong.
+//@Transactional // Spring sẽ mở một transaction cho mỗi test case, và rollback lại sau khi test
+// xong.
 @AutoConfigureTestDatabase(replace = Replace.NONE) // Ngăn Spring Boot tự động thay thế database thật bằng database
 													// memory
 @TestInstance(Lifecycle.PER_CLASS) // JUnit chỉ tạo một instance duy nhất của lớp test → cho phép dùng @BeforeAll
@@ -50,6 +54,7 @@ public class TestAdding {
 	private AttributeAddition attribute;
 	@Autowired
 	private VectorStoreService vectorStoreService;
+
 	@Value("${path.video}")
 	private String pathVideo;
 
@@ -142,16 +147,25 @@ public class TestAdding {
 
 	@Test
 	public void addingMultiVideo() {
-		VectorStoreDTO vectorStoreDTO = null;
-		StringHandler stringHandler = new StringHandler();
-		for (Video video : videos) {
-			videoService.saveAndFlush(video);
-			vectorStoreDTO = new VectorStoreDTO(video.getId(),
-					video.getCategories().stream().map(o -> o.getName()).collect(Collectors.joining(",")),
-					video.getDirector(), video.getLanguage(), stringHandler.decrypt(video.getDescription()),
-					video.getViewer());
-			vectorStoreService.insertData(vectorStoreDTO);
+		boolean result = true;
+		try {
+			VectorStoreDTO vectorStoreDTO = null;
+			StringHandler stringHandler = new StringHandler();
+			for (Video video : videos) {
+				video.setVideoAnalyst(new VideoAnalyst(video.getId(), video));
+				videoService.saveAndFlush(video);
+				vectorStoreDTO = new VectorStoreDTO(video.getId(),
+						video.getCategories().stream().map(o -> o.getName()).collect(Collectors.joining(",")),
+						video.getDirector(), video.getLanguage(), stringHandler.decrypt(video.getDescription()),
+						video.getViewer());
+				vectorStoreService.insertData(vectorStoreDTO);
+
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			result = false;
 		}
-		assert true;
+		assertTrue(result);
 	}
 }
