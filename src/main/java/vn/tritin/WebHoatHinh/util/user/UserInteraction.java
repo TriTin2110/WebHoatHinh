@@ -22,7 +22,7 @@ public class UserInteraction {
 	private RoleInteraction roleInt;
 	private MailService mailSer;
 
-	private final String ROLE_USER = "USER";
+	private final String ROLE_USER = "ROLE_USER";
 
 	@Autowired
 	public UserInteraction(UserService userSer, RoleInteraction roleInt, MailService mailSer) {

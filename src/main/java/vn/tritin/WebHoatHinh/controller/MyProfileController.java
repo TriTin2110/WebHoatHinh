@@ -1,6 +1,5 @@
 package vn.tritin.WebHoatHinh.controller;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,14 +71,9 @@ public class MyProfileController {
 		}
 
 		String avatar = accountInDB.getUser().getAvatar();
-		try {
-			if (avatarFile.getSize() != 0) { // If user want to change image
-				FileService fileSer = new FileServiceImpl();
-				avatar = fileSer.saveImage(avatarPath, avatarFile);
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (avatarFile.getSize() > 0) { // If user want to change image
+			FileService fileSer = new FileServiceImpl();
+			avatar = fileSer.saveFile(avatarPath, avatarFile);
 		}
 		accountInDB.setEmail(account.getEmail());
 		accountInDB.setUser(accountInDB.getUser().updateProfile(account, accountInDB, avatar));

@@ -33,5 +33,4 @@ public class Category extends OutDoor {
 	public void setVideos(List<Video> videos) {
 		this.videos = videos;
 	}
-
 }

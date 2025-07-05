@@ -149,9 +149,4 @@ public class AccountController {
 		passwordForgotCodeAndAccount.remove(Encoder.base64Encode(code));
 		return "user/sign-in";
 	}
-
-	@GetMapping("/logout/{username}")
-	public void logout(@RequestParam("username") String username) {
-		System.out.println("Da dang xuat");
-	}
 }

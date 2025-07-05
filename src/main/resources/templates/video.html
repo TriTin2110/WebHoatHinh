@@ -21,10 +21,12 @@
 
 </head>
 
-<body th:attr="data-time-begin=${timeBegin}, data-user-id=${account.username}, data-video-id=${video.id}">
-	<div id="shell">
+<body th:attr="data-time-begin=${timeBegin}, data-user=${account}, data-video-id=${video.id}">
+	<div class="row" id="outer">
+	<div class="col-md-3" id="cotainer">
 		<div th:replace="~{component/index-page/header.html :: header}"></div>
-
+</div>
+	<div class="col-md-9">
 		<div id="main">
 			<div>
 				<h3 th:text="${video?.id}" id="video-detail-id" style="color: white;">...</h3>
@@ -44,7 +46,9 @@
 			</h3>
 			<div th:replace="~{component/video-page/slider.html :: slider(${videos})}"></div>
 		</div>
+		
 		<div th:replace="~{component/index-page/footer.html :: footer}"></div>
+	</div>
 	</div>
 </body>
 <script type="text/javascript" th:inline="javascript" th:src="@{/js/video.js}"></script>

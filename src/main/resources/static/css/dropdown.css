@@ -4,7 +4,9 @@
 {
 	color: red;
 }
-
+#cotainer{
+	padding: 10px 20px 10px 20px;
+}
 #drop-down:hover #drop-box
 {
 	display: block;
@@ -14,12 +16,43 @@
 
 #drop-box
 {
-	display: none;
-	position: absolute;
-	width: 100px;
+	display: none; 
+    position: absolute;
+    width: 150px;
+    background-color: black;
+    margin-top: 40vh;
+    line-height: 40px;
+    z-index: 10;
 }
 .item
 {
 	display: block;
 	text-align: center;
+	color: white;
+	text-decoration: none;
+	margin-bottom: 10px;
+}
+.menu-item{
+	margin-bottom: 10px;
+    height: 40px;
+    font-size: 20px;
+    text-align: center;
+    cursor: pointer;
+   
+}
+
+/* Item in pop-up */
+.item:hover{ 
+	color: red;
+	background-color: #2a2929;
+}
+
+.menu-item {
+	color: white;
+ 	text-decoration: none;
+ 	display: block;
+}
+.menu-item:hover{
+	color: red;
+	background-color: #2a2929;
 }

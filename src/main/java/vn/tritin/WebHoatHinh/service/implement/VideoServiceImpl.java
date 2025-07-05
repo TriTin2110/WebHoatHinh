@@ -3,7 +3,6 @@ package vn.tritin.WebHoatHinh.service.implement;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,13 +13,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.transaction.Transactional;
 import vn.tritin.WebHoatHinh.dao.DAOVideo;
 import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.service.VideoService;
-import vn.tritin.WebHoatHinh.util.ImageHandler;
 import vn.tritin.WebHoatHinh.util.StringHandler;
 
 @Service
@@ -49,31 +46,6 @@ public class VideoServiceImpl implements VideoService {
 	public void saveAndFlush(Video video) {
 		// TODO Auto-generated method stub
 		dao.saveAndFlush(video);
-	}
-
-	@Override
-	public String saveFile(String path, MultipartFile file) throws Exception {
-		// TODO Auto-generated method stub
-		String resultPath = file.getOriginalFilename();
-		String extension = resultPath.substring(resultPath.lastIndexOf("."), resultPath.length());
-		StringBuilder fileName = new StringBuilder(String.valueOf(System.currentTimeMillis()));
-		StringBuilder storingPath = new StringBuilder(path + File.separator);
-
-		File pathDir = new File(path);
-		if (!pathDir.exists())
-			pathDir.mkdirs();
-		if (extension.equals(".jpg") || extension.equals(".jpeg") || extension.equals(".png")) {
-			extension = ".webp";
-			fileName.append(extension);
-			storingPath.append(fileName);
-			ImageHandler.saveAsWebp(file.getInputStream(), storingPath.toString());
-		} else {
-			fileName.append(extension);
-			storingPath.append(fileName);
-			Files.copy(file.getInputStream(), Path.of(storingPath.toString()));
-		}
-
-		return fileName.toString();
 	}
 
 	@Override
@@ -161,15 +133,6 @@ public class VideoServiceImpl implements VideoService {
 	@Override
 	public boolean isExists(String id) {
 		return dao.existsById(id);
-	}
-
-	@Override
-	public boolean isFileExists(String path, String fileName) {
-		// TODO Auto-generated method stub
-		File file = new File(path + fileName);
-		if (file.exists())
-			return true;
-		return false;
 	}
 
 	@Override

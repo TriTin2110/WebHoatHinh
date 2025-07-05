@@ -4,15 +4,18 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
-<body>
-<div id="header" class="sticky-top" th:fragment="header">
-			<h1 id="logo">
+<body  th:fragment="header">
+	<div id="header" class="sticky-top">
+		<div style="height: inherit; margin-bottom: 40px;">
+			<h1 id="logo" style="text-align: center;">
 				<a href="/">Web hoạt hình</a>
 			</h1>
-			<div id="right-header">
+		</div>
+		<div>
 			<div th:replace="~{/component/index-page/dropdown.html :: dropdown}">
 			</div>
-			</div>
 		</div>
+	</div>
+	<script type="text/javascript" src="/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

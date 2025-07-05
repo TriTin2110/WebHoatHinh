@@ -12,10 +12,12 @@
 	media="all" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 </head>
-<body style="background-color: black;" th:attr="data-current-page=${currentPage}">
-	<div class="container" id="overlay">
-		<div th:replace="~{component/index-page/header.html :: header}"></div>
-		<div style="margin-top: 20px;">
+<body style="background-color: black;" th:attr="data-current-page=${currentPage}, data-categories=${categories}">
+	<div class="row" id="outer">
+		<div class="col-md-3" id="cotainer">
+			<div th:replace="~{component/index-page/header.html :: header}"></div>
+		</div>
+		<div class="col-md-9">
 			<div class="container news-container text-center">
 				<!-- Tiêu đề chính -->
 				<h1 class="text-white mb-4" th:text="${news.id}">TIN TỨC PHIM</h1>
@@ -33,8 +35,9 @@
 				<!-- Nội dung -->
 				<div id="content" style="text-align: left;"></div>
 			</div>
+			<div th:replace="~{/component/news-page/tags.html :: tags}"></div>
 		</div>
-		<div th:replace="~{/component/news-page/tags.html :: tags}"></div>
+		
 	</div>
 
 <script type="text/javascript" src="/js/drop-down.js"></script>

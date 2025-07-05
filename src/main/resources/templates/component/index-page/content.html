@@ -6,9 +6,6 @@
 </head>
 <body>
 	<div id="content" th:fragment="content">
-		<div>
-			<a th:href="@{/chat-room?username={id} (id=${account.username})}">Chat room</a>
-		</div>
 		<div class="box">
 			<div style="text-align: center; font-size: 30px; color: white;"
 				th:each="video, sta : ${videos}" th:if="${sta.size == 0}"

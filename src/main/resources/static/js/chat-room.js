@@ -144,17 +144,27 @@ function changeRoom(id) {
 
 function sendMessage() {
 	let message = inputMessage.value
-	inputMessage.value = ''
-	let messageObject = { userId: userId, message: message, chatRoomId: chatRoomId, dateSent: Date.now(), changeRoom: false }
-	websocket.send(JSON.stringify(messageObject))
+	if(!message && message.length > 0)
+	{
+		inputMessage.value = ''
+		let messageObject = { userId: userId, message: message, chatRoomId: chatRoomId, dateSent: Date.now(), changeRoom: false }
+		websocket.send(JSON.stringify(messageObject))
+	}
+	else{
+		console.log('Tin nhan rong')
+	}
 }
 
 function changeBackgroundColorActive(e) {
-	e.className = "col-md-9 tittle-room-card-active"
+	e.className = "row room-card tittle-room-card-active"
+	let child = e.children[1];
+	child.className="col-md-9 tittle-room-card tittle-room-card-active";
 }
 
 function changeBackgroundColor(e) {
-	e.className = "col-md-9 tittle-room-card"
+	e.className = "row room-card tittle-room-card"
+	let child = e.children[1];
+	child.className="col-md-9 tittle-room-card";
 }
 
 function goBack() {

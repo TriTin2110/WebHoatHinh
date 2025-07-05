@@ -19,6 +19,7 @@ import vn.tritin.WebHoatHinh.service.util.Encoder;
 
 //Account will implements UserDetails cause
 //Spring Security will use UserDetails for checking when user logins
+//Also this will help us take this user when authenticate completed
 @Entity
 public class Account implements UserDetails {
 	private static final long serialVersionUID = 1L;
@@ -107,6 +108,7 @@ public class Account implements UserDetails {
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		return Arrays.asList(new SimpleGrantedAuthority("User"));
+		String role = this.getRole().getName();
+		return Arrays.asList(new SimpleGrantedAuthority(role));
 	}
 }

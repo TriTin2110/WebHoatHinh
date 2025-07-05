@@ -74,29 +74,9 @@ h4 {
 	width:980px;
 	margin:0 auto;
 }
-#header {
-	background: url('images/body-bg.gif');
-	height: 90px;
-	opacity: 0.5;
-	transition: opacity 700ms;
-}
 #header:hover
 {
 	opacity: 1.0;
-}
-h1#logo {
-	position:absolute;
-	top:17px;
-	left:0;
-}
-h1#logo a {
-	float:left;
-	width:239px;
-	height:49px;
-	background:url('images/logo.gif') no-repeat 0 0;
-	font-size:0;
-	line-height:0;
-	text-indent:-4000px;
 }
 
 #right-header
@@ -196,7 +176,6 @@ h1#logo a {
 #search-form
 {
 	padding: 0px;
-	float: right;
 	width: 400px;
 	display: flex;
 }
@@ -210,7 +189,7 @@ h1#logo a {
 	padding-right:6px;
 }
 #search .search-field {
-	width: 83%;
+	width: 70%;
 	border:1px solid #413e3e;
 	height: 35px;
 	display: inline-block;
@@ -229,7 +208,6 @@ h1#logo a {
 }
 
 .box {
-	width:980px;
 	padding-bottom:21px;
 }
 .box .head {
@@ -402,4 +380,19 @@ h1#logo a {
 }
 #footer .rf {
 	float:right;
+}
+#outer{
+	margin-top: 20px;
+	width: 99vw;
+}
+#logout{
+	width: 100%;
+	margin-top: 20px; 
+	transition: 0.5s;
+	background-color: transparent;
+    border: none;
+}
+#logout:hover{
+	background-color: red;
+	color: white;
 }

@@ -1,17 +1,18 @@
 let videoDetailId = document.getElementById("video-detail-id").innerText + ''
 let videoContents = document.querySelectorAll(".video-content")
-let username = document.getElementById("user-full-name").value
-let avatar = document.getElementById("user-avatar").value
-let userId = document.body.dataset.userId
+let username = document.getElementById("user-full-name")
+let avatar = document.getElementById("user-avatar")
+let user = document.body.dataset.user
 let videoId = document.body.dataset.videoId
 let timeBegin = Date.now()
-
+console.log(user)
 window.addEventListener('beforeunload', function(){
 	//with navigator.sendBeacon the request still excute even user leave page not like fetch
 	let formData = new FormData()
-	
+	user = (user == null)?null:user.username
+	console.log(user)
 	formData.append("videoId", videoId)
-	formData.append("userId", userId)
+	formData.append("userId", user)
 	formData.append("timeBegin", timeBegin)
 	formData.append("timeEnd", Date.now())
 	navigator.sendBeacon('/exit', formData)
@@ -53,9 +54,9 @@ function addComment(text) {
             var newComment = document.createElement("div");
             newComment.classList.add("comment");
             newComment.innerHTML = `
-                <img src="/img/user-avatar/${avatar}" alt="User Avatar">
+                <img src="/img/user-avatar/${avatar.value}" alt="User Avatar">
                 <div>
-                    <div class="comment-content"><a href="#"><b>${username}</b></a> <br> 
+                    <div class="comment-content"><a href="#"><b>${username.value}</b></a> <br> 
 	                    ${commentText}
                     </div>
                     <div class="comment-actions">

@@ -23,11 +23,11 @@ import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.entity.VideoAnalyst;
 import vn.tritin.WebHoatHinh.entity.VideoDetail;
 import vn.tritin.WebHoatHinh.model.VideoAnalystDTO;
-import vn.tritin.WebHoatHinh.service.CategoryService;
 import vn.tritin.WebHoatHinh.service.CommentService;
 import vn.tritin.WebHoatHinh.service.NewsService;
 import vn.tritin.WebHoatHinh.service.VideoAnalystService;
 import vn.tritin.WebHoatHinh.service.VideoService;
+import vn.tritin.WebHoatHinh.util.category.CategoryInteraction;
 
 @Controller
 public class VideoController {
@@ -40,17 +40,17 @@ public class VideoController {
 	private VideoService videoService;
 	private CommentService commmentService;
 	private NewsService newsService;
-	private CategoryService categoryService;
 	private VideoAnalystService videoAnalystService;
+	private CategoryInteraction categoryInteraction;
 
 	@Autowired
-	public VideoController(VideoService videoService, CategoryService categoryService, CommentService commmentService,
-			NewsService newsService, VideoAnalystService videoAnalystService) {
+	public VideoController(VideoService videoService, CommentService commmentService, NewsService newsService,
+			VideoAnalystService videoAnalystService, CategoryInteraction categoryInteraction) {
 		this.videoService = videoService;
-		this.categoryService = categoryService;
 		this.commmentService = commmentService;
 		this.newsService = newsService;
 		this.videoAnalystService = videoAnalystService;
+		this.categoryInteraction = categoryInteraction;
 	}
 
 	// Redirect user to the Video page (index page if the video requested not found)
@@ -65,7 +65,7 @@ public class VideoController {
 				VideoDetail videoDetail = video.getVideoDetail();
 				List<List<Video>> groupVideos = videoService.getGroupVideo(videos, SLIDER_LENGTH,
 						NUMBER_VIDEO_IN_ONE_SLIDE); // Suggestion videos
-				List<Category> categories = video.getCategories();
+				List<Category> videoCategories = video.getCategories();
 
 				if (account != null) {
 					// Get comment on video (apply when user authenticate)
@@ -79,7 +79,7 @@ public class VideoController {
 				}
 				model.addAttribute("video", video);
 				model.addAttribute("videoDetail", videoDetail);
-				model.addAttribute("categories", categories);
+				model.addAttribute("videoCategories", videoCategories);
 				model.addAttribute("videos", groupVideos);
 				return "video";
 			}
@@ -102,16 +102,7 @@ public class VideoController {
 		int end = (num * NUMBER_VIDEO_ON_PAGE < videos.size()) ? (num * NUMBER_VIDEO_ON_PAGE) : videos.size();
 		videos = videos.subList(start, end);
 		List<List<Video>> groupVideos = this.videoService.getGroupVideo(videos, videos.size(), AMOUNT_VIDEO_PER_LINE);
-//		model = setupBasicModel(model, request, videos);
-		List<News> news = this.newsService.findAll();
-		List<Category> categories = this.categoryService.findAll();
-		Account account = (Account) request.getSession().getAttribute("account");
-
-		model.addAttribute("categories", categories);
-		model.addAttribute("videos", videos);
-		model.addAttribute("news", news);
-		model.addAttribute("account", account);
-		model.addAttribute("currentPage", "home");
+		model = setupBasicModel(model, request, videos);
 		model.addAttribute("videos", groupVideos);
 		model.addAttribute("pageNumber", pageNumbers);
 		model.addAttribute("currentPage", num);
@@ -155,10 +146,8 @@ public class VideoController {
 	// Any API will also have 1 basic model
 	private Model setupBasicModel(Model model, HttpServletRequest request, List<Video> videos) {
 		List<News> news = this.newsService.findAll();
-		List<Category> categories = this.categoryService.findAll();
 		Account account = (Account) request.getSession().getAttribute("account");
-
-		model.addAttribute("categories", categories);
+		model = categoryInteraction.setModelCategory(model);
 		model.addAttribute("videos", videos);
 		model.addAttribute("news", news);
 		model.addAttribute("account", account);
@@ -171,6 +160,9 @@ public class VideoController {
 		VideoAnalyst videoAnalyst = videoAnalystService.selectById(analystDTO.getVideoId());
 		Map<String, Long> totalTimePerUserWatch = videoAnalyst.getTotalTimePerUserWatch();
 		String key = analystDTO.getUserId();
+		if (analystDTO.getUserId().equals("null")) {
+			key = "Guest-" + System.currentTimeMillis();
+		}
 		long value = 0;
 		if (totalTimePerUserWatch.get(key) == null) {
 			value = analystDTO.getTimeEnd() - analystDTO.getTimeBegin();

@@ -2,8 +2,6 @@ package vn.tritin.WebHoatHinh.service;
 
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import vn.tritin.WebHoatHinh.entity.Video;
 
 public interface VideoService {
@@ -12,9 +10,6 @@ public interface VideoService {
 	public void saveAndFlush(Video video);
 
 	public List<Video> findAll();
-
-	// Return file's name
-	public String saveFile(String path, MultipartFile file) throws Exception;
 
 	public List<Video> updateCache();
 
@@ -27,8 +22,6 @@ public interface VideoService {
 	public void delete(Video video);
 
 	public boolean isExists(String id);
-
-	public boolean isFileExists(String path, String fileName);
 
 	public List<Video> findVideosByListId(List<String> ids);
 }

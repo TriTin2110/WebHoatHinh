@@ -20,6 +20,7 @@ import vn.tritin.WebHoatHinh.model.VectorStoreDTO;
 import vn.tritin.WebHoatHinh.model.VideoCreator;
 import vn.tritin.WebHoatHinh.service.VectorStoreService;
 import vn.tritin.WebHoatHinh.service.VideoService;
+import vn.tritin.WebHoatHinh.service.util.FileService;
 import vn.tritin.WebHoatHinh.util.video.AttributeAddition;
 
 @SpringBootTest(classes = vn.tritin.WebHoatHinh.WebHoatHinhApplication.class)
@@ -28,6 +29,8 @@ import vn.tritin.WebHoatHinh.util.video.AttributeAddition;
 public class TestAddingVideo {
 	@Autowired
 	private VideoService videoService;
+	@Autowired
+	private FileService fileService;
 	@Autowired
 	private AttributeAddition addition;
 	@Value("${path.video}")
@@ -50,8 +53,8 @@ public class TestAddingVideo {
 					new FileInputStream(image));
 			MultipartFile fileVideo = new MockMultipartFile("file", video.getName(), "video/mp4",
 					new FileInputStream(video));
-			pathAvatar = videoService.saveFile(pathImage, fileImage);
-			pathVideoo = videoService.saveFile(pathVideo, fileVideo);
+			pathAvatar = fileService.saveFile(pathImage, fileImage);
+			pathVideoo = fileService.saveFile(pathVideoo, fileVideo);
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

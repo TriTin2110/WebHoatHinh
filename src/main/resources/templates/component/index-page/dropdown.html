@@ -5,30 +5,57 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<div id="navigation" th:fragment="dropdown">
-		<ul>
-			<li><a class="active" href="/" id="home-link">Trang chủ</a></li>
-			<li><a href="/movie-news/show-news" id="news-link">Tin tức</a></li>
-			<li>
-				<div id="drop-down">
-					<a href="#" id="drop-button">Thể loại</a>
-					<div id="drop-box">
-					<div th:each = "category: ${categories}">
-						<a class="item" th:href="@{/filter-category?category={name} (name=${category.name})}" th:text="${category.name}"></a>
-						</div>
-					</div>
-				</div>
-			</li>
-			<li th:if="${account == null}"><a href="/account/sign-in">Đăng nhập / Đăng ký</a></li>
-			<li th:if="${account != null}"><a style="display: flex;" th:href="@{/user-profile}">Xin chào, <span style="display: inline-block; width: 100px; overflow: hidden; text-overflow: ellipsis;" th:text="${account.user.fullName}"></span></a></li>
-		</ul>
+	<div th:fragment="dropdown">
 		<div id="search">
-			<form id="search-form" th:action="@{/searching-video}" th:method="get" accept-charset="utf-8">
+			<form id="search-form" th:action="@{/searching-video}"
+				th:method="get" accept-charset="utf-8">
 				<input type="text" name="content-searched"
 					placeholder="Nhập nội dung tìm kiếm..." id="search-field"
-					class="blink search-field form-control" /> <button type="submit" class="btn btn-success"><i class='fas fa-search'></i> </button>
+					class="blink search-field form-control" />
+				<button type="submit" style="width: 15%;" class="btn btn-success">
+					<i class='fas fa-search'></i>
+				</button>
+			</form>
+		</div>
+		<div style="text-align: center;">
+			<a class="menu-item active" style="margin-top: 30px;" href="/"
+				id="home-link"> Trang chủ </a>
+			<div class="menu-item">
+				<div class="btn-group dropend" style="width: 100%;">
+					<button type="button"
+						class="btn btn-secondary dropdown-toggle menu-item"
+						data-bs-toggle="dropdown" aria-expanded="false"
+						style="background-color: transparent; border: none;">Thể
+						loại</button>
+					<div class="dropdown-menu" style="background-color: black;"
+						id="category-list">
+							<h3 style="text-align: center; color: white;">Thể loại</h3>
+							<hr style="border: 2px solid white;">
+						</div>
+				</div>
+			</div>
+		</div>
+		<a class="menu-item" sec:authorize="isAuthenticated()"
+			th:href="@{/chat-room?username={id} (id=${account.username})}">
+			Chat room </a> 
+			
+			<a class="menu-item" th:href="@{/movie-news/show-news}"
+			id="news-link"> Tin tức </a> <a th:if="${account == null}"
+			href="/account/sign-in" class="menu-item"> Đăng nhập / Đăng ký </a> <a
+			th:href="@{/user-profile}" th:if="${account != null}"
+			style="text-align: center;" class="menu-item"> <span
+			style="display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;"
+			sec:authentication="name"></span>
+		</a>
+		<div th:if="${account != null}">
+			<form th:action="@{/logout}" method="post">
+				<input type="submit" class="menu-item" id="logout" value="Đăng xuất">
 			</form>
 		</div>
 	</div>
+	<script type="text/javascript">
+		let categoryList = document.getElementById("category-list");
+		console.log(categoryList);
+	</script>
 </body>
 </html>

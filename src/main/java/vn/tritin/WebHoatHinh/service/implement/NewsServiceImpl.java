@@ -1,6 +1,5 @@
 package vn.tritin.WebHoatHinh.service.implement;
 
-import java.io.IOException;
 import java.sql.Date;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -127,13 +126,8 @@ public class NewsServiceImpl implements NewsService {
 
 		// Banner handling
 		String banner = newsCreator.getBanner();
-		try {
-			if (banner == null || !banner.equals(file.getOriginalFilename()))
-				banner = fileSer.saveImage(bannerPath, file);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		if (banner == null || !banner.equals(file.getOriginalFilename()))
+			banner = fileSer.saveFile(bannerPath, file);
 
 		// Tag handling
 		String[] tagsSplitted = newsCreator.getTags().split(",");

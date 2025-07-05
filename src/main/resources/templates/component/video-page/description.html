@@ -15,20 +15,20 @@
                                                 <td style="color: white;" th:text="${video.id}">Tên</td>
                                         </tr>
                                         <tr>
-                                                <td><div>Ngôn ngữ: <strong><span th:text="${video.language}">Tên Ngôn ngữ</span></strong> </div></td>
+                                                <td><div>Ngôn ngữ: <strong><span th:text="${video.language}">Ngôn ngữ</span></strong> </div></td>
                                                 
                                         </tr>
                                         <tr>
-                                                <td><div>Tình trạng: <span th:text="${video.status}">Tên Ngôn ngữ</span></div></td>
+                                                <td><div>Tình trạng: <span th:text="${video.status}">Tình Trạng</span></div></td>
                                         </tr>
                                         <tr>
-                                                <td><div>Lượt xem: <span th:text="${video.viewer}">Tên Ngôn ngữ</span></div> </td>
+                                                <td><div>Lượt xem: <span th:text="${video.viewer}">Lượt xem</span></div> </td>
                                         </tr>
                                         <tr>
                                                 <td>
                                                 	<div>
                                                 		Thể loại:
-                                                		<span th:each="category, iter : ${categories}">
+                                                		<span th:each="category, iter : ${videoCategories}">
                                                 				<span th:if="${iter.index == (iter.size-1)}" th:text="${category.name}"></span>
 		                                                		<span th:unless="${iter.index == (iter.size-1)}" th:text="${category.name} + ','"></span>
 		                                                </span>

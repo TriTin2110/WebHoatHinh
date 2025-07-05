@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -38,7 +37,8 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public UserDetails loadUserByUsername(String username) {
 		// TODO Auto-generated method stub
-		return dao.findById(username).orElseThrow(() -> new UsernameNotFoundException(username + " cannot found!"));
+		Account account = selectAccountByUsername(username);
+		return account;
 	}
 
 	@Override
@@ -83,5 +83,4 @@ public class AccountServiceImpl implements AccountService {
 			return null;
 		}
 	}
-
 };

@@ -16,22 +16,22 @@ import vn.tritin.WebHoatHinh.entity.Tag;
 import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.NewsNotExistsException;
 import vn.tritin.WebHoatHinh.service.NewsService;
-import vn.tritin.WebHoatHinh.service.TagService;
 import vn.tritin.WebHoatHinh.service.VideoService;
 import vn.tritin.WebHoatHinh.util.StringHandler;
+import vn.tritin.WebHoatHinh.util.category.CategoryInteraction;
 
 @Controller
 @RequestMapping("/movie-news")
 public class NewsController {
 	private NewsService service;
 	private VideoService videoSer;
-	private TagService tagSer;
+	private CategoryInteraction categoryInteraction;
 
 	@Autowired
-	public NewsController(NewsService service, VideoService videoSer, TagService tagSer) {
+	public NewsController(NewsService service, VideoService videoSer, CategoryInteraction categoryInteraction) {
 		this.service = service;
 		this.videoSer = videoSer;
-		this.tagSer = tagSer;
+		this.categoryInteraction = categoryInteraction;
 	}
 
 	@GetMapping("/{id}")
@@ -43,6 +43,8 @@ public class NewsController {
 		StringHandler stringHandler = new StringHandler();
 		news.setDescription(stringHandler.decrypt(news.getDescription()));
 		List<Tag> tags = news.getTags();
+
+		model = categoryInteraction.setModelCategory(model);
 		model.addAttribute("account", account);
 		model.addAttribute("news", news);
 		model.addAttribute("tags", tags);
@@ -51,13 +53,17 @@ public class NewsController {
 	}
 
 	@GetMapping("/show-news")
-	public String showNewsList(Model model) {
+	public String showNewsList(Model model, HttpServletRequest request) {
+		Account account = (Account) request.getSession().getAttribute("account");
 		List<News> newsList = service.findAll();
 		List<Video> videos = videoSer.findAll();
 		List<Video> videoList = videoSer.getVideosByAmount(videos, 4);
+		model = categoryInteraction.setModelCategory(model);
 		model.addAttribute("news", newsList);
 		model.addAttribute("videos", videoList);
 		model.addAttribute("currentPage", "news");
+		model.addAttribute("account", account);
 		return "other/news/news-page";
 	}
+
 }

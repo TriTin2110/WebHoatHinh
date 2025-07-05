@@ -22,6 +22,7 @@ import vn.tritin.WebHoatHinh.exceptions.exceptions.VideoAlreadyExistsException;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.VideoNotFoundException;
 import vn.tritin.WebHoatHinh.model.VideoCreator;
 import vn.tritin.WebHoatHinh.service.VideoService;
+import vn.tritin.WebHoatHinh.service.util.FileService;
 import vn.tritin.WebHoatHinh.util.video.AttributeAddition;
 import vn.tritin.WebHoatHinh.util.video.VideoDuration;
 
@@ -30,7 +31,8 @@ import vn.tritin.WebHoatHinh.util.video.VideoDuration;
 public class VideoControllerManager {
 	private VideoService service;
 	private AttributeAddition addition;
-
+	@Autowired
+	private FileService fileService;
 	@Value("${path.video}")
 	private String pathVideo;
 
@@ -104,10 +106,10 @@ public class VideoControllerManager {
 		String storingVideoPath = videoFile.getOriginalFilename();
 		String storingAvatarPath = avatarFile.getOriginalFilename();
 		try {
-			if (!service.isFileExists(pathVideo + File.separator, videoFile.getOriginalFilename()))
-				storingVideoPath = service.saveFile(pathVideo, videoFile);
-			if (!service.isFileExists(pathAvatar + File.separator, avatarFile.getOriginalFilename()))
-				storingAvatarPath = service.saveFile(pathAvatar, avatarFile);
+			if (!fileService.isFileExists(pathVideo + File.separator, videoFile.getOriginalFilename()))
+				storingVideoPath = fileService.saveFile(pathVideo, videoFile);
+			if (!fileService.isFileExists(pathAvatar + File.separator, avatarFile.getOriginalFilename()))
+				storingAvatarPath = fileService.saveFile(pathAvatar, avatarFile);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

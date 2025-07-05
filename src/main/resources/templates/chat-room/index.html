@@ -5,106 +5,13 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css"
 	media="all" />
-<style type="text/css">
-body {
-	background-color: black;
-	min-height: 100vh;
-}
-
-#main {
-	min-height: 100vh;
-}
-
-.room-name {
-	font-size: 18px;
-	font-weight: bold;
-}
-
-.room-recently-message {
-	font-size: 15px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}
-
-.room-recently-message div {
-	display: inline;
-}
-
-.room-card {
-	margin-top: 10px;
-}
-
-.tittle-room-card {
-	background-color: #FFFFFF;
-	cursor: pointer;
-}
-
-.tittle-room-card-active {
-	background-color: #DDDDDD;
-	cursor: pointer;
-}
-
-#message-header {
-	height: 7vh;
-	background-color: pink;
-}
-
-#messages {
-	background-color: rgb(225, 245, 255);;
-	height: 83vh;
-	padding: 20px 10px 5px 10px;
-	overflow-y: auto;
-}
-
-#input {
-	background-color: brown;
-	height: 10vh;
-	padding: 10px 10px 10px 10px;
-}
-
-#message-input {
-	width: 85%;
-	display: inline;
-}
-
-#button-input {
-	width: 8%;
-	margin-bottom: 5px;
-}
-
-.user-message {
-	float: right;
-	background-color: white;
-}
-
-.other-user-message {
-	float: left;
-	background-color: white;
-}
-
-.message {
-	padding: 5px;
-	clear: both; /* Clear both side of div */
-	margin-bottom: 10px;
-	max-width: 90%;
-	white-space: normal;
-	word-wrap: break-word;
-}
-
-#message-begin {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
-}
-</style>
+<link rel="stylesheet" href="/css/chat-room.css" type="text/css">
 </head>
 <body th:attr="data-user-id=${userId}">
 	<div class="container">
 		<div class="row" id="main">
 			<div class="col-md-4"
-				style="background-color: orange; overflow-y: auto; max-height: 100vh;">
+				style="background-color: rgb(247 247 247); overflow-y: auto; max-height: 100vh;">
 				<div
 					style="margin-top: 10px; display: flex; justify-content: space-between;">
 					<div>
@@ -112,7 +19,7 @@ body {
 							onclick="goBack()" style="cursor: pointer;">
 						<h4 style="display: inline;">Thoát</h4>
 					</div>
-					<div>
+					<div sec:authorize="hasRole('ADMIN')">
 						<button type="button" class="btn btn-primary"
 							data-bs-toggle="modal" data-bs-target="#exampleModal">
 							Thêm phòng mới</button>
@@ -120,11 +27,13 @@ body {
 				</div>
 				<div th:each="room : ${chatRooms}">
 					<div class="row room-card"
-						th:attr="onclick=|changeRoom('${room.id}')|">
-						<div class="col-md-2" style="background-color: red">Avatar</div>
-						<div class="col-md-9 tittle-room-card"
-							onmouseenter="changeBackgroundColorActive(this)"
+						th:attr="onclick=|changeRoom('${room.id}')|" onmouseenter="changeBackgroundColorActive(this)"
 							onmouseleave="changeBackgroundColor(this)">
+						<div class="col-md-2">
+							<img alt="..." height="55" style="border-radius: 50%;" th:src="@{/img/chat-room-avatar/{avatar} (avatar = ${room.banner})}"/>
+						</div>
+						<div class="col-md-9 tittle-room-card"
+							>
 							<div class="room-name" th:text="${room.id}">Name room</div>
 							<div class="room-recently-message" th:name="${room.id}">Recently
 								message</div>
@@ -153,7 +62,7 @@ body {
 							<div id="button-emoji"
 								style="display: inline; cursor: pointer; font-size: 25px;">😊</div>
 							<span><button onclick="sendMessage()" type="button"
-									class="btn btn-info form-control" id="button-input">
+									class="btn form-control" id="button-input">
 									Gửi</button></span>
 						</div>
 					</div>
@@ -192,7 +101,7 @@ body {
 					</form>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-success w-100" onclick="submitForm()"/>Tạo phòng chat!</button>
+					<button class="btn btn-success w-100" onclick="submitForm()">Tạo phòng chat!</button>
 				</div>
 			</div>
 		</div>

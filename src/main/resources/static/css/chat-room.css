@@ -1,0 +1,107 @@
+body {
+	background-color: black;
+	min-height: 100vh;
+}
+
+#main {
+	min-height: 100vh;
+}
+
+.room-name {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.room-recently-message {
+	font-size: 15px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.room-recently-message div {
+	display: inline;
+}
+
+.room-card {
+	margin-top: 10px;
+	background-color: white;
+	border-top: 2px solid #f2f0f0;
+	border-bottom: 1px solid #f2f0f0;
+	padding: 10px 10px;
+}
+
+.tittle-room-card {
+	background-color: #FFFFFF;
+	cursor: pointer;
+}
+
+.tittle-room-card-active {
+	background-color: #DDDDDD;
+	cursor: pointer;
+}
+
+#message-header {
+	height: 7vh;
+	background-color: #FFFFFF;
+}
+
+#messages {
+	background-color: rgb(225, 245, 255);;
+	height: 83vh;
+	padding: 20px 10px 5px 10px;
+	overflow-y: auto;
+}
+
+#input {
+	background-color: #fafafa;
+	height: 10vh;
+	padding: 10px 10px;
+}
+
+#message-input {
+	width: 85%;
+	display: inline;
+	box-shadow: 1px 2px 10px 1px
+}
+
+#button-input {
+	width: 8%;
+	margin-bottom: 5px;
+	color: white;
+	background-color: blue;
+}
+
+#button-input:hover{
+	width: 8%;
+	margin-bottom: 5px;
+	color: black;
+	background-color: cyan;
+	transition: 0.5s;
+}
+
+.user-message {
+	float: right;
+	background-color: white;
+}
+
+.other-user-message {
+	float: left;
+	background-color: white;
+}
+
+.message {
+	padding: 5px;
+	clear: both; /* Clear both side of div */
+	margin-bottom: 10px;
+	max-width: 90%;
+	white-space: normal;
+	word-wrap: break-word;
+}
+
+#message-begin {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}

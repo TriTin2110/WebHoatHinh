@@ -30,7 +30,7 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<Comment> comments;
 
-	private final String DEFAULT_AVATAR_NAME = "DefaultAvatar.jpeg";
+	private final String DEFAULT_AVATAR_NAME = "DefaultAvatar.webp";
 
 	public User() {
 	}
@@ -120,9 +120,8 @@ public class User {
 		User user = account.getUser();
 		String fullName = user.getFullName();
 		boolean gender = user.isGender();
-		int age = (new Date(System.currentTimeMillis()).getYear() + 1900) - user.getDateOfBirth().getYear() + 1900;
 		Date dateOfBirth = user.getDateOfBirth();
-
+		int age = (new Date(System.currentTimeMillis()).getYear() + 1900) - (dateOfBirth.getYear() + 1900);
 		User userInDB = accountInDB.getUser();
 		userInDB.setFullName(fullName);
 		userInDB.setAvatar(avatar);

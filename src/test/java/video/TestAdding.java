@@ -28,6 +28,7 @@ import vn.tritin.WebHoatHinh.model.VectorStoreDTO;
 import vn.tritin.WebHoatHinh.model.VideoCreator;
 import vn.tritin.WebHoatHinh.service.VectorStoreService;
 import vn.tritin.WebHoatHinh.service.VideoService;
+import vn.tritin.WebHoatHinh.service.util.FileService;
 import vn.tritin.WebHoatHinh.util.StringHandler;
 import vn.tritin.WebHoatHinh.util.video.AttributeAddition;
 
@@ -54,7 +55,8 @@ public class TestAdding {
 	private AttributeAddition attribute;
 	@Autowired
 	private VectorStoreService vectorStoreService;
-
+	@Autowired
+	private FileService fileService;
 	@Value("${path.video}")
 	private String pathVideo;
 
@@ -130,8 +132,8 @@ public class TestAdding {
 		try {
 			for (int i = 0; i < LIMIT; i++) {
 				creator = creators.get(i);
-				storingVideoPath = videoService.saveFile(pathVideo, videoFiles.get(i));
-				storingAvatarPath = videoService.saveFile(pathAvatar, bannerFiles.get(i));
+				storingVideoPath = fileService.saveFile(pathVideo, videoFiles.get(i));
+				storingAvatarPath = fileService.saveFile(pathAvatar, bannerFiles.get(i));
 
 				creator.setPathVideo(storingVideoPath);
 				creator.setPathAvatar(storingAvatarPath);
