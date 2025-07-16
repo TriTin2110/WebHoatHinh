@@ -5,7 +5,7 @@ let content = document.body.dataset.description
   let url = '/admin/news'
   let currentImage
   var tags = document.body.dataset.tags
-	  if(tags === null)
+	  if(!tags)
 		  tags = []
 
 	window.addEventListener("DOMContentLoaded",  async () => {
@@ -43,8 +43,8 @@ function setContent(){
 
   function addTag(val)
   {
-	  
-	  if(val && !tags.includes(val)){
+	  console.log(tags)
+	  if(val  && !tags.includes(val)){
 	        tags.push(val);
 	        renderTags();
 	  }
@@ -125,8 +125,11 @@ function setContent(){
 			fetch(url, {
 				method: "POST",
 				body: formData
-			}).then(res =>{
-				window.location.replace("/admin/news")
+			}).then(res => res.json()).then(data =>{
+				let result = data.result;
+				alert(data.message);
+				if(result == 'true')
+					window.location.replace("/admin/news")
 				})
 		}
 	}

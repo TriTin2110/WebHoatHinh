@@ -1,5 +1,6 @@
 package vn.tritin.WebHoatHinh.util.category;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,13 +20,32 @@ public class CategoryInteraction {
 		this.categoryService = categoryService;
 	}
 
-	public Category findCategories(String name) {
-		Category category = categoryService.findByName(name);
-		if (category == null) {
-			category = new Category(name);
-			category = categoryService.save(category);
+//	public Category findCategories(String name) {
+//		Category category = categoryService.findByName(name);
+//		if (category == null) {
+//			category = new Category(name);
+//			category = categoryService.save(category);
+//		}
+//		return category;
+//	}
+
+	public List<Category> findCategories(String[] names) {
+		List<Category> categories = categoryService.findAll();
+
+		List<Category> result = new LinkedList<Category>();
+
+		out: for (String name : names) {
+			for (Category category : categories) {
+				if (name.equals(category.getName())) {
+					result.add(category);
+					continue out;
+				}
+			}
+			Category category = new Category(name);
+			categoryService.save(category);
+			result.add(category);
 		}
-		return category;
+		return result;
 	}
 
 	public Category update(Category category) {

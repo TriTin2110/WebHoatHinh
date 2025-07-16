@@ -3,7 +3,6 @@ package vn.tritin.WebHoatHinh.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -12,7 +11,7 @@ import jakarta.persistence.OneToMany;
 @Entity
 public class Studio extends OutDoor {
 
-	@OneToMany(mappedBy = "studio", cascade = { CascadeType.MERGE, CascadeType.REMOVE })
+	@OneToMany(mappedBy = "studio")
 	private List<Video> videos;
 
 	@ManyToOne

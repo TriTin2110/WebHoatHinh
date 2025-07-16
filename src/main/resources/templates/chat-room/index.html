@@ -35,8 +35,9 @@
 						<div class="col-md-9 tittle-room-card"
 							>
 							<div class="room-name" th:text="${room.id}">Name room</div>
-							<div class="room-recently-message" th:name="${room.id}">Recently
+							<div class="room-recently-message" th:if="${room.id != 'Chat Room AI'}" th:name="${room.id}">Recently
 								message</div>
+								<div class="room-recently-message" th:unless="${room.id != 'Chat Room AI'}" th:name="${room.id}">Tôi ở đây để hỗ trợ bạn!</div>
 						</div>
 					</div>
 				</div>
@@ -114,8 +115,5 @@
 	<script
 		src="https://cdn.jsdelivr.net/npm/emoji-button@latest/dist/index.min.js"></script>
 	<script type="text/javascript" src="/js/chat-room.js"></script>
-	<script type="text/javascript">
-		
-	</script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package vn.tritin.WebHoatHinh.entity;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -26,11 +27,11 @@ public class Video extends Content {
 	@JoinTable(name = "videos_categories", joinColumns = @JoinColumn(name = "video_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
 	private List<Category> categories;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "studio_id")
 	private Studio studio;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "country_id")
 	private Country country;
 
@@ -149,8 +150,9 @@ public class Video extends Content {
 
 	@Override
 	public String toString() {
-		return "Video [id =" + getId() + "categories=" + categories + ", studio=" + studio + ", country=" + country
-				+ "]";
+		return "Video [id =" + getId() + "categories="
+				+ categories.stream().map(o -> o.getName()).collect(Collectors.joining(",")).toString() + ", studio="
+				+ studio.getName() + ", country=" + country.getName() + ", viewer" + getViewer() + "]";
 	}
 
 }

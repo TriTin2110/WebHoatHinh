@@ -80,27 +80,28 @@ websocket.onmessage = (mess) => {
 
 }
 
-chatRoomImage.addEventListener('change', (e) =>{
+chatRoomImage.addEventListener('change', (e) => {
 	file = e.target.files[0]
 	let previewImage = document.getElementById("preview-image")
 	let url = URL.createObjectURL(file)
 	previewImage.src = url
 })
 
-function submitForm()
-{
+function submitForm() {
 	let form = document.getElementById("create-chat-room-form")
 	let formData = new FormData(form)
 	formData.append("banner", file)
-	fetch('/create-chat-room', {
+	console.log(file)
+	fetch('/admin/create-chat-room', {
 		method: 'POST',
 		body: formData
-	}).then(res  => res.json()).then(data =>  {
+	}).then(res => res.json()).then(data => {
 		let result = data.result
-		if(result)
-		{
+		if (result) {
 			alert("Đã thêm thành công!")
-			window.location.replace('/chat-room?username='+userId)
+			window.location.replace('/chat-room?username=' + userId)
+		}else{
+			alert("Chat room này đã tồn tại!")
 		}
 	})
 }
@@ -113,7 +114,7 @@ function setNameTag(name) {
 	var nameTag = document.createElement("div")
 	nameTag.innerText = name
 	nameTag.style.color = nameColor.get(name)
-	
+
 	return nameTag
 }
 
@@ -139,18 +140,16 @@ function changeRoom(id) {
 		let messageComponent = document.getElementById("message-component")
 		messageComponent.style.display = "block"
 	}
-
 }
 
 function sendMessage() {
 	let message = inputMessage.value
-	if(!message && message.length > 0)
-	{
+	if (message && message.length > 0) {
 		inputMessage.value = ''
 		let messageObject = { userId: userId, message: message, chatRoomId: chatRoomId, dateSent: Date.now(), changeRoom: false }
 		websocket.send(JSON.stringify(messageObject))
 	}
-	else{
+	else {
 		console.log('Tin nhan rong')
 	}
 }
@@ -158,13 +157,13 @@ function sendMessage() {
 function changeBackgroundColorActive(e) {
 	e.className = "row room-card tittle-room-card-active"
 	let child = e.children[1];
-	child.className="col-md-9 tittle-room-card tittle-room-card-active";
+	child.className = "col-md-9 tittle-room-card tittle-room-card-active";
 }
 
 function changeBackgroundColor(e) {
 	e.className = "row room-card tittle-room-card"
 	let child = e.children[1];
-	child.className="col-md-9 tittle-room-card";
+	child.className = "col-md-9 tittle-room-card";
 }
 
 function goBack() {

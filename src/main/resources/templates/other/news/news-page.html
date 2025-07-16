@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
 <link rel="stylesheet" href="/css/style.css" type="text/css" media="all"/>
 <link rel="stylesheet" href="/css/dropdown.css" type="text/css" media="all"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 <style type="text/css">
 	div{
 		color: white;
@@ -17,7 +18,7 @@
 	}
 </style>
 </head>
-<body th:attr="data-current-page=${currentPage}, data-categories=${categories}">
+<body th:attr="data-current-page=${currentPage}, data-categories=${categories}" style="background-color: black;">
 	<div class="row" id="outer">
 	<div class="col-md-3" id="cotainer">
 		<div th:replace="~{/component/index-page/header.html :: header}"></div>

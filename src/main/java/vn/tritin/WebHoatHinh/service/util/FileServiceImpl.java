@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import vn.tritin.WebHoatHinh.thread.DeleteFileThread;
 import vn.tritin.WebHoatHinh.util.ImageHandler;
 
 @Service
@@ -59,4 +60,20 @@ public class FileServiceImpl implements FileService {
 		File file = new File(path + fileName);
 		return file.exists();
 	}
+
+	@Override
+	public boolean removeFile(String path) {
+		// TODO Auto-generated method stub
+		File file = new File(path);
+		try {
+			DeleteFileThread thread = new DeleteFileThread(file);
+			thread.start();
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+
 }

@@ -67,7 +67,19 @@ public class AccountController {
 	@PostMapping("/create-user")
 	public String checkingRegisterUser(@Valid @ModelAttribute("ru") RegisterUser ru, BindingResult result,
 			Model model) {
+		boolean isDataExists = accSer.isUsernameExists(ru.getUserName());
+		if (isDataExists) {
+			model.addAttribute("errors", "Tài khoản đã tồn tại");
+			return "user/sign-up";
+		}
+		isDataExists = accSer.isEmailExists(ru.getEmail());
+		if (isDataExists) {
+			model.addAttribute("errors", "Email đã tồn tại");
+			return "user/sign-up";
+		}
+
 		if (result.hasErrors()) { // When data is not valid
+			System.out.println("Da co loi");
 			return "user/sign-up";
 		} else {
 			User user = userInt.createUser(ru);

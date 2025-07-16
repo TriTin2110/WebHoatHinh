@@ -62,23 +62,19 @@ public class AttributeAddition {
 		List<Category> categories = new ArrayList<Category>();
 		Studio studio = null;
 
-		if (countryName != null) {
-			country = countryInt.findCountry(countryName);
-		}
-
 		if (categoriesName != null) {
 			String[] categoryListStr = categoriesName.split(",");
+			categories = categoryInt.findCategories(categoryListStr);
+		}
 
-			for (String name : categoryListStr) {
-				Category category = categoryInt.findCategories(name);
-				categories.add(category);
-			}
+		if (countryName != null) {
+			country = countryInt.findCountry(countryName);
+			country = countryInt.addVideoToCountry(countryName, video);
 		}
 
 		if (studioName != null && countryName != null) {
 			studio = studioInt.setCountryAndVideoForStudio(studioName, country);
 		}
-
 		video.setCategories(categories);
 		video.setStudio(studio);
 		video.setCountry(country);

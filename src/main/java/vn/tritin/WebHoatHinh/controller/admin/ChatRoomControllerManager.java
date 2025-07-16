@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,6 +21,7 @@ import vn.tritin.WebHoatHinh.entity.ChatRoom;
 import vn.tritin.WebHoatHinh.service.ChatRoomService;
 
 @Controller
+@RequestMapping("/admin")
 public class ChatRoomControllerManager {
 
 	@Autowired
@@ -31,10 +33,16 @@ public class ChatRoomControllerManager {
 	@PostMapping("/create-chat-room")
 	public ResponseEntity<Map<String, Boolean>> insertChatRoom(@RequestParam("id") String id,
 			@RequestParam("description") String description, @RequestParam("banner") MultipartFile banner) {
-		ChatRoom chatRoom = createData(id, description, banner);
+		Map<String, Boolean> result = new HashMap<String, Boolean>();
+		ChatRoom chatRoom = chatRoomService.selectById(id);
+		if (chatRoom != null) {
+			result.put("result", false);
+			return ResponseEntity.ok(result);
+		}
+		chatRoom = createData(id, description, banner);
 		chatRoomService.saveAndFlush(chatRoom);
 		chatRoomService.updateList();
-		Map<String, Boolean> result = new HashMap<String, Boolean>();
+
 		result.put("result", true);
 		return ResponseEntity.ok(result);
 	}
@@ -50,7 +58,11 @@ public class ChatRoomControllerManager {
 		// TODO Auto-generated method stub
 		String fileExtend = banner.getOriginalFilename().substring(banner.getOriginalFilename().indexOf("."),
 				banner.getOriginalFilename().length());
-		File file = new File(path + File.separator + id + fileExtend);
+		long fileName = System.currentTimeMillis();
+		if (fileExtend.equals(".png") || fileExtend.equals(".jpg") || fileExtend.equals(".jpeg")) {
+			fileExtend = ".webp";
+		}
+		File file = new File(path + File.separator + fileName + fileExtend);
 		if (!file.exists()) {
 			try {
 				if (!file.getParentFile().exists())

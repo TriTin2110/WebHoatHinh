@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div style="height: 100vh; display: flex; justify-content: center; align-items: center;">
+		<h1>Video này đã tồn tại!</h1>
+	</div>
+</body>
+<script type="text/javascript" th:inline="javascript">
+window.onload = function(){
+	let error = /*[[${error}]]*/ ''
+		console.log(error)
+// 	if(error != null)
+// 	{
+// 		let idInserted = /*[[${idInserted}]]*/ '';
+// 		alert(error);
+// 		var input = document.getElementById("search-input")
+// 		input.value = idInserted;
+// 		search('video-table');
+// 	}
+}
+</script>
+</html>

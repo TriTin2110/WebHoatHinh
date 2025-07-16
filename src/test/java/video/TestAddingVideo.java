@@ -1,5 +1,7 @@
 package video;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -45,41 +47,46 @@ public class TestAddingVideo {
 	public void addingOneVideo() {
 		String pathAvatar = null;
 		String pathVideoo = null;
-
+		boolean result = true;
 		try {
-			File video = new File("D:\\Code\\Project\\WebHoatHinh\\Demo\\Clips\\Test.mp4");
+			File videoFile = new File("D:\\Code\\Project\\WebHoatHinh\\Demo\\Clips\\Test.mp4");
 			File image = new File("D:\\Code\\Project\\WebHoatHinh\\Demo\\Images\\Test.jpg");
 			MultipartFile fileImage = new MockMultipartFile("file", image.getName(), "img/jpg",
 					new FileInputStream(image));
-			MultipartFile fileVideo = new MockMultipartFile("file", video.getName(), "video/mp4",
-					new FileInputStream(video));
+			MultipartFile fileVideo = new MockMultipartFile("file", videoFile.getName(), "video/mp4",
+					new FileInputStream(videoFile));
 			pathAvatar = fileService.saveFile(pathImage, fileImage);
 			pathVideoo = fileService.saveFile(pathVideoo, fileVideo);
+			System.out.println("da luu file");
+			VideoCreator creator = new VideoCreator();
+			creator.setId("Video Demo 4");
+			creator.setCategories("Hài hước,Kinh dị");
+			creator.setCountry("Anh");
+			creator.setDescription(
+					"Video Demo là một bộ phim đến từ Anh Quốc mang chủ đề kinh dị, hài hước do đạo diễn NTT chỉ đạo");
+			creator.setDirector("NTT");
+			creator.setLanguage("Tiếng Anh");
+			creator.setPathAvatar(pathAvatar);
+			creator.setPathVideo(pathVideoo);
+			creator.setStudio("NTT Studio");
 
+			System.out.println("da tao creator");
+			Video video = addition.createAttribute(creator);
+			System.out.println("da tao doi tuong");
+			videoService.saveAndFlush(video);
+			VectorStoreDTO vectorDTO = new VectorStoreDTO(creator.getId(), creator.getCategories(),
+					creator.getDirector(), creator.getLanguage(), creator.getDescription(), 0);
+			vectorService.insertData(vectorDTO);
+			System.out.println("Da insert");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			result = false;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			result = false;
 		}
-
-		VideoCreator creator = new VideoCreator();
-		creator.setId("Video Demo 4");
-		creator.setCategories("Hài hước,Kinh dị");
-		creator.setCountry("Anh");
-		creator.setDescription(
-				"Video Demo là một bộ phim đến từ Anh Quốc mang chủ đề kinh dị, hài hước do đạo diễn NTT chỉ đạo");
-		creator.setDirector("NTT");
-		creator.setLanguage("Tiếng Anh");
-		creator.setPathAvatar(pathAvatar);
-		creator.setPathVideo(pathVideoo);
-		creator.setStudio("NTT Studio");
-
-		Video video = addition.createAttribute(creator);
-		videoService.saveAndFlush(video);
-		VectorStoreDTO vectorDTO = new VectorStoreDTO(creator.getId(), creator.getCategories(), creator.getDirector(),
-				creator.getLanguage(), creator.getDescription(), 0);
-		vectorService.insertData(vectorDTO);
+		assertTrue(result);
 	}
 }

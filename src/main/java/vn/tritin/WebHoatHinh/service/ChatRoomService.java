@@ -12,4 +12,6 @@ public interface ChatRoomService {
 	public void saveAndFlush(ChatRoom chatRoom);
 
 	public List<ChatRoom> updateList();
+
+	public boolean isChatRoomAIAvailable();
 }

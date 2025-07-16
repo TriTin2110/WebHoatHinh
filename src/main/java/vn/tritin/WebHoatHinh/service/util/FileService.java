@@ -6,4 +6,6 @@ public interface FileService {
 	public String saveFile(String path, MultipartFile file);
 
 	public boolean isFileExists(String path, String fileName);
+
+	public boolean removeFile(String path);
 }

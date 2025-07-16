@@ -51,7 +51,7 @@ public class UserInteraction {
 			// TODO: handle exception
 			return false;
 		} catch (Exception e) {
-			// TODO: handle exception
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return (user != null);

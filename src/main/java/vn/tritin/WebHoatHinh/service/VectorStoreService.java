@@ -13,5 +13,6 @@ public interface VectorStoreService {
 
 	public void deleteData(String id);
 
-	public List<Document> getDataByDescription(String description);
+	public List<Document> getDataByDescription(String id, String categories, String director, String language,
+			int viewer, String description);
 }

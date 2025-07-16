@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -38,6 +39,10 @@ public class AccountServiceImpl implements AccountService {
 	public UserDetails loadUserByUsername(String username) {
 		// TODO Auto-generated method stub
 		Account account = selectAccountByUsername(username);
+		System.out.println("account.getRole().getName() " + account.getRole().getName());
+		if (account == null) {
+			throw new UsernameNotFoundException("Đăng nhập không thành công!");
+		}
 		return account;
 	}
 
@@ -82,5 +87,17 @@ public class AccountServiceImpl implements AccountService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public boolean isUsernameExists(String username) {
+		// TODO Auto-generated method stub
+		return dao.existsById(username);
+	}
+
+	@Override
+	public boolean isEmailExists(String email) {
+		// TODO Auto-generated method stub
+		return dao.existsByEmail(email);
 	}
 };

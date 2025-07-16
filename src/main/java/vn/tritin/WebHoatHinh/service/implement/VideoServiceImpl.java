@@ -12,26 +12,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 import vn.tritin.WebHoatHinh.dao.DAOVideo;
 import vn.tritin.WebHoatHinh.entity.Video;
+import vn.tritin.WebHoatHinh.service.VectorStoreService;
 import vn.tritin.WebHoatHinh.service.VideoService;
 import vn.tritin.WebHoatHinh.util.StringHandler;
 
 @Service
 public class VideoServiceImpl implements VideoService {
 	private final int MINIMUM_AMOUNT = 0;
-	private DAOVideo dao;
+
 	@Value("${path.avatar}")
 	private String pathImage;
 	@Value("${path.video}")
 	private String pathVideo;
+	private VectorStoreService vectorService;
+	private DAOVideo dao;
 
+	// add @Lazy annotation to avoid dependencies cycle
 	@Autowired
-	public VideoServiceImpl(DAOVideo dao) {
+	public VideoServiceImpl(DAOVideo dao, @Lazy VectorStoreService vectorService) {
 		this.dao = dao;
+		this.vectorService = vectorService;
 	}
 
 	@Override
@@ -61,7 +67,7 @@ public class VideoServiceImpl implements VideoService {
 	}
 
 	@CachePut("videos")
-	public List<Video> updateCache() {
+	public synchronized List<Video> updateCache() {
 		List<Video> videos = dao.findAll();
 		StringHandler handler = new StringHandler();
 		return videos.stream().map(o -> {
@@ -120,9 +126,10 @@ public class VideoServiceImpl implements VideoService {
 		File imageFile = new File(pathImage + File.separator + video.getBanner());
 		File videoFile = new File(pathVideo + File.separator + video.getVideoDetail().getPath());
 		try {
+			vectorService.deleteData(video.getId());
+			dao.delete(video);
 			Files.deleteIfExists(imageFile.toPath());
 			Files.deleteIfExists(videoFile.toPath());
-			dao.delete(video);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

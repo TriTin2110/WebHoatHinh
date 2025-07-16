@@ -3,17 +3,16 @@ package vn.tritin.WebHoatHinh.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 
 @Entity
 public class Country extends OutDoor {
 
-	@OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "country")
 	private List<Video> videos;
 
-	@OneToMany(mappedBy = "country", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "country")
 	private List<Studio> studios;
 
 	public Country() {

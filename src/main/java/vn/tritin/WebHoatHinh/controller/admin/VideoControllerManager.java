@@ -1,11 +1,15 @@
 package vn.tritin.WebHoatHinh.controller.admin;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +24,9 @@ import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.entity.VideoAnalyst;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.VideoAlreadyExistsException;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.VideoNotFoundException;
+import vn.tritin.WebHoatHinh.model.VectorStoreDTO;
 import vn.tritin.WebHoatHinh.model.VideoCreator;
+import vn.tritin.WebHoatHinh.service.VectorStoreService;
 import vn.tritin.WebHoatHinh.service.VideoService;
 import vn.tritin.WebHoatHinh.service.util.FileService;
 import vn.tritin.WebHoatHinh.util.video.AttributeAddition;
@@ -29,9 +35,9 @@ import vn.tritin.WebHoatHinh.util.video.VideoDuration;
 @Controller
 @RequestMapping("/admin/video")
 public class VideoControllerManager {
+	private VectorStoreService vectorStoreService;
 	private VideoService service;
 	private AttributeAddition addition;
-	@Autowired
 	private FileService fileService;
 	@Value("${path.video}")
 	private String pathVideo;
@@ -40,20 +46,29 @@ public class VideoControllerManager {
 	private String pathAvatar;
 
 	@Autowired
-	public VideoControllerManager(VideoService service, AttributeAddition addition) {
+	public VideoControllerManager(VideoService service, AttributeAddition addition, FileService fileService,
+			VectorStoreService vectorStoreService) {
 		this.service = service;
 		this.addition = addition;
+		this.fileService = fileService;
+		this.vectorStoreService = vectorStoreService;
 	}
 
 	@PostMapping("")
-	public String postVideo(@ModelAttribute("video") VideoCreator videoCreator,
+	public ResponseEntity<Map<String, String>> postVideo(@ModelAttribute("video") VideoCreator videoCreator,
 			@RequestParam("video") MultipartFile videoFile, @RequestParam("avatar") MultipartFile avatarFile) {
 		Video video = service.findById(videoCreator.getId());
 		if (video != null) {
-			throw new VideoAlreadyExistsException();
+			throw new VideoAlreadyExistsException(video.getId());
 		} else {
-			saveVideo(videoCreator, videoFile, avatarFile, video);
-			return "redirect:/admin/video";
+			VectorStoreDTO vectorStoreDTO = saveVideo(videoCreator, videoFile, avatarFile, video);
+			if (vectorStoreDTO != null)
+				vectorStoreService.insertData(vectorStoreDTO);
+			Map<String, String> message = new HashMap<String, String>();
+			message.put("result", "true");
+			message.put("message", "Thêm thành công!");
+			return ResponseEntity.status(200).body(message);
+
 		}
 	}
 
@@ -86,21 +101,25 @@ public class VideoControllerManager {
 	}
 
 	@PostMapping("/update")
-	public String update(@ModelAttribute("creator") VideoCreator videoCreator,
+	public ResponseEntity<Map<String, String>> update(@ModelAttribute("creator") VideoCreator videoCreator,
 			@RequestParam("video") MultipartFile videoFile, @RequestParam("avatar") MultipartFile avatarFile) {
 		Video video = service.findById(videoCreator.getId());
 		if (video == null) {
 			throw new VideoNotFoundException();
 		} else {
-			saveVideo(videoCreator, videoFile, avatarFile, video);
-			return "redirect:/admin/video";
+			VectorStoreDTO vectorStoreDTO = saveVideo(videoCreator, videoFile, avatarFile, video);
+			vectorStoreService.updateData(vectorStoreDTO);
+			Map<String, String> message = new HashMap<String, String>();
+			message.put("result", "true");
+			message.put("message", "Đã cập nhật thành công!");
+			return ResponseEntity.status(200).body(message);
 		}
 	}
 
 	/*-
 	 * I will use this method for both insert and update (video)
 	 * */
-	private boolean saveVideo(VideoCreator videoCreator, MultipartFile videoFile, MultipartFile avatarFile,
+	private VectorStoreDTO saveVideo(VideoCreator videoCreator, MultipartFile videoFile, MultipartFile avatarFile,
 			Video video) {
 
 		String storingVideoPath = videoFile.getOriginalFilename();
@@ -110,11 +129,9 @@ public class VideoControllerManager {
 				storingVideoPath = fileService.saveFile(pathVideo, videoFile);
 			if (!fileService.isFileExists(pathAvatar + File.separator, avatarFile.getOriginalFilename()))
 				storingAvatarPath = fileService.saveFile(pathAvatar, avatarFile);
-
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
 		}
 
 		videoCreator.setPathVideo(storingVideoPath);
@@ -125,9 +142,20 @@ public class VideoControllerManager {
 		String duration = VideoDuration.getDuration(new File(pathVideo + File.separator + storingVideoPath));
 		video.setDuration(duration);
 		video.setVideoAnalyst(new VideoAnalyst(video.getId(), video));
-		service.saveAndFlush(video);
+		try {
+			service.saveAndFlush(video);
+		} catch (JpaObjectRetrievalFailureException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			fileService.removeFile(pathAvatar + File.separator + storingAvatarPath);
+			fileService.removeFile(pathVideo + File.separator + storingVideoPath);
+			return null;
+		}
+		VectorStoreDTO vectorStore = new VectorStoreDTO(video.getId(),
+				video.getCategories().stream().map(o -> o.getName()).collect(Collectors.joining(",")),
+				video.getDirector(), video.getLanguage(), video.getDescription(), 0);
 		service.updateCache();
-		return true;
+		return vectorStore;
 	}
 
 	@GetMapping("/show-update/{id}")
@@ -159,4 +187,5 @@ public class VideoControllerManager {
 			return "/manage/video/video-create";
 		}
 	}
+
 }

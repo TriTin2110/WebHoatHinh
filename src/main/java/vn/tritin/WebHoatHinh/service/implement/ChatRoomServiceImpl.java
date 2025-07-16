@@ -16,6 +16,7 @@ import vn.tritin.WebHoatHinh.service.ChatRoomService;
 @Service
 public class ChatRoomServiceImpl implements ChatRoomService {
 	private DAOChatRoom dao;
+	private final String CHAT_ROOM_AI_ID = "Chat Room AI";
 
 	@Autowired
 	public ChatRoomServiceImpl(DAOChatRoom dao) {
@@ -49,6 +50,13 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 		// TODO Auto-generated method stub
 		List<ChatRoom> chatRooms = dao.findAll();
 		return chatRooms;
+	}
+
+	@Override
+	public boolean isChatRoomAIAvailable() {
+		// TODO Auto-generated method stub
+		ChatRoom chatRoomId = selectById(CHAT_ROOM_AI_ID);
+		return chatRoomId != null;
 	}
 
 }

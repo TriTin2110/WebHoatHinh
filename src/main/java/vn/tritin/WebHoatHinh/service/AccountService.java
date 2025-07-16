@@ -18,4 +18,8 @@ public interface AccountService extends UserDetailsService {
 	public void updatePassword(AccountDTO accountDTO);
 
 	public Account update(Account account);
+
+	public boolean isUsernameExists(String username);
+
+	public boolean isEmailExists(String email);
 }

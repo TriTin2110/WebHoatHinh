@@ -20,6 +20,7 @@ public class StudioInteraction {
 		Studio studio = studioSer.findByName(studioName);
 		if (studio == null) {
 			studio = new Studio(studioName);
+			studioSer.add(studio);
 		}
 		return studio;
 	}
@@ -34,10 +35,7 @@ public class StudioInteraction {
 
 	public Studio setCountryAndVideoForStudio(String studioName, Country country) {
 		Studio studio = findStudio(studioName);
-
 		studio.setCountry(country);
-		studio = add(studio);
-
 		return studio;
 	}
 }

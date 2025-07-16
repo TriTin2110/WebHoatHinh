@@ -27,6 +27,8 @@ public class NewsController {
 	private VideoService videoSer;
 	private CategoryInteraction categoryInteraction;
 
+	private final int LIST_VIDEO_ON_SIDE = 4;
+
 	@Autowired
 	public NewsController(NewsService service, VideoService videoSer, CategoryInteraction categoryInteraction) {
 		this.service = service;
@@ -57,7 +59,8 @@ public class NewsController {
 		Account account = (Account) request.getSession().getAttribute("account");
 		List<News> newsList = service.findAll();
 		List<Video> videos = videoSer.findAll();
-		List<Video> videoList = videoSer.getVideosByAmount(videos, 4);
+		int videoCount = (videos.size() > LIST_VIDEO_ON_SIDE) ? LIST_VIDEO_ON_SIDE : videos.size();
+		List<Video> videoList = videoSer.getVideosByAmount(videos, videoCount);
 		model = categoryInteraction.setModelCategory(model);
 		model.addAttribute("news", newsList);
 		model.addAttribute("videos", videoList);

@@ -66,15 +66,22 @@
 				<label for="dob">Ngày sinh</label> <input type="date" id="dob"
 					th:field="*{dateOfBirth}">
 			</div>
-			<button type="submit" class="btn">Đăng ký</button>
+			<button type="submit" class="btn" onclick="return checkingFormData()">Đăng ký</button>
 		</form>
 		<hr>
 		<div style="padding-top: 10px; display: flex; justify-content: space-between; font-size: 20px;">
 				<span>
-							<a style="text-decoration: none; color: yellow;" th:href="@{/account/sign-in}">Đăng nhập ngay</a>
+					<a style="text-decoration: none; color: yellow;" th:href="@{/account/sign-in}">Đăng nhập ngay</a>
 				</span>
-				<span><a th:href="@{/account/show-password-resolve}">Quên mật khẩu</a></span>
+				<span>
+					<a th:href="@{/account/show-password-resolve}">Quên mật khẩu</a> | <a href="/" style="text-decoration: none; color: orange;">Trang chủ</a>
+				</span>
+				
+		</div>
+		<div>
+			
 		</div>
 </body>
+<script type="text/javascript" src="/js/util.js"></script>
 <script type="text/javascript" th:src="@{/js/sign-up.js}"></script>
 </html>

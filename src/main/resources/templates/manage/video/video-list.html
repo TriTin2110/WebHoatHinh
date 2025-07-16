@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <title>Video List</title>
 <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">
+<style type="text/css">
+.link-redirect{
+	color: white;
+}
+.link-redirect:hover{
+	color: orange;
+}
+</style>
 </head>
 <body>
 	<div class="container">
@@ -18,6 +26,15 @@
 					<th style="width: 167px;">Quốc gia</th>
 					<th style="width: 167px;">Studio</th>
 					<th style="width: 240px;">Tùy chọn</th>
+				</tr>
+				<tr>
+					<td colspan="8">
+						<div style="text-align: center;">
+							<a class="link-redirect" href="/">Trang chủ</a> |
+							<a class="link-redirect" href="/admin/news">Trang quản lí tin tức</a>|
+							<a class="link-redirect" href="/admin/video/create">Thêm Video</a>
+						</div>
+					</td>
 				</tr>
 				<tr>
 					<td colspan="8"><input style="width: 100%" onkeyup="search('video-table')"
@@ -51,10 +68,5 @@
 		
 	<script src="/js/bootstrap.min.js"></script>
 	<script type="text/javascript" th:src="@{/js/component-interact.js}"></script>
-	<script type="text/javascript" th:inline="javascript">
-		let error = /*[[${error}]]*/ ''
-		if(error != null)
-			alert(error)
-	</script>
 </body>
 </html>

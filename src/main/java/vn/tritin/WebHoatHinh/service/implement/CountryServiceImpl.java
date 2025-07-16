@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 import vn.tritin.WebHoatHinh.dao.DAOCountry;
 import vn.tritin.WebHoatHinh.entity.Country;
+import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.service.CountryService;
 
 @Service
@@ -47,6 +48,16 @@ public class CountryServiceImpl implements CountryService {
 	public List<Country> findAll() {
 		// TODO Auto-generated method stub
 		return dao.findAll();
+	}
+
+	@Override
+	@Transactional
+	public Country addVideo(String id, Video video) {
+		// TODO Auto-generated method stub
+		Optional<Country> countryOpt = dao.findById(id);
+		Country country = countryOpt.get();
+		country.getVideos().add(video);
+		return country;
 	}
 
 }

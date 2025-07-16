@@ -6,6 +6,12 @@
 <link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css"
 	media="all" />
 <style type="text/css">
+.link-redirect{
+	color: white;
+}
+.link-redirect:hover{
+	color: orange;
+}
 </style>
 </head>
 <body>
@@ -18,6 +24,14 @@
 					<th style="width: 180px;">Ngày đăng</th>
 					<th style="width: 167px;">Tác giả</th>
 					<th style="width: 240px;">Tùy chọn</th>
+				</tr>
+				<tr>
+					<td colspan="5">
+						<div style="text-align: center;">
+							<a class="link-redirect" href="/">Trang chủ</a> |
+							<a class="link-redirect" href="/admin/video">Trang quản lí video</a>
+						</div>
+					</td>
 				</tr>
 				<tr>
 					<td colspan="5"><input style="width: 100%" onkeyup="search('news-table')"

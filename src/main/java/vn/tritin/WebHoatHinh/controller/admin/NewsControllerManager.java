@@ -1,6 +1,8 @@
 package vn.tritin.WebHoatHinh.controller.admin;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,15 +55,26 @@ public class NewsControllerManager {
 	}
 
 	@PostMapping("")
-	public ResponseEntity<String> saveAndUpdate(@ModelAttribute("creator") NewsCreator newsCreator,
+	public ResponseEntity<Map<String, String>> saveAndUpdate(@ModelAttribute("creator") NewsCreator newsCreator,
 			@RequestParam("image") MultipartFile file) {
 		News news = newsSer.findById(newsCreator.getId());
 		if (news != null)
 			throw new NewsExistsException();
 		else {
-			saveAndFlushNews(newsCreator, file, news);
+			Map<String, String> map = new HashMap<String, String>();
+			try {
+				saveAndFlushNews(newsCreator, file, news);
+				map.put("result", "true");
+				map.put("message", "Đã thêm thành công!");
+			} catch (Exception e) {
+				// TODO: handle exception
+				map.put("result", "false");
+				map.put("message", "Thêm thất bại!");
+			}
+
+			return ResponseEntity.status(200).body(map);
 		}
-		return ResponseEntity.status(200).build();
+
 	}
 
 	@GetMapping("/delete/{id}")
@@ -98,7 +111,17 @@ public class NewsControllerManager {
 		if (news == null)
 			throw new NewsNotExistsException();
 		else {
-			saveAndFlushNews(newsCreator, file, news);
+			Map<String, String> map = new HashMap<String, String>();
+			try {
+				saveAndFlushNews(newsCreator, file, news);
+				map.put("result", "true");
+				map.put("message", "Đã cập nhật thành công!");
+			} catch (Exception e) {
+				// TODO: handle exception
+				map.put("result", "false");
+				map.put("message", "Cập nhật thất bại!");
+			}
+
 		}
 		return ResponseEntity.status(200).build();
 	}

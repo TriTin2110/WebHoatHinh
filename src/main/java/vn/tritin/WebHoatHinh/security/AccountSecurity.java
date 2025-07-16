@@ -30,14 +30,12 @@ public class AccountSecurity {
 	public SecurityFilterChain createChain(HttpSecurity http) {
 		try {
 			http.authorizeHttpRequests(con -> con.requestMatchers(HttpMethod.GET, "/chat-room").authenticated()
-					.requestMatchers(HttpMethod.GET, "/user-profile").authenticated()
-					.requestMatchers(HttpMethod.GET, "/admin/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.POST, "/admin/**", "/create-chat-room").hasRole("ADMIN").anyRequest()
-					.permitAll())
+					.requestMatchers(HttpMethod.GET, "/user-profile").authenticated().requestMatchers("/admin/**")
+					.hasRole("ADMIN").anyRequest().permitAll())
 					.formLogin(login -> login.loginPage("/account/sign-in").loginProcessingUrl("/authenticateTheUser")
 							.successForwardUrl("/account/generate-user-session").permitAll())
 					.logout(logout -> logout.logoutSuccessUrl("/").permitAll())
-					.csrf(csrf -> csrf.ignoringRequestMatchers("/logout")); // chỉ
+					.csrf(csrf -> csrf.ignoringRequestMatchers("/logout", "/admin/create-chat-room")); // chỉ
 			// tắt
 			// csrf
 			// với

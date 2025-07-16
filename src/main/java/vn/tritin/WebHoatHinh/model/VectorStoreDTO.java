@@ -6,11 +6,11 @@ public class VectorStoreDTO {
 
 	public VectorStoreDTO(String id, String categories, String director, String language, String description,
 			int viewer) {
-		this.id = id;
-		this.categories = categories;
-		this.director = director;
-		this.language = language;
-		this.description = description;
+		this.id = id.toUpperCase();
+		this.categories = categories.toUpperCase();
+		this.director = director.toUpperCase();
+		this.language = language.toUpperCase();
+		this.description = description.toUpperCase();
 		this.viewer = viewer;
 	}
 
@@ -64,7 +64,9 @@ public class VectorStoreDTO {
 
 	@Override
 	public String toString() {
-		return id + ";" + categories + ";" + director + ";" + language + ";" + description + ";" + viewer;
+		String result = "Tên phim:" + id + ";Thể loại:" + categories + ";Đạo diễn:" + director + ";Ngôn ngữ:" + language
+				+ ";Mô tả:" + description + ";Lượt xem:" + viewer;
+		return result.toUpperCase();
 	}
 
 }

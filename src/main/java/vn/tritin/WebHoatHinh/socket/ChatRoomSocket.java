@@ -1,5 +1,6 @@
 package vn.tritin.WebHoatHinh.socket;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -22,6 +24,7 @@ import vn.tritin.WebHoatHinh.entity.ChatRoom;
 import vn.tritin.WebHoatHinh.entity.Message;
 import vn.tritin.WebHoatHinh.model.MessageDTO;
 import vn.tritin.WebHoatHinh.service.AccountService;
+import vn.tritin.WebHoatHinh.service.ChatRoomAIService;
 import vn.tritin.WebHoatHinh.service.ChatRoomService;
 import vn.tritin.WebHoatHinh.thread.SendAllMessageForUserThread;
 import vn.tritin.WebHoatHinh.thread.SendMessageChatRoomThread;
@@ -35,12 +38,14 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 	private AccountService accountService;
 	@Autowired
 	private ChatRoomService chatRoomService;
-
+	@Autowired
+	private ChatRoomAIService chatRoomAIService;
 	private static Map<Account, ChatRoom> accountOnChatRoom = new HashMap<Account, ChatRoom>();
 	private static Map<String, ChatRoom> chatRoomAvailable = new HashMap<String, ChatRoom>();
 	private static List<WebSocketSession> allUsers = new ArrayList<WebSocketSession>();
 
 	private final int NUMBER_USER_SEND = 10;
+	private final String CHAT_ROOM_AI_ID = "Chat Room AI";
 
 	private StringHandler stringHandler;
 
@@ -81,11 +86,13 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 			}
 			if (session.getAttributes().replace("currentRoom", chatRoomRequired.getId()) == null)
 				session.getAttributes().put("currentRoom", chatRoomRequired.getId());
-//			else {
-//				removeAccountFromPreviousChatRoom(account, previousChatRoom);
-//			}
-			addUserToRoom(chatRoomRequired, session);
-			sendAllMessageFromChatRoomToUser(chatRoomRequired, session);
+			addUserToRoom(session);
+			if (CHAT_ROOM_AI_ID.equals(chatRoomRequired.getId())) {
+				String rawMessage = "Xin chào bạn đã đến với " + CHAT_ROOM_AI_ID
+						+ " tôi ở đây để hỗ trợ bạn tìm kiếm phim!";
+				sendChatBotMessageToUser(rawMessage, session);
+			} else
+				sendAllMessageFromChatRoomToUser(chatRoomRequired, session);
 		} else {
 			// Trường hợp người dùng muốn gửi tin nhắn
 			// Ta phải lấy được chat room hiện tại của user
@@ -93,12 +100,16 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 			// lần lượt gửi message cho từng user trong danh sách
 			// update current chatRoom vào DB
 			ChatRoom currentUserChatRoom = accountOnChatRoom.get(account);
-			userMessage = sendMessage(userMessage, account, currentUserChatRoom.getId());
-			currentUserChatRoom.setRecentlyMessage(userMessage);
-			Message messageEntity = createMessageEntity(userMessage, currentUserChatRoom, account);
-			currentUserChatRoom.getMessages().add(messageEntity);
+			if (CHAT_ROOM_AI_ID.equals(currentUserChatRoom.getId())) {
+				sendMessageToChatRoomAI(userMessage, session);
+			} else {
+				userMessage = sendMessage(userMessage, account, currentUserChatRoom.getId());
+				currentUserChatRoom.setRecentlyMessage(userMessage);
+				Message messageEntity = createMessageEntity(userMessage, currentUserChatRoom, account);
+				currentUserChatRoom.getMessages().add(messageEntity);
+				updateChatRoom(currentUserChatRoom);
+			}
 
-			updateChatRoom(currentUserChatRoom);
 		}
 	}
 
@@ -118,11 +129,8 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 		return messageEntity;
 	}
 
-	private void addUserToRoom(ChatRoom chatRoomRequired, WebSocketSession user) {
+	private void addUserToRoom(WebSocketSession user) {
 		// TODO Auto-generated method stub
-//		users.add(user);
-//		accountsOnChatRoom.replace(chatRoomRequired, users);
-
 		if (!allUsers.contains(user)) {
 			allUsers.add(user);
 		}
@@ -153,7 +161,6 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 		Account otherAccount = null;
 		message = stringHandler.base64Encode(message);
 
-		// num : 12
 		int count = 0;
 		int temp = 0;
 		while (true) {
@@ -171,6 +178,42 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 			}
 		}
 		return message;
+	}
+
+	// Gui yeu cau cho user
+	// Gui cau hoi len ChatRoomAIService
+	// Ma hoa cau tra loi
+	// hien cho user
+	private String sendMessageToChatRoomAI(String message, WebSocketSession user) {
+		// TODO Auto-generated method stub
+		try {
+			// send owner message
+			String rawMessage = message;
+			message = stringHandler.base64Encode(message);
+			user.sendMessage(new TextMessage(message));
+
+			// send chat response message
+			message = chatRoomAIService.searchByDescription(rawMessage);
+			sendChatBotMessageToUser(message, user);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return message;
+	}
+
+	private void sendChatBotMessageToUser(String message, WebSocketSession user) {
+		message = stringHandler.base64Encode(message);
+		StringBuilder sendMessage = new StringBuilder();
+		sendMessage.append(CHAT_ROOM_AI_ID);
+		sendMessage.append(":");
+		sendMessage.append(message);
+		try {
+			user.sendMessage(new TextMessage(sendMessage.toString()));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	// Để có thể lấy được chat room ra thì ta cần có chatroomId

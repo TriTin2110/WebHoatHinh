@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import vn.tritin.WebHoatHinh.entity.Country;
+import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.service.CountryService;
 
 @Component
@@ -19,9 +20,13 @@ public class CountryInteraction {
 		Country country = service.findByName(countryName);
 		if (country == null) {
 			country = new Country(countryName);
-			country = add(country);
+			service.save(country);
 		}
 		return country;
+	}
+
+	public Country addVideoToCountry(String id, Video video) {
+		return this.service.addVideo(id, video);
 	}
 
 	public Country add(Country country) {

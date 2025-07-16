@@ -1,6 +1,7 @@
 package vn.tritin.WebHoatHinh.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,15 +16,22 @@ import vn.tritin.WebHoatHinh.service.ChatRoomService;
 public class ChatRoomController {
 	@Autowired
 	private ChatRoomService chatRoomService;
+	private final String CHAT_ROOM_AI_ID = "Chat Room AI";
 
-	// Chuyển ng dùng đến chat room
-	// Ta cần có Account và danh sách tất cả chat room hiện có
+	// redirect user to chat room page
+	// must have account and chat room list
 	@GetMapping("/chat-room")
 	public String accessChatRoomPage(@RequestParam("username") String userId, Model model) {
+
 		List<ChatRoom> chatRooms = chatRoomService.selectAll();
-		chatRooms.sort((o1, o2) -> {
-			return Long.compare(o2.getDateUploaded().getTime(), o1.getDateUploaded().getTime());
-		});
+
+		// Move chat room id to head
+		ChatRoom chatRoomAI = chatRooms.stream().filter(o -> CHAT_ROOM_AI_ID.equals(o.getId()))
+				.collect(Collectors.toList()).get(0);
+		int index = chatRooms.indexOf(chatRoomAI);
+		chatRooms.remove(index);
+		chatRooms.add(0, chatRoomAI);
+
 		model.addAttribute("userId", userId);
 		model.addAttribute("chatRooms", chatRooms);
 		return "chat-room/index";

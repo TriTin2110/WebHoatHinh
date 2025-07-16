@@ -43,7 +43,7 @@
 
 /* Item in pop-up */
 .item:hover{ 
-	color: red;
+	color: rgb(244, 73, 0);
 	background-color: #2a2929;
 }
 
@@ -53,6 +53,6 @@
  	display: block;
 }
 .menu-item:hover{
-	color: red;
+	color:  rgb(244, 73, 0);
 	background-color: #2a2929;
 }

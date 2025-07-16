@@ -1,5 +1,6 @@
 package vn.tritin.WebHoatHinh.controller;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,10 @@ import vn.tritin.WebHoatHinh.entity.VideoDetail;
 import vn.tritin.WebHoatHinh.model.VideoAnalystDTO;
 import vn.tritin.WebHoatHinh.service.CommentService;
 import vn.tritin.WebHoatHinh.service.NewsService;
+import vn.tritin.WebHoatHinh.service.VectorStoreService;
 import vn.tritin.WebHoatHinh.service.VideoAnalystService;
 import vn.tritin.WebHoatHinh.service.VideoService;
+import vn.tritin.WebHoatHinh.thread.UpdateViewer;
 import vn.tritin.WebHoatHinh.util.category.CategoryInteraction;
 
 @Controller
@@ -36,21 +39,24 @@ public class VideoController {
 	private final int SLIDER_LENGTH = 8;
 	private final int NUMBER_VIDEO_IN_ONE_SLIDE = 4;
 	private final int NUMBER_VIDEO_ON_PAGE = 10;
-
+	private final int NUMBER_NEWS_ON_PAGE = 3;
 	private VideoService videoService;
 	private CommentService commmentService;
 	private NewsService newsService;
 	private VideoAnalystService videoAnalystService;
 	private CategoryInteraction categoryInteraction;
+	private VectorStoreService vectorStoreService;
 
 	@Autowired
 	public VideoController(VideoService videoService, CommentService commmentService, NewsService newsService,
-			VideoAnalystService videoAnalystService, CategoryInteraction categoryInteraction) {
+			VideoAnalystService videoAnalystService, CategoryInteraction categoryInteraction,
+			VectorStoreService vectorStoreService) {
 		this.videoService = videoService;
 		this.commmentService = commmentService;
 		this.newsService = newsService;
 		this.videoAnalystService = videoAnalystService;
 		this.categoryInteraction = categoryInteraction;
+		this.vectorStoreService = vectorStoreService;
 	}
 
 	// Redirect user to the Video page (index page if the video requested not found)
@@ -63,20 +69,32 @@ public class VideoController {
 				video.setViewer(video.getViewer() + 1);
 
 				VideoDetail videoDetail = video.getVideoDetail();
-				List<List<Video>> groupVideos = videoService.getGroupVideo(videos, SLIDER_LENGTH,
-						NUMBER_VIDEO_IN_ONE_SLIDE); // Suggestion videos
+				List<List<Video>> groupVideos = new ArrayList<List<Video>>();
+				// if videos.size is has length above 8 element
+				if (videos.size() >= SLIDER_LENGTH) {
+					groupVideos = videoService.getGroupVideo(videos, SLIDER_LENGTH, NUMBER_VIDEO_IN_ONE_SLIDE); // Suggestion
+				} else {
+					// if videos.size range is 5-7
+					if (videos.size() > NUMBER_VIDEO_IN_ONE_SLIDE) {
+						int firstList = 0;
+						groupVideos.add(videos.subList(firstList, 4));
+						groupVideos.add(videos.subList(4, videos.size()));
+					} else {
+						groupVideos.add(videos);
+					}
+				}
 				List<Category> videoCategories = video.getCategories();
 
 				if (account != null) {
 					// Get comment on video (apply when user authenticate)
 					List<Comment> comments = this.commmentService.selectByVideoDetail(videoDetail);
-					List<News> news = newsService.getNewestNews(AMOUNT_NEWS_ON_PAGE);
 
 					model.addAttribute("comments", comments);
 					model.addAttribute("account", account);
-					model.addAttribute("news", news);
 
 				}
+				UpdateViewer thread = new UpdateViewer(video, vectorStoreService, videoService);
+				thread.start();
 				model.addAttribute("video", video);
 				model.addAttribute("videoDetail", videoDetail);
 				model.addAttribute("videoCategories", videoCategories);
@@ -146,10 +164,11 @@ public class VideoController {
 	// Any API will also have 1 basic model
 	private Model setupBasicModel(Model model, HttpServletRequest request, List<Video> videos) {
 		List<News> news = this.newsService.findAll();
+		int newsCount = (news.size() > NUMBER_NEWS_ON_PAGE) ? NUMBER_NEWS_ON_PAGE : news.size();
 		Account account = (Account) request.getSession().getAttribute("account");
 		model = categoryInteraction.setModelCategory(model);
 		model.addAttribute("videos", videos);
-		model.addAttribute("news", news);
+		model.addAttribute("news", news.subList(0, newsCount));
 		model.addAttribute("account", account);
 		model.addAttribute("currentPage", "home");
 		return model;

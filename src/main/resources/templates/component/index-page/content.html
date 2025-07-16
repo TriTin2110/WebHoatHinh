@@ -22,7 +22,7 @@
 									th:src="@{'img/video-avatar/'+${video.banner}}" style="border-radius: 18px;" alt="" /></a>
 						</div>
 						<div style="width: 152px;">
-							<a th:href="@{/view/{id}(id = ${video.id})}" class="name"
+							<a th:href="@{/view/{id}(id = ${video.id})}" id="name" class="name"
 								th:text="${video.id}"></a>
 						</div>
 						<div class="rating">
@@ -38,9 +38,9 @@
 			
 			<div style="text-align: center;"> 
 				<span th:each="pages : ${pageNumber}">
-					<span th:if="${pages == currentPage}" style="color: red; font-weight: bold;" th:text="${pages}"></span>
+					<span th:if="${pages == currentPage}" style="color: rgb(244, 73, 0); font-weight: bold;" th:text="${pages}"></span>
 					<span th:unless="${pages == currentPage}">
-					<a style="color: white; text-decoration: none;" th:href="@{?page={page} (page = ${pages})}" th:text="${pages}">
+						<a id="page" style="color: white; text-decoration: none;" th:href="@{?page={page} (page = ${pages})}" th:text="${pages}">
 					</a>
 					</span>
 					

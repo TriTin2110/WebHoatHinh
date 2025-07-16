@@ -60,17 +60,18 @@ body {
 }
 </style>
 </head>
-<body th:attr="data-description=${creator.description}, data-tags=${creator.tags}, data-banner=${creator.banner}">
+<body
+	th:attr="data-description=${creator.description}, data-tags=${creator.tags}, data-banner=${creator.banner}">
 	<div class="container">
 		<h1 class="text-center mb-5">Tạo/Cập nhật bài viết!</h1>
 
 		<form id="postForm" th:method="post" th:action="@{/admin/news}"
 			enctype="multipart/form-data" th:object="${creator}">
-			 
+
 			<div class="mb-3" th:if="*{id != null}">
 				<input type="hidden" id="tittle" th:field="*{id}">
 				<h4 style="text-align: center;" th:text="*{id}"></h4>
-			</div> 
+			</div>
 			<div class="mb-3" th:if="*{id == null}">
 				<label for="title" class="form-label">Tiêu đề bài viết</label> <input
 					type="text" class="form-control" id="tittle" th:field="*{id}"
@@ -118,21 +119,21 @@ body {
 				<textarea style="display: none;" th:field="*{description}"
 					id="description"></textarea>
 			</div>
-			<input type="hidden" th:field="*{banner}"> 
+			<input type="hidden" th:field="*{banner}">
 		</form>
 		<div class="mb-3">
-				<label for="image" class="form-label">Chọn ảnh banner</label> <input
-					type="file" class="form-control" id="image" name="image"
-					accept="image/*" required>
-				<div style="text-align: center; margin-top: 10px;">
-					<img src="" width="100" id="preview-image">
-				</div>
-		</div>
-			
-		<div class="text-center">
-				<button type="button" onclick="submit()" class="btn btn-submit px-4 py-2 text-white">Đăng
-					bài</button>
+			<label for="image" class="form-label">Chọn ảnh banner</label> <input
+				type="file" class="form-control" id="image" name="image"
+				accept="image/*" required>
+			<div style="text-align: center; margin-top: 10px;">
+				<img src="" width="100" id="preview-image">
 			</div>
+		</div>
+
+		<div class="text-center">
+			<button type="button" onclick="submit()"
+				class="btn btn-submit px-4 py-2 text-white">Đăng bài</button>
+		</div>
 	</div>
 
 	<!-- Quill JS -->

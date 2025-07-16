@@ -21,7 +21,7 @@
 			</div>
 			<div style="text-align: center;" th:class="error"
 				th:if="${error} != null">
-				<span th:text="${error}"></span>
+				<span th:text="${error}" id="error"></span>
 			</div>
 			<div class="form-group">
 				<label for="username">Tên đăng nhập</label> <input type="text"
@@ -31,15 +31,36 @@
 				<label for="password">Mật khẩu</label> <input type="password"
 					id="password" name="password" required>
 			</div>
-			<button type="submit" class="btn">Đăng nhập</button>
+			<button type="submit" class="btn" onclick="return checkingForm()">Đăng
+				nhập</button>
 		</form>
 		<div
 			style="padding-top: 10px; display: flex; justify-content: space-between; font-size: 20px;">
 			<span> <a style="text-decoration: none; color: yellow;"
 				th:href="@{/account/sign-up}">Đăng ký ngay</a>
-			</span> <span><a th:href="@{/account/show-password-resolve}">Quên
-					mật khẩu</a></span>
+			</span> <span> <a th:href="@{/account/show-password-resolve}">Quên
+					mật khẩu</a> | <a href="/" style="text-decoration: none; color: orange;">Trang
+						chủ</a>
+			</span>
 		</div>
 	</div>
+
+	<script type="text/javascript" src="/js/util.js"></script>
+	<script type="text/javascript">
+	const usernameInvalidMessage = "Tài khoản không chứa ký tự đặc biệt";
+	const passwordInvalidMessage = "Mật khẩu không chứa ký tự đặc biệt";
+	
+		function checkingForm()
+		{
+			let username = document.getElementById("username").value;
+			let password = document.getElementById("password").value;
+			if(!username || !password)
+			{
+					let error = document.getElementById("error");
+					error.innertHTML = "Vui lòng điền đầy đủ thông tin!";
+			}
+			return checkingData(username, usernameInvalidMessage) && checkingData(password, passwordInvalidMessage);
+		}
+	</script>
 </body>
 </html>

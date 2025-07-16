@@ -17,6 +17,8 @@ body {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	line-height: 1.25em;
+    height: 1.25em;
 }
 
 .room-recently-message div {

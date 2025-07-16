@@ -50,7 +50,7 @@ categoriesList.addEventListener('click', e => {
 });
 
 
-function checkingData() //Checking categories when submit
+function checkingCategories() //Checking categories when submit
 {
 	let categories = document.getElementById("categories")
 	if (categories.value == '') {
@@ -93,8 +93,9 @@ function previewVideoHandling(currentVideo) {
 }
 //submit form with chosen video and avatar
 function submit() {
-	if (checkingData()) {
+	if (validation()) {
 		setContent()
+		loadingScreen();
 		let form = document.getElementById("postForm")
 		let formData = new FormData(form)
 		formData.append("video", currentVideo, currentVideo.name)
@@ -102,11 +103,51 @@ function submit() {
 		fetch(urlAction, {
 			method: "POST",
 			body: formData
-		}).then(res => {
-			window.location.replace("/admin/video");
+		}).then(res => res.json()).then(data => {
+			closeLoadingScreen();
+			let result = data.result
+			if(result == 'true')
+			{
+				window.location.replace("/admin/video");
+			}
 		})
 	}
 }
+
+function loadingScreen(){
+	$("#modal-loading").modal("show")
+}
+
+function closeLoadingScreen(){
+	$("#modal-loading").modal("hide")
+}
+
+function validation()
+{
+	let tittle = document.getElementById("title").value;
+	let director = document.getElementById("director").value;
+	let country = document.getElementById("country").value;
+	let studio = document.getElementById("studio").value;
+	let language = document.getElementById("language").value;
+	let categories = document.getElementById("categories").value;
+	
+	let inputInvalid = "Tất cả dữ liệu không được chứa kí tự đặc biệt!";
+	
+	return checkingData(tittle, inputInvalid) && checkingData(director, inputInvalid) && checkingData(country, inputInvalid) && checkingData(studio, inputInvalid) && checkingData(language, inputInvalid) && checkingCategories() && checkingData(categories, inputInvalid);
+	
+}
+
+function checkingData(tittle, message)
+{
+	let reg = /[^\p{L}\p{N}\s,:]/gu
+	if(reg.test(tittle))
+	{
+			alert("Tựa đề không được phép chứa ký tự đặc biệt!");		
+			return false;
+	}
+	return true;
+}
+
 function addEventVideo() {
 	let videoInput = document.getElementById("video")
 	videoInput.addEventListener("change", function() {

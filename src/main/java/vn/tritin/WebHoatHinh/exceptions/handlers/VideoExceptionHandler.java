@@ -1,12 +1,12 @@
 package vn.tritin.WebHoatHinh.exceptions.handlers;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.VideoAlreadyExistsException;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.VideoNotFoundException;
 import vn.tritin.WebHoatHinh.service.VideoService;
@@ -20,10 +20,10 @@ public class VideoExceptionHandler {
 	}
 
 	@ExceptionHandler(exception = { VideoAlreadyExistsException.class, VideoNotFoundException.class })
-	public String handlingVideoExistsException(VideoAlreadyExistsException ex, Model model) {
-		List<Video> videos = videoService.findAll();
-		model.addAttribute("videos", videos);
-		model.addAttribute("error", ex.getMessage());
-		return "/manage/video/video-list";
+	public ResponseEntity<Map<String, String>> handlingVideoExistsException(VideoAlreadyExistsException ex) {
+		Map<String, String> message = new HashMap<String, String>();
+		message.put("message", ex.getMessage());
+		message.put("result", "false");
+		return ResponseEntity.status(200).body(message);
 	}
 }

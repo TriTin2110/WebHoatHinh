@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import vn.tritin.WebHoatHinh.dao.DAOCategory;
 import vn.tritin.WebHoatHinh.entity.Category;
 import vn.tritin.WebHoatHinh.service.CategoryService;
@@ -28,12 +29,14 @@ public class CategoryServiceImpl implements CategoryService {
 	}
 
 	@Override
+	@Transactional
 	public Category save(Category category) {
 		// TODO Auto-generated method stub
 		return dao.save(category);
 	}
 
 	@Override
+	@Transactional
 	public Category merge(Category category) {
 		// TODO Auto-generated method stub
 		return dao.saveAndFlush(category);
