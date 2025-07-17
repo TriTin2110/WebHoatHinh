@@ -29,7 +29,6 @@ import vn.tritin.WebHoatHinh.model.VideoCreator;
 import vn.tritin.WebHoatHinh.service.VectorStoreService;
 import vn.tritin.WebHoatHinh.service.VideoService;
 import vn.tritin.WebHoatHinh.service.util.FileService;
-import vn.tritin.WebHoatHinh.util.StringHandler;
 import vn.tritin.WebHoatHinh.util.video.AttributeAddition;
 
 @SpringBootTest(classes = vn.tritin.WebHoatHinh.WebHoatHinhApplication.class) // Khởi tạo toàn bộ Spring
@@ -152,14 +151,12 @@ public class TestAdding {
 		boolean result = true;
 		try {
 			VectorStoreDTO vectorStoreDTO = null;
-			StringHandler stringHandler = new StringHandler();
 			for (Video video : videos) {
 				video.setVideoAnalyst(new VideoAnalyst(video.getId(), video));
 				videoService.saveAndFlush(video);
 				vectorStoreDTO = new VectorStoreDTO(video.getId(),
 						video.getCategories().stream().map(o -> o.getName()).collect(Collectors.joining(",")),
-						video.getDirector(), video.getLanguage(), stringHandler.decrypt(video.getDescription()),
-						video.getViewer());
+						video.getDirector(), video.getLanguage(), video.getDescription(), video.getViewer());
 				vectorStoreService.insertData(vectorStoreDTO);
 
 			}

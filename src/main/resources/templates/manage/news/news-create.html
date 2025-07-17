@@ -13,6 +13,7 @@
 <!-- Quill CSS -->
 <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css"
 	rel="stylesheet">
+<link href="/css/loading-modal.css" rel="stylesheet">
 <style>
 body {
 	background-color: #111;
@@ -69,7 +70,7 @@ body {
 			enctype="multipart/form-data" th:object="${creator}">
 
 			<div class="mb-3" th:if="*{id != null}">
-				<input type="hidden" id="tittle" th:field="*{id}">
+				<input type="hidden" id="tittle" th:field="*{id}" required="required">
 				<h4 style="text-align: center;" th:text="*{id}"></h4>
 			</div>
 			<div class="mb-3" th:if="*{id == null}">
@@ -135,9 +136,23 @@ body {
 				class="btn btn-submit px-4 py-2 text-white">Đăng bài</button>
 		</div>
 	</div>
-
+	
+	<!-- Loading modal -->
+	<div class="modal" id="modal-loading" data-bs-backdrop="static" data-bs-keyboard="false">
+		<div class="modal-dialog modal-sm modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-body text-center">
+					<div class="dots-3"></div>
+					<div style="color: black;">Đang thêm Tin Tức mới...</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- Quill JS -->
 	<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+	<script type="text/javascript" src="/js/jquery-1.4.2.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+	<script src="/js/loading-modal.js"></script>
 	<script src="/js/news-create.js"></script>
 </body>
 </html>

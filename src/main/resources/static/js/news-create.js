@@ -103,6 +103,7 @@ function setContent(){
 
 	function submit()
 	{
+		loadingScreen();
 		const tittle = document.getElementById("tittle").value
 		//Doesn't allow speacial character on tittle
 		const reg = /[^\p{L}\p{N}\s]/gu //\p{L}: language unicode,\p{N}: number unicode,u: unicode identify
@@ -114,8 +115,14 @@ function setContent(){
 		}
 		if(reg.test(tittle))
 		{
+			closeLoadingScreen()
 			alert("Tựa đề không được phép chứa kí tự đặc biệt!!")
 			tittleWarning.style.display = "block"
+		}
+		if(!currentImage)
+		{
+			closeLoadingScreen()
+			alert("Vui lòng thêm ảnh bìa!!")
 		}
 		else{
 			setContent()
@@ -127,9 +134,17 @@ function setContent(){
 				body: formData
 			}).then(res => res.json()).then(data =>{
 				let result = data.result;
-				alert(data.message);
 				if(result == 'true')
+				{
+					alert(data.message);
 					window.location.replace("/admin/news")
+				}
+					
+				else{
+					closeLoadingScreen()
+					let error = data.error
+					alert(error)
+				}
 				})
 		}
 	}

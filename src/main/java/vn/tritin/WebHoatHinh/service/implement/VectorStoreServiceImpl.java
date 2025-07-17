@@ -23,7 +23,7 @@ public class VectorStoreServiceImpl implements VectorStoreService {
 	@Autowired
 	private VectorStore vectorStore;
 	private final int LIMIT_RESULT = 3;
-	private final float MINIUM_SCORE = 0.85f;
+	private final float MINIMUM_SCORE = 0.85f;
 
 	@Override
 	public void insertData(VectorStoreDTO data) {
@@ -83,8 +83,8 @@ public class VectorStoreServiceImpl implements VectorStoreService {
 									builder.or(builder.eq("director", director), builder.eq("language", language))))
 					.build();
 		}
-		List<Document> documents = vectorStore.similaritySearch(SearchRequest.builder().query(description)
-				.similarityThreshold(MINIUM_SCORE).filterExpression(expression).topK(LIMIT_RESULT).build());
+		List<Document> documents = vectorStore.similaritySearch(SearchRequest.builder().query(description.toUpperCase())
+				.similarityThreshold(MINIMUM_SCORE).filterExpression(expression).topK(LIMIT_RESULT).build());
 		return documents;
 	}
 

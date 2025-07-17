@@ -43,7 +43,6 @@ public class ChatRoomAIServiceImpl implements ChatRoomAIService {
 			String language = split[3].split(":")[1];
 			int viewers = (split[4].split(":")[1].equalsIgnoreCase("null")) ? 0
 					: Integer.parseInt(split[4].split(":")[1]);
-
 			Set<String> ids = vectorStoreService
 					.getDataByDescription(id, categories, director, language, viewers, prompt).stream()
 					.map(o -> o.getMetadata().get("id").toString()).collect(Collectors.toSet());

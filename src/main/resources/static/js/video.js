@@ -5,12 +5,10 @@ let avatar = document.getElementById("user-avatar")
 let user = document.body.dataset.user
 let videoId = document.body.dataset.videoId
 let timeBegin = Date.now()
-console.log(user)
 window.addEventListener('beforeunload', function(){
 	//with navigator.sendBeacon the request still excute even user leave page not like fetch
 	let formData = new FormData()
 	user = (user == null)?null:user.username
-	console.log(user)
 	formData.append("videoId", videoId)
 	formData.append("userId", user)
 	formData.append("timeBegin", timeBegin)
@@ -18,7 +16,7 @@ window.addEventListener('beforeunload', function(){
 	navigator.sendBeacon('/exit', formData)
 })
 
-let currentPage = /*[[$currentPage]]*/''
+currentPage = /*[[$currentPage]]*/''
 	if(currentPage == 'news')
 	{
 		let link = document.getElementById("news-link")

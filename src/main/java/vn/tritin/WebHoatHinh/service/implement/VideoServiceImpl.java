@@ -7,7 +7,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.springframework.ai.document.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachePut;
@@ -20,7 +23,6 @@ import vn.tritin.WebHoatHinh.dao.DAOVideo;
 import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.service.VectorStoreService;
 import vn.tritin.WebHoatHinh.service.VideoService;
-import vn.tritin.WebHoatHinh.util.StringHandler;
 
 @Service
 public class VideoServiceImpl implements VideoService {
@@ -58,23 +60,13 @@ public class VideoServiceImpl implements VideoService {
 	@Cacheable("videos")
 	public List<Video> findAll() {
 		List<Video> videos = dao.findAll();
-		StringHandler handler = new StringHandler();
-		return videos.stream().map(o -> {
-			if (o.getDescription() != null)
-				o.setDescription(handler.decrypt(o.getDescription()));
-			return o;
-		}).toList();
+		return videos;
 	}
 
 	@CachePut("videos")
 	public synchronized List<Video> updateCache() {
 		List<Video> videos = dao.findAll();
-		StringHandler handler = new StringHandler();
-		return videos.stream().map(o -> {
-			if (o.getDescription() != null)
-				o.setDescription(handler.decrypt(o.getDescription()));
-			return o;
-		}).toList();
+		return videos;
 	}
 
 	/*-
@@ -86,16 +78,14 @@ public class VideoServiceImpl implements VideoService {
 	@Override
 	public List<Video> getVideoByName(List<Video> videos, String name) {
 		// TODO Auto-generated method stub
-		String[] nameSplits = name.split(" ");
+		List<Document> documents = vectorService.getDataByDescription(name, null, null, null, 0, "TÊN PHIM:" + name);
+		Set<String> ids = documents.stream().map(o -> o.getMetadata().get("id").toString()).collect(Collectors.toSet());
+
 		List<Video> foundVideos = new ArrayList<Video>();
-		String videoName = null;
 		for (Video video : videos) {
-			videoName = video.getId().toLowerCase();
-			for (String nameSplit : nameSplits) {
-				if (videoName.indexOf(nameSplit.toLowerCase()) > -1) {
+			for (String id : ids) {
+				if (id.equalsIgnoreCase(video.getId()))
 					foundVideos.add(video);
-					continue;
-				}
 			}
 		}
 		return foundVideos;

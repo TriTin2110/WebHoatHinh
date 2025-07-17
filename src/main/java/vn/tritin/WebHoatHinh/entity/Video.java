@@ -150,9 +150,9 @@ public class Video extends Content {
 
 	@Override
 	public String toString() {
-		return "Video [id =" + getId() + "categories="
-				+ categories.stream().map(o -> o.getName()).collect(Collectors.joining(",")).toString() + ", studio="
-				+ studio.getName() + ", country=" + country.getName() + ", viewer" + getViewer() + "]";
+		return "Video [id=" + getId() + ",categories="
+				+ categories.stream().map(o -> o.getName()).collect(Collectors.joining(",")).toString() + ",studio="
+				+ studio.getName() + ",country=" + country.getName() + ",viewer=" + getViewer() + "]";
 	}
 
 }

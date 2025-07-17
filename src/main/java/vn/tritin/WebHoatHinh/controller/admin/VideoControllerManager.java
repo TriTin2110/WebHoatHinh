@@ -94,6 +94,7 @@ public class VideoControllerManager {
 			throw new VideoNotFoundException();
 		} else {
 			service.delete(video);
+			vectorStoreService.deleteData(id);
 			service.updateCache();
 		}
 
@@ -153,7 +154,7 @@ public class VideoControllerManager {
 		}
 		VectorStoreDTO vectorStore = new VectorStoreDTO(video.getId(),
 				video.getCategories().stream().map(o -> o.getName()).collect(Collectors.joining(",")),
-				video.getDirector(), video.getLanguage(), video.getDescription(), 0);
+				video.getDirector(), video.getLanguage(), video.toString(), video.getViewer());
 		service.updateCache();
 		return vectorStore;
 	}

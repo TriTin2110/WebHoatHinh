@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.validation.Valid;
 import vn.tritin.WebHoatHinh.entity.News;
 import vn.tritin.WebHoatHinh.entity.Tag;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.NewsExistsException;
@@ -24,7 +26,6 @@ import vn.tritin.WebHoatHinh.model.NewsCreator;
 import vn.tritin.WebHoatHinh.service.NewsService;
 import vn.tritin.WebHoatHinh.service.TagService;
 import vn.tritin.WebHoatHinh.service.util.FileService;
-import vn.tritin.WebHoatHinh.util.StringHandler;
 
 @Controller
 @RequestMapping("/admin/news")
@@ -55,13 +56,18 @@ public class NewsControllerManager {
 	}
 
 	@PostMapping("")
-	public ResponseEntity<Map<String, String>> saveAndUpdate(@ModelAttribute("creator") NewsCreator newsCreator,
-			@RequestParam("image") MultipartFile file) {
+	public ResponseEntity<Map<String, String>> saveAndUpdate(@Valid @ModelAttribute("creator") NewsCreator newsCreator,
+			BindingResult result, @RequestParam("image") MultipartFile file) {
+		Map<String, String> map = new HashMap<String, String>();
+		if (result.hasErrors()) {
+			map.put("result", String.valueOf(false));
+			map.put("error", result.getAllErrors().get(0).getDefaultMessage());
+			return ResponseEntity.badRequest().body(map);
+		}
 		News news = newsSer.findById(newsCreator.getId());
 		if (news != null)
 			throw new NewsExistsException();
 		else {
-			Map<String, String> map = new HashMap<String, String>();
 			try {
 				saveAndFlushNews(newsCreator, file, news);
 				map.put("result", "true");
@@ -87,19 +93,17 @@ public class NewsControllerManager {
 	@GetMapping("/update/{id}")
 	public String showUpdateForm(@PathVariable("id") String id, Model model) {
 		News news = newsSer.findById(id);
-		StringHandler stringHandler = new StringHandler();
 		if (news == null)
 			throw new NewsNotExistsException();
 		StringBuilder tags = new StringBuilder();
 		List<Tag> tagList = news.getTags();
-		String description = stringHandler.decrypt(news.getDescription());
 		for (Tag tag : tagList) {
 			tags.append(tag.getId());
 			tags.append(",");
 		}
 		String bannerPath = news.getBanner();
-		NewsCreator creator = new NewsCreator(news.getId(), description, news.getAuthorName(), tags.toString(),
-				bannerPath);
+		NewsCreator creator = new NewsCreator(news.getId(), news.getDescription(), news.getAuthorName(),
+				tags.toString(), bannerPath);
 		model.addAttribute("creator", creator);
 		return "manage/news/news-create";
 	}

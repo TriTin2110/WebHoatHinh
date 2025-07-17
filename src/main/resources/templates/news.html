@@ -41,10 +41,23 @@
 	</div>
 
 <script type="text/javascript" src="/js/drop-down.js"></script>
+<script type="text/javascript" th:src="@{/js/base64.js}"></script>
+<script type="text/javascript" th:inline="javascript">
+
+if(rawDescription != '')
+{
+	let data = decrypt(rawDescription)
+	document.getElementById("description").innerHTML = data
+}
+</script>
 	<script type="text/javascript" th:inline="javascript">
-  	let description = /*[[${news.description}]]*/ ''
-	let content = document.getElementById("content")
-	content.innerHTML = description
+	let rawDescription = /*[[${news.description}]]*/ '';
+	if(rawDescription != '')
+	{
+		let data = decrypt(rawDescription)
+		let content = document.getElementById("content")
+		content.innerHTML = data
+	}
 	</script>
 </body>
 </html>

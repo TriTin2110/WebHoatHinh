@@ -37,14 +37,13 @@ public class AttributeAddition {
 		Video video = new Video();
 		String videoPath = videoCreator.getPathVideo();
 		String avatarPath = videoCreator.getPathAvatar();
-
 		video.setId(videoCreator.getId());
 		video.setBanner(avatarPath);
 		video.setDirector(videoCreator.getDirector());
 		video.setLanguage(videoCreator.getLanguage());
 		video.setDateUploaded(new Date(System.currentTimeMillis()));
 		StringHandler stringHanler = new StringHandler();
-		video.setDescription(stringHanler.encrypt(videoCreator.getDescription()));
+		video.setDescription(stringHanler.base64Encode(videoCreator.getDescription()));
 		video = createOtherEntity(videoCreator, video);
 
 		video.setVideoDetail(createVideoDetail(videoPath, video));

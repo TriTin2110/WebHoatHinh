@@ -6,10 +6,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public class NewsCreator {
-	@NotBlank(message = "Không được để trống tên")
+	@NotBlank(message = "Không được để trống tiêu đề")
 	private String id;
 	@NotBlank(message = "Không được để trống mô tả")
-	@Size(min = 20, max = 3000)
+	@Size(min = 20, max = 3000, message = "Độ dài của mô tả không hợp lệ")
 	private String description;
 	private Date dateUploaded;
 	@NotBlank(message = "Không được để trống tên tác giả")

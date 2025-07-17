@@ -50,12 +50,7 @@ public class NewsServiceImpl implements NewsService {
 
 	@CachePut(value = "news")
 	public List<News> updateListNews() {
-		StringHandler stringHandler = new StringHandler();
 		List<News> news = dao.findAll();
-		news = news.stream().map(o -> {
-			o.setDescription(stringHandler.decrypt(o.getDescription()));
-			return o;
-		}).toList();
 		return news;
 	}
 
@@ -82,12 +77,7 @@ public class NewsServiceImpl implements NewsService {
 	@Cacheable(value = "news")
 	public List<News> findAll() {
 		// TODO Auto-generated method stub
-		StringHandler stringHandler = new StringHandler();
 		List<News> news = dao.findAll();
-		news = news.stream().map(o -> {
-			o.setDescription(stringHandler.decrypt(o.getDescription()));
-			return o;
-		}).toList();
 		return news;
 	}
 
@@ -122,7 +112,7 @@ public class NewsServiceImpl implements NewsService {
 		// Description Handling
 		String description = newsCreator.getDescription();
 		StringHandler stringHandler = new StringHandler();
-		String output = stringHandler.encrypt(description);
+		String output = stringHandler.base64Encode(description);
 
 		// Banner handling
 		String banner = newsCreator.getBanner();

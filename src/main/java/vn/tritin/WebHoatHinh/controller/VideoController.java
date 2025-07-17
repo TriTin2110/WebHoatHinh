@@ -1,9 +1,11 @@
 package vn.tritin.WebHoatHinh.controller;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +36,6 @@ import vn.tritin.WebHoatHinh.util.category.CategoryInteraction;
 
 @Controller
 public class VideoController {
-	private final int AMOUNT_NEWS_ON_PAGE = 2;
 	private final int AMOUNT_VIDEO_PER_LINE = 5;
 	private final int SLIDER_LENGTH = 8;
 	private final int NUMBER_VIDEO_IN_ONE_SLIDE = 4;
@@ -67,18 +68,17 @@ public class VideoController {
 		for (Video video : videos) {
 			if (video.getId().equals(videoId)) {
 				video.setViewer(video.getViewer() + 1);
-
 				VideoDetail videoDetail = video.getVideoDetail();
 				List<List<Video>> groupVideos = new ArrayList<List<Video>>();
-				// if videos.size is has length above 8 element
+				// if videos.size has length above 8 element
 				if (videos.size() >= SLIDER_LENGTH) {
 					groupVideos = videoService.getGroupVideo(videos, SLIDER_LENGTH, NUMBER_VIDEO_IN_ONE_SLIDE); // Suggestion
 				} else {
 					// if videos.size range is 5-7
 					if (videos.size() > NUMBER_VIDEO_IN_ONE_SLIDE) {
 						int firstList = 0;
-						groupVideos.add(videos.subList(firstList, 4));
-						groupVideos.add(videos.subList(4, videos.size()));
+						groupVideos.add(videos.subList(firstList, NUMBER_VIDEO_IN_ONE_SLIDE));
+						groupVideos.add(videos.subList(NUMBER_VIDEO_IN_ONE_SLIDE, videos.size()));
 					} else {
 						groupVideos.add(videos);
 					}
@@ -95,6 +95,7 @@ public class VideoController {
 				}
 				UpdateViewer thread = new UpdateViewer(video, vectorStoreService, videoService);
 				thread.start();
+				categoryInteraction.setModelCategory(model);// for categories in dropdown
 				model.addAttribute("video", video);
 				model.addAttribute("videoDetail", videoDetail);
 				model.addAttribute("videoCategories", videoCategories);
@@ -131,10 +132,11 @@ public class VideoController {
 	public String findVideoByName(@RequestParam("content-searched") String name, Model model,
 			HttpServletRequest request) {
 		List<Video> videos = this.videoService.findAll();
-		List<Video> foundVideos = videoService.getVideoByName(videos, name);
-		List<List<Video>> groupFoundVideos = videoService.getGroupVideo(foundVideos, foundVideos.size(),
+		Set<Video> foundVideos = new HashSet<Video>(videoService.getVideoByName(videos, name));
+		videos = new ArrayList<Video>(foundVideos);
+		List<List<Video>> groupFoundVideos = videoService.getGroupVideo(videos, foundVideos.size(),
 				AMOUNT_VIDEO_PER_LINE);
-		model = setupBasicModel(model, request, foundVideos);
+		model = setupBasicModel(model, request, videos);
 		model.addAttribute("videos", groupFoundVideos);
 		return "index";
 	}

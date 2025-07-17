@@ -6,20 +6,28 @@
 </head>
 <body>
 	<div th:fragment="news-list-video" style="width: 90%;">
-			<div th:each="video : ${videos}">
-				<div style="margin-bottom: 20px;">
-					<div>
-						<a th:href="@{/view/{id}(id = ${video.id})}" class="name"
-							th:text="${video.id}"></a>
-					</div>
-					<div style="display: flex;">
-						<a th:href="@{/view/{id}(id=${video.id})}"><img
-							th:src="@{'/img/video-avatar/'+${video.banner}}"
-							style="border-radius: 18px;" width="90" /></a> <span
-							style="font-size: 10px; word-break: break-all; padding-left: 10px;" th:utext="${video.description}"></span>
-					</div>
+		<div th:each="video : ${videos}">
+			<div style="margin-bottom: 20px;">
+				<div>
+					<a th:href="@{/view/{id}(id = ${video.id})}" class="name"
+						th:text="${video.id}"></a>
+				</div>
+				<div style="display: flex;">
+					<a th:href="@{/view/{id}(id=${video.id})}"><img
+						th:src="@{'/img/video-avatar/'+${video.banner}}"
+						style="border-radius: 18px;" width="90" /></a> <span>
+						<div class="list-video-component"
+							th:text="${'Đạo diễn: '+ video.director}"></div> 
+							<div class="list-video-component"
+							th:text="${'Quốc gia: '+ video.country.name}"></div> 
+							<div class="list-video-component"
+							th:text="${'Ngôn ngữ: '+ video.language}"></div>
+							<div class="list-video-component"
+							th:text="${'Lượt xem: '+ video.viewer}"></div>
+							</span>
 				</div>
 			</div>
+		</div>
 	</div>
 </body>
 </html>

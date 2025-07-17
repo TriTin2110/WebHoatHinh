@@ -43,7 +43,6 @@ public class NewsController {
 		if (news == null)
 			throw new NewsNotExistsException();
 		StringHandler stringHandler = new StringHandler();
-		news.setDescription(stringHandler.decrypt(news.getDescription()));
 		List<Tag> tags = news.getTags();
 
 		model = categoryInteraction.setModelCategory(model);

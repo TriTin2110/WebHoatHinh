@@ -9,10 +9,10 @@
 	media="all" />
 <link rel="stylesheet" href="/css/dropdown.css" type="text/css"
 	media="all" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 
 <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="js/jquery-func.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 </head>
 <body onload="checkingLogin()" style="background-color: black;" th:attr="data-current-page=${currentPage}, data-categories=${categories}">
 	<!-- START PAGE SOURCE -->
@@ -30,16 +30,15 @@
 			<div th:replace="~{component/news-page/news-list.html :: news-list}"></div>
 
 		</div>
-
-		<div th:replace="~{component/index-page/footer.html :: footer}"></div>
 	</div>
+	
 	<!-- END PAGE SOURCE -->
-	<script type="text/javascript" src="/js/drop-down.js"></script>
 	<script th:inline="javascript">
 window.addEventListener("beforeunload", () =>{
 	let data = JSON.stringify({username: username})
 	navigator.sendBeacon("localhost:8080/account/logout", data)
 })
 </script>
+<script type="text/javascript" th:src="@{/js/base64.js}"></script>
 </body>
 </html>
