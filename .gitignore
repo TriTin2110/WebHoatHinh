@@ -36,4 +36,5 @@ build/
 src/main/resources/static/img/*
 src/main/resources/static/video/*
 src/main/resources/application.properties
-src/main/java/vn/tritin/WebHoatHinh/configuration/AIVectorDatabaseConfiguration.java
+src/main/java/vn/tritin/WebHoatHinh/configuration/*
+src/main/resources/GuideForAI.txt
