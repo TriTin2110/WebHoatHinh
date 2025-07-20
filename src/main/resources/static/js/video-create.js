@@ -8,7 +8,7 @@ let urlAction = "/admin/video"
 var categories = document.body.dataset.categories //Checking if there is any data before
 if (categories === undefined)
 	categories = []
-	
+
 window.addEventListener("DOMContentLoaded", async () => {
 	if (content != null && content != '')
 		await quill.clipboard.dangerouslyPasteHTML(content)
@@ -23,6 +23,7 @@ window.addEventListener("DOMContentLoaded", async () => {
 	addEventVideo()
 	addEventImage()
 })
+
 function setContent() {
 	const content = quill.root.innerHTML
 	let description = document.getElementById('description')
@@ -93,50 +94,50 @@ function previewVideoHandling(currentVideo) {
 }
 //submit form with chosen video and avatar
 function submit() {
-	if (validation()) {
-		setContent()
-		loadingScreen();
-		let form = document.getElementById("postForm")
-		let formData = new FormData(form)
-		formData.append("video", currentVideo, currentVideo.name)
-		formData.append("avatar", currentImage, currentImage.name);
-		fetch(urlAction, {
-			method: "POST",
-			body: formData
-		}).then(res => res.json()).then(data => {
-			closeLoadingScreen();
-			let result = data.result
-			if(result == 'true')
-			{
-				window.location.replace("/admin/video");
-			}
-		})
+	if (!currentImage || !currentVideo) {
+		alert("Vui lòng thêm đầy đủ thông tin!");
+	} else {
+		if (validation()) {
+			setContent()
+			loadingScreen();
+			let form = document.getElementById("postForm")
+			let formData = new FormData(form)
+			formData.append("video", currentVideo, currentVideo.name)
+			formData.append("avatar", currentImage, currentImage.name);
+			fetch(urlAction, {
+				method: "POST",
+				body: formData
+			}).then(res => res.json()).then(data => {
+				closeLoadingScreen();
+				let result = data.result
+				if (result == 'true') {
+					window.location.replace("/admin/video");
+				}
+			})
+		}
 	}
 }
 
 
-function validation()
-{
+function validation() {
 	let tittle = document.getElementById("title").value;
 	let director = document.getElementById("director").value;
 	let country = document.getElementById("country").value;
 	let studio = document.getElementById("studio").value;
 	let language = document.getElementById("language").value;
 	let categories = document.getElementById("categories").value;
-	
-	let inputInvalid = "Tất cả dữ liệu không được chứa kí tự đặc biệt!";
-	
+
+	let inputInvalid = "Tất cả dữ liệu phải được điền đầy đủ và không được chứa kí tự đặc biệt!";
+
 	return checkingData(tittle, inputInvalid) && checkingData(director, inputInvalid) && checkingData(country, inputInvalid) && checkingData(studio, inputInvalid) && checkingData(language, inputInvalid) && checkingCategories() && checkingData(categories, inputInvalid);
-	
+
 }
 
-function checkingData(tittle, message)
-{
+function checkingData(tittle, message) {
 	let reg = /[^\p{L}\p{N}\s,:]/gu
-	if(reg.test(tittle))
-	{
-			alert("Tựa đề không được phép chứa ký tự đặc biệt!");		
-			return false;
+	if (reg.test(tittle)) {
+		alert("Tựa đề không được phép chứa ký tự đặc biệt!");
+		return false;
 	}
 	return true;
 }
@@ -182,7 +183,7 @@ function addEventTag(input, values, list, id) //Handling event when inputed
 		if (e.key === 'Enter') {
 			e.preventDefault();
 			const val = input.value.trim();
-			
+
 			values = addTag(val, values, list)
 			input.value = '';
 			let tag = document.getElementById(id)

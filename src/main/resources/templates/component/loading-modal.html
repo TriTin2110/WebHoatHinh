@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.orf">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div th:fragment="loading-modal(message)">
+		<!-- Loading modal -->
+		<div class="modal" id="modal-loading" data-bs-backdrop="static"
+			data-bs-keyboard="false">
+			<div class="modal-dialog modal-sm modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-body text-center">
+						<div class="dots-3"></div>
+						<div style="color: black;" th:text="${message}"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import vn.tritin.WebHoatHinh.entity.Video;
 import vn.tritin.WebHoatHinh.entity.VideoAnalyst;
 import vn.tritin.WebHoatHinh.exceptions.exceptions.VideoAlreadyExistsException;
@@ -27,8 +30,10 @@ import vn.tritin.WebHoatHinh.exceptions.exceptions.VideoNotFoundException;
 import vn.tritin.WebHoatHinh.model.VectorStoreDTO;
 import vn.tritin.WebHoatHinh.model.VideoCreator;
 import vn.tritin.WebHoatHinh.service.VectorStoreService;
+import vn.tritin.WebHoatHinh.service.VideoAnalystService;
 import vn.tritin.WebHoatHinh.service.VideoService;
 import vn.tritin.WebHoatHinh.service.util.FileService;
+import vn.tritin.WebHoatHinh.util.StringHandler;
 import vn.tritin.WebHoatHinh.util.video.AttributeAddition;
 import vn.tritin.WebHoatHinh.util.video.VideoDuration;
 
@@ -39,19 +44,20 @@ public class VideoControllerManager {
 	private VideoService service;
 	private AttributeAddition addition;
 	private FileService fileService;
+	private VideoAnalystService videoAnalystService;
 	@Value("${path.video}")
 	private String pathVideo;
-
 	@Value("${path.avatar}")
 	private String pathAvatar;
 
 	@Autowired
 	public VideoControllerManager(VideoService service, AttributeAddition addition, FileService fileService,
-			VectorStoreService vectorStoreService) {
+			VectorStoreService vectorStoreService, VideoAnalystService videoAnalystService) {
 		this.service = service;
 		this.addition = addition;
 		this.fileService = fileService;
 		this.vectorStoreService = vectorStoreService;
+		this.videoAnalystService = videoAnalystService;
 	}
 
 	@PostMapping("")
@@ -174,6 +180,7 @@ public class VideoControllerManager {
 			throw new VideoNotFoundException();
 		else {
 			VideoCreator creator = new VideoCreator();
+			StringHandler stringHandler = new StringHandler();
 			String categories = video.getCategories().stream().map(o -> o.getName()).collect(Collectors.joining(","));
 			creator.setId(video.getId());
 			creator.setDirector(video.getDirector());
@@ -183,10 +190,18 @@ public class VideoControllerManager {
 			creator.setPathVideo(video.getVideoDetail().getPath());
 			creator.setCategories(categories);
 			creator.setCountry(video.getCountry().getName());
-			creator.setDescription(video.getDescription());
+			creator.setDescription(stringHandler.base64Decode(video.getDescription()));
 			model.addAttribute("creator", creator);
 			return "/manage/video/video-create";
 		}
 	}
 
+	@GetMapping("/chart")
+	public String showVideoAnalyst(Model model) {
+		List<VideoAnalyst> videoAnalysts = videoAnalystService.selectAll();
+		Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+		String json = gson.toJson(videoAnalysts);
+		model.addAttribute("analysts", json.toString());
+		return "/other/videos/analyst-chart.html";
+	}
 }

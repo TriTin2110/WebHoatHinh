@@ -39,7 +39,6 @@ public class AccountServiceImpl implements AccountService {
 	public UserDetails loadUserByUsername(String username) {
 		// TODO Auto-generated method stub
 		Account account = selectAccountByUsername(username);
-		System.out.println("account.getRole().getName() " + account.getRole().getName());
 		if (account == null) {
 			throw new UsernameNotFoundException("Đăng nhập không thành công!");
 		}

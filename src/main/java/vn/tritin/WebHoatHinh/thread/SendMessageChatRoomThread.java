@@ -77,7 +77,7 @@ public class SendMessageChatRoomThread extends Thread {
 				sendMessage.append(userId);
 				sendMessage.append(":");
 				sendMessage.append(message);
-
+				System.out.println("sendMessage " + sendMessage.toString());
 				user.sendMessage(new TextMessage(sendMessage.toString()));
 			}
 		} catch (IOException e) {

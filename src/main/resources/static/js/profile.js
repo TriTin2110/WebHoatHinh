@@ -1,6 +1,4 @@
-/**
- * 
- */
+
 function previewAvatar(event) {
 	var reader = new FileReader();
 	reader.onload = function() {
@@ -37,3 +35,4 @@ let regularButtons = document.querySelectorAll(".regular-button")
 regularButtons.forEach(e =>{
 	e.addEventListener("click", () => {return false});
 })
+

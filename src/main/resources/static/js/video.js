@@ -16,17 +16,6 @@ window.addEventListener('beforeunload', function(){
 	navigator.sendBeacon('/exit', formData)
 })
 
-currentPage = /*[[$currentPage]]*/''
-	if(currentPage == 'news')
-	{
-		let link = document.getElementById("news-link")
-		link.style.color="red"
-	}
-	else if(currentPage = 'home')
-	{
-		let link = document.getElementById("home-link")
-		link.style.color="red"
-	}
 
 for (let video of videoContents) {
         if (video instanceof HTMLElement) {
@@ -70,8 +59,8 @@ function addComment(text) {
         }
 
 var socket = new WebSocket("ws://localhost:8080/comment");
-
 socket.onopen = function() {
+	console.log("Da ket noi")
     socket.send(videoDetailId);
 };
 
@@ -86,6 +75,8 @@ socket.onmessage = function(event) {
         
 function sendMessage()
 {
+	console.log(socket)
+	console.log(username)
 	let accountId = document.getElementById("user-name").value
 	let text = document.getElementById("text-field").value
 	let object = {id: "comment-id", accountId: accountId, text: text, videoDetailId: videoDetailId, date: Date.now().toString()}

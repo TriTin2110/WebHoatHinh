@@ -35,7 +35,7 @@ public class AccountSecurity {
 					.formLogin(login -> login.loginPage("/account/sign-in").loginProcessingUrl("/authenticateTheUser")
 							.successForwardUrl("/account/generate-user-session").permitAll())
 					.logout(logout -> logout.logoutSuccessUrl("/").permitAll())
-					.csrf(csrf -> csrf.ignoringRequestMatchers("/logout", "/admin/create-chat-room")); // chỉ
+					.csrf(csrf -> csrf.ignoringRequestMatchers("/logout", "/admin/create-chat-room", "/exit")); // chỉ
 			// tắt
 			// csrf
 			// với

@@ -31,6 +31,9 @@ websocket.onopen = () => {
 }
 
 websocket.onmessage = (mess) => {
+	//When mess load open button
+	if(inputButton.disabled)
+		inputButton.disabled=false
 	let message = mess.data
 	let div = document.createElement("div")
 	let recentyTag = null

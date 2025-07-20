@@ -5,6 +5,7 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="/css/sign-up.css" type="text/css"
 	media="all" />
+<link href="/img/logo.webp" rel="icon" type="image/x-icon">
 <style type="text/css">
 .error {
 	color: red;
@@ -59,7 +60,7 @@
 					let error = document.getElementById("error");
 					error.innertHTML = "Vui lòng điền đầy đủ thông tin!";
 			}
-			return checkingData(username, usernameInvalidMessage) && checkingData(password, passwordInvalidMessage);
+			return checkingData(username, usernameInvalidMessage);
 		}
 	</script>
 </body>

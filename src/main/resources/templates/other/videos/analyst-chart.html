@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Biểu đồ lượt xem</title>
+<link rel="stylesheet" href="/css/bootstrap.min.css" type="text/css">	
+</head>
+<body th:attr="data-analyst=|${analysts}|">
+	<div class="container">
+	<h3>Tổng thời gian xem</h3>
+		<div>
+			<canvas id="bar-chart"></canvas>
+		</div>
+		<hr>
+		<h3>Tổng lượt comment</h3>
+		<div>
+			<canvas id="line-chart"></canvas>
+		</div>
+		<hr>
+		<h3>Tổng lượt xem</h3>
+		<div>
+			<canvas id="bar-chart-view-total"></canvas>
+		</div>
+	</div>
+	
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script type="text/javascript" src="/js/chart.js"></script>
+</body>
+</html>

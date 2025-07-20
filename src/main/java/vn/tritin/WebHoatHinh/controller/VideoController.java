@@ -178,6 +178,7 @@ public class VideoController {
 
 	@PostMapping("/exit")
 	public ResponseEntity<String> exitEventHandling(@RequestBody VideoAnalystDTO analystDTO) {
+		System.out.println("analystDTO.getVideoId(): " + analystDTO.getVideoId());
 		VideoAnalyst videoAnalyst = videoAnalystService.selectById(analystDTO.getVideoId());
 		Map<String, Long> totalTimePerUserWatch = videoAnalyst.getTotalTimePerUserWatch();
 		String key = analystDTO.getUserId();

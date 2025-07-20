@@ -5,6 +5,7 @@
 <title>Insert title here</title>
 <link rel="stylesheet" href="/css/sign-up.css" type="text/css"
 	media="all" />
+	<link href="/css/loading-modal.css" rel="stylesheet">
 <style type="text/css">
 .error {
 	color: red;
@@ -15,7 +16,7 @@
 	<div class="container">
 		<h2>Đăng ký</h2>
 		<form th:action="@{/account/create-user}"
-			onsubmit="return checkPassword();" th:method="post" th:object="${ru}">
+			onsubmit="return checkingFormData()" th:method="post" th:object="${ru}">
 			<input type="hidden" th:field="*{role}" value="User">
 			<div style="text-align: center;" th:class="error"
 				th:if="${errors} != null">
@@ -64,9 +65,9 @@
 			</div>
 			<div class="form-group">
 				<label for="dob">Ngày sinh</label> <input type="date" id="dob"
-					th:field="*{dateOfBirth}">
+					th:field="*{dateOfBirth}" required="required">
 			</div>
-			<button type="submit" class="btn" onclick="return checkingFormData()">Đăng ký</button>
+			<button type="submit" id="btn-sign-up" class="btn">Đăng ký</button>
 		</form>
 		<hr>
 		<div style="padding-top: 10px; display: flex; justify-content: space-between; font-size: 20px;">
@@ -77,9 +78,6 @@
 					<a th:href="@{/account/show-password-resolve}">Quên mật khẩu</a> | <a href="/" style="text-decoration: none; color: orange;">Trang chủ</a>
 				</span>
 				
-		</div>
-		<div>
-			
 		</div>
 </body>
 <script type="text/javascript" src="/js/util.js"></script>

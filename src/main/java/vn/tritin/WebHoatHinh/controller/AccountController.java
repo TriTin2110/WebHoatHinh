@@ -79,7 +79,6 @@ public class AccountController {
 		}
 
 		if (result.hasErrors()) { // When data is not valid
-			System.out.println("Da co loi");
 			return "user/sign-up";
 		} else {
 			User user = userInt.createUser(ru);
@@ -123,7 +122,7 @@ public class AccountController {
 	public String sendingCodeToGmail(@RequestParam("email") String gmail, Model model) {
 		AccountDTO accountDTO = accSer.selectAccountByEmail(gmail);
 		if (accountDTO == null) {
-			model.addAttribute("errors", "Tài khoản không tồn tại!");
+			model.addAttribute("errors", "Email không tồn tại trong hệ thống!");
 			return "user/password-resolve";
 		}
 		Random random = new Random();

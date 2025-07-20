@@ -41,7 +41,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr th:each="news, iStat: ${news}">
+				<tr th:each="news, iStat: ${newsList}">
 					<td th:text="${iStat.index + 1}"></td>
 					<td th:text="${news.id}"></td>
 					<td th:text="${news.dateUploaded}"></td>
@@ -59,15 +59,14 @@
 	<div th:replace="~{/manage/news/components/modal-confirm-update.html :: update-modal}"></div>
 	<div th:replace="~{/manage/news/components/modal-confirm-delete.html :: delete-modal}"></div>
 	<script src="/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="/js/news-manage.js"></script>
 	<script type="text/javascript" src="/js/component-interact.js"></script>
+	<script type="text/javascript" src="/js/news-manage.js"></script>
 	<script type="text/javascript" th:inline="javascript">
 		let error = /*[[${error}]]*/ ""
-		if(error.length > 0)
+		if(!error && error.length > 0)
 		{
 			alert(error)
 		}
-			
 	</script>
 </body>
 </html>

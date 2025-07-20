@@ -8,7 +8,7 @@
 	<!-- Hồ sơ bên trái -->
 	<div th:fragment="information" class="col-md-4">
 		<form th:action="@{/user-profile/update}" th:method="POST"
-			enctype="multipart/form-data" th:object="${account}">
+			enctype="multipart/form-data" th:object="${account}" onsubmit="return checkingUserInformationData()">
 			<input type="hidden" th:field="*{username}" />
 			<div class="profile-card p-4 h-100">
 				<div style="text-align: left;">
@@ -41,7 +41,7 @@
 							th:text="${account.user.dateOfBirth}">21/10/1232</span>
 					</p>
 					<p>
-						<strong>Email:</strong> <span th:text="${account.email}">tin@gmail.com</span>
+						<strong>Email:</strong> <span th:text="${account.email}">email</span>
 					</p>
 				</div>
 				<div>
@@ -49,14 +49,13 @@
 						style="background-color: yellow;" data-bs-toggle="modal"
 						data-bs-target="#editProfileModal" type="button">Chỉnh
 						sửa hồ sơ</button>
-					<input type="submit" class="btn btn-primary mt-2"
-						value="Lưu những thay đổi">
 				</div>
 				<div th:if="${error}" th:text="${error}"></div>
-
 			</div>
 			<div th:replace="~{/user/profile/input-modal.html :: input-modal}"></div>
+			<div th:replace="~{/component/loading-modal.html :: loading-modal('Đang cập nhật thông tin của bạn...')}"></div>
 		</form>
+		<script type="text/javascript" src="/js/loading-modal.js"></script>
 	</div>
 </body>
 </html>

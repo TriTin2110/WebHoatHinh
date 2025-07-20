@@ -209,8 +209,12 @@ public class ChatRoomSocket extends TextWebSocketHandler {
 		sendMessage.append(":");
 		sendMessage.append(message);
 		try {
+			Thread.sleep(3000);
 			user.sendMessage(new TextMessage(sendMessage.toString()));
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -26,6 +26,7 @@ import vn.tritin.WebHoatHinh.model.NewsCreator;
 import vn.tritin.WebHoatHinh.service.NewsService;
 import vn.tritin.WebHoatHinh.service.TagService;
 import vn.tritin.WebHoatHinh.service.util.FileService;
+import vn.tritin.WebHoatHinh.util.StringHandler;
 
 @Controller
 @RequestMapping("/admin/news")
@@ -44,7 +45,7 @@ public class NewsControllerManager {
 	@GetMapping("")
 	public String findAll(Model model) {
 		List<News> news = newsSer.findAll();
-		model.addAttribute("news", news);
+		model.addAttribute("newsList", news);
 		return "manage/news/news-list";
 	}
 
@@ -93,6 +94,7 @@ public class NewsControllerManager {
 	@GetMapping("/update/{id}")
 	public String showUpdateForm(@PathVariable("id") String id, Model model) {
 		News news = newsSer.findById(id);
+		StringHandler stringHandler = new StringHandler();
 		if (news == null)
 			throw new NewsNotExistsException();
 		StringBuilder tags = new StringBuilder();
@@ -102,20 +104,21 @@ public class NewsControllerManager {
 			tags.append(",");
 		}
 		String bannerPath = news.getBanner();
-		NewsCreator creator = new NewsCreator(news.getId(), news.getDescription(), news.getAuthorName(),
-				tags.toString(), bannerPath);
+		NewsCreator creator = new NewsCreator(news.getId(), stringHandler.base64Decode(news.getDescription()),
+				news.getAuthorName(), tags.toString(), bannerPath);
 		model.addAttribute("creator", creator);
 		return "manage/news/news-create";
 	}
 
 	@PostMapping("/update")
-	public ResponseEntity<String> update(@ModelAttribute("creator") NewsCreator newsCreator,
+	public ResponseEntity<Map<String, String>> update(@ModelAttribute("creator") NewsCreator newsCreator,
 			@RequestParam("image") MultipartFile file) {
 		News news = newsSer.findById(newsCreator.getId());
+		Map<String, String> map = new HashMap<String, String>();
 		if (news == null)
 			throw new NewsNotExistsException();
 		else {
-			Map<String, String> map = new HashMap<String, String>();
+
 			try {
 				saveAndFlushNews(newsCreator, file, news);
 				map.put("result", "true");
@@ -127,7 +130,7 @@ public class NewsControllerManager {
 			}
 
 		}
-		return ResponseEntity.status(200).build();
+		return ResponseEntity.status(200).body(map);
 	}
 
 	public void saveAndFlushNews(NewsCreator newsCreator, MultipartFile file, News news) {

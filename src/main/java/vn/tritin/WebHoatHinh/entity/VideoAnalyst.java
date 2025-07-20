@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.annotations.Expose;
+
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -16,15 +18,19 @@ import jakarta.persistence.OneToOne;
 @Entity
 public class VideoAnalyst {
 	@Id
+	@Expose // chỉ convert những trường được đánh dấu sang JSON
 	private String id;
 	@ElementCollection
 	@CollectionTable(name = "total_time_per_user_watch", joinColumns = @JoinColumn(name = "video_analyst_id"))
 	@MapKeyColumn(name = "user_id")
 	@Column(name = "time_watch")
 	private Map<String, Long> totalTimePerUserWatch;
-
+	@Expose // chỉ convert những trường được đánh dấu sang JSON
 	private long totalTimeWatch;
-	private int totalView, totalComment;
+	@Expose
+	private int totalComment;
+	@Expose
+	private int totalView;
 	private Date dateUploaded;
 
 	@OneToOne
@@ -98,6 +104,13 @@ public class VideoAnalyst {
 
 	public void setVideo(Video video) {
 		this.video = video;
+	}
+
+	@Override
+	public String toString() {
+		return "VideoAnalyst [id=" + id + ", totalTimePerUserWatch=" + totalTimePerUserWatch + ", totalTimeWatch="
+				+ totalTimeWatch + ", totalView=" + totalView + ", totalComment=" + totalComment + ", dateUploaded="
+				+ dateUploaded + ", video=" + video + "]";
 	}
 
 }

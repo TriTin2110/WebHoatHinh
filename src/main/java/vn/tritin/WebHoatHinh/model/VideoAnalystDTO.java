@@ -4,6 +4,9 @@ public class VideoAnalystDTO {
 	private String videoId, userId;
 	private long timeBegin, timeEnd;
 
+	public VideoAnalystDTO() {
+	}
+
 	public VideoAnalystDTO(String videoId, String userId, long timeBegin, long timeEnd) {
 		this.videoId = videoId;
 		this.userId = userId;

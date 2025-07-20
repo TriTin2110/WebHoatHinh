@@ -1,5 +1,6 @@
 package vn.tritin.WebHoatHinh.service.implement;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,12 @@ public class VideoAnalystServiceImpl implements VideoAnalystService {
 		// TODO Auto-generated method stub
 		Optional<VideoAnalyst> opt = dao.findById(id);
 		return (opt.isEmpty()) ? null : opt.get();
+	}
+
+	@Override
+	public List<VideoAnalyst> selectAll() {
+		// TODO Auto-generated method stub
+		return dao.findAll();
 	}
 
 }

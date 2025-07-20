@@ -130,9 +130,11 @@ public class CommentSocket extends TextWebSocketHandler {
 	private void sendMessageForAllUser(WebSocketSession userCommented, Comment comment) {
 		Account account = (Account) userCommented.getAttributes().get("account");
 		String html = "<div class = \"comment\">" + "<img src=\"/img/user-avatar/" + account.getUser().getAvatar()
-				+ "\" alt=\"Không có ảnh\">" + "<div>" + "<div class=\"comment-content\">" + comment.getContent()
-				+ "</div>" + "<div class=\"comment-actions\">" + "		<span>Thích</span>"
-				+ "     <span>Phản hồi</span>" + "     <span>1 phút trước</span>" + "</div>" + "</div>" + "</div>";
+				+ "\" alt=\"Không có ảnh\">" + "<div>" + "<div class=\"comment-content\"> <a href=\"/user-profile/"
+				+ account.getUsername() + "\">" + account.getUser().getFullName() + "</a> <br><span>"
+				+ comment.getContent() + "</span></div>" + "<div class=\"comment-actions\">"
+				+ "		<span>Thích</span>" + "     <span>Phản hồi</span>" + "     <span>1 phút trước</span>" + "</div>"
+				+ "</div>" + "</div>";
 		synchronized (sessions) {
 			// Get all user at the same movie
 			List<WebSocketSession> webSocketSessions = sessions.get(comment.getVideoDetail().getId());
